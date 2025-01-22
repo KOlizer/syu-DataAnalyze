@@ -51,7 +51,7 @@ app = Flask(__name__)
 
 DB_CONFIG = {
     'user': 'admin',
-    'password': 'admin123',
+    'password': 'admin1234',
     'host': '${MYSQL_HOST}',
     'database': 'shopdb',
     'ssl_disabled': True
