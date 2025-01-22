@@ -3,12 +3,32 @@
 import logging
 
 PUBSUB_ENDPOINT = "https://pub-sub.kr-central-2.kakaocloud.com"
-DOMAIN_ID = "{조직 ID}"
-PROJECT_ID = "{프로젝트 ID}"
-TOPIC_NAME = "{Topic 이름}"
+DOMAIN_ID = "fa22d0db818f48829cf8b7849e3a0a26"
+PROJECT_ID = "0aa67b93c3ec48e587a51c9f842ca407"
+#TOPIC_NAME은 통신할 토픽 및 보낼 토픽이름이고 mk는 만들토픽
+TOPIC_NAME = "Test-Topic-sh"
+TOPIC_NAME_MK = "Test-Topic-sh-1"
+TOPIC_DESCRIPTION = ""
+TOPIC_RETENTION_DURATION="600s"
 
-CREDENTIAL_ID     = "{액세스 키 ID}"
-CREDENTIAL_SECRET = "{보안 액세스 키}"
+CREDENTIAL_ID     = "ad5a9ef37e18454dbfb1110ad34d07da"
+CREDENTIAL_SECRET = "8d6d9b673e7d9c8a5c5c3499a0c3a920bc2a246dbe3fd893f282a7ee25fe005f796062"
+
+# 구독 설정
+SUBSCRIPTION_NAME = "pull-topic-sh"  # 구독 이름
+SUBSCRIPTION_ENDPOINT = (
+    f"{PUBSUB_ENDPOINT}/v1/domains/{DOMAIN_ID}/projects/{PROJECT_ID}/subscriptions/{SUBSCRIPTION_NAME}/pull"
+)
+
+# Object Storage 서브스크립션 환경변수
+OBJECT_STORAGE_SUBSCRIPTION_NAME = "obj-test"  #obj_sub로 만들 서브스크립션 이름
+OBJECT_STORAGE_BUCKET              = "apiserver-sh"
+OBJECT_STORAGE_EXPORT_INTERVAL_MIN = 10    # exportIntervalMinutes
+OBJECT_STORAGE_FILE_PREFIX         = ""
+OBJECT_STORAGE_FILE_SUFFIX         = ".log"
+OBJECT_STORAGE_CHANNEL_COUNT       = 4
+OBJECT_STORAGE_MAX_CHANNEL_COUNT   = 10
+OBJECT_STORAGE_IS_EXPORT_ENABLED   = True  # bool
 
 #################################
 # 로그 설정
@@ -24,9 +44,9 @@ MAX_THREADS = 5        # 동시에 실행할 최대 스레드 수
 ACTIONS_PER_USER = 30  # 각 사용자가 수행할 최대 상태 전이 횟수
 
 #################################
-# API 서버 정보
+# API 서버 정보-로드밸런서 주소
 #################################
-API_BASE_URL = "{ALB Public IP}"  # 실제 로드밸런서 도메인
+API_BASE_URL = "${로드밸런서주소}"  # 실제 로드밸런서/API 서버 IP/도메인
 TIME_SLEEP_RANGE = (0.1, 1.0)  # 상태 전이 사이의 sleep 시간 범위(초)
 
 #################################
@@ -119,7 +139,6 @@ STATE_TRANSITIONS = {
     "Done": {}
 }
 
-
 #################################
 # 비로그인 하위머신: ANON_SUB_TRANSITIONS
 #################################
@@ -133,7 +152,7 @@ ANON_SUB_TRANSITIONS = {
         "Anon_Sub_Done":       0.2
     },
 
-    # 메인 페이지 접근( / ) 
+    # 메인 페이지 접근( / )
     "Anon_Sub_Main": {
         # 여기서 그냥 메인 페이지 머무르거나
         "Anon_Sub_Main": 0.1,
@@ -228,7 +247,6 @@ ANON_SUB_TRANSITIONS = {
     # 하위머신 종료
     "Anon_Sub_Done": {}
 }
-
 
 #################################
 # 로그인 상태에서 발생 가능한 하위머신
@@ -348,7 +366,6 @@ LOGGED_SUB_TRANSITIONS = {
     # 하위머신 종료
     "Login_Sub_Done": {}
 }
-
 
 #################################
 # 카테고리 선호도
