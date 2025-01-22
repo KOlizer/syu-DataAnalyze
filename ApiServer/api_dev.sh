@@ -5,6 +5,14 @@ echo "kakaocloud: 1. 환경 변수 설정을 시작합니다."
 # /home/ubuntu/.bashrc 에 영구적으로 저장할 환경 변수들을 선언한다.
 command=$(cat <<EOF
 export MYSQL_HOST="{MySQL 엔드포인트}"
+export DOMAIN_ID="{조직 ID}"
+export PROJECT_ID="{프로젝트 ID}"
+export TOPIC_NAME="{Topic 이름}"
+export CREDENTIAL_ID="{액세스 키 ID}"
+export CREDENTIAL_SECRET="{보안 액세스 키}"
+export PUBSUB_ENDPOINT = "https://pub-sub.kr-central-2.kakaocloud.com"
+export MYSQL_USER="admin"
+export MYSQL_PASS="admin1234"
 EOF
 )
 
