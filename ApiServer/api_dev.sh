@@ -10,9 +10,6 @@ export PROJECT_ID="{프로젝트 ID}"
 export TOPIC_NAME="{Topic 이름}"
 export CREDENTIAL_ID="{액세스 키 ID}"
 export CREDENTIAL_SECRET="{보안 액세스 키}"
-export PUBSUB_ENDPOINT = "https://pub-sub.kr-central-2.kakaocloud.com"
-export MYSQL_USER="admin"
-export MYSQL_PASS="admin1234"
 EOF
 )
 
