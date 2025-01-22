@@ -1,12 +1,12 @@
 #!/bin/bash
 
-#### (A) 여기에 본인 환경값을 직접 작성해둔다.
-MYSQL_HOST="{MySQL 엔드포인트}"
+MYSQL_HOST="az-a.api-db-sh.0aa67b93c3ec48e587a51c9f842ca407.mysql.managed-service.kr-central-2.kakaocloud.com"
 DOMAIN_ID="{조직 ID}"
 PROJECT_ID="{프로젝트 ID}"
 TOPIC_NAME="{Topic 이름}"
 CREDENTIAL_ID="{액세스 키 ID}"
 CREDENTIAL_SECRET="{보안 액세스 키}"
+LOGSTASH_ENV_FILE="/etc/default/logstash"
 
 
 echo "kakaocloud: 1. ~/.bashrc에 환경 변수를 설정합니다."
@@ -42,27 +42,45 @@ echo "kakaocloud: ~/.bashrc에 환경 변수를 추가 완료."
 ##########################################################################
 # 2) systemd(예: Logstash 등)에서 같은 변수를 쓰려면?
 ##########################################################################
-# 방법 1: /etc/default/logstash (Debian/Ubuntu 계열) 파일에 key=value 저장
-# 방법 2: 특정 service.override에 [Service] Environment= 로 지정
-# 여기서는 Logstash 예시로 /etc/default/logstash 사용
 
-LOGSTASH_ENV_FILE="/etc/default/logstash"
+echo "kakaocloud: 2. /etc/default/logstash에 환경 변수를 '추가'합니다. (append)"
 
-echo "kakaocloud: 2. /etc/default/logstash에 환경 변수를 설정합니다."
-sudo bash -c "cat <<EOF > $LOGSTASH_ENV_FILE
-# Logstash 실행 시 불러올 환경 변수
-MYSQL_HOST=\"$MYSQL_HOST\"
+# 1) 공식 Elastic GPG 키 등록
+curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+
+# 2) 저장소 추가
+echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee /etc/apt/sources.list.d/beats.list
+
+# 3) 패키지 업데이트 후 filebeat, logstash 설치
+sudo apt-get update
+sudo apt-get install filebeat
+sudo apt-get update
+sudo apt-get install logstash
+
+sudo systemctl enable filebeat
+sudo systemctl start filebeat
+sudo systemctl enable logstash
+sudo systemctl start logstash
+
+sudo chmod 777 /etc/default/logstash
+
+sudo bash -c "cat <<EOF >> $LOGSTASH_ENV_FILE
+
+# === Additional Env for Pub/Sub ===
+CREDENTIAL_ID=\"$CREDENTIAL_ID\"
+CREDENTIAL_SECRET=\"$CREDENTIAL_SECRET\"
 DOMAIN_ID=\"$DOMAIN_ID\"
 PROJECT_ID=\"$PROJECT_ID\"
 TOPIC_NAME=\"$TOPIC_NAME\"
-CREDENTIAL_ID=\"$CREDENTIAL_ID\"
-CREDENTIAL_SECRET=\"$CREDENTIAL_SECRET\"
 
-export MYSQL_HOST DOMAIN_ID PROJECT_ID TOPIC_NAME CREDENTIAL_ID CREDENTIAL_SECRET
+export CREDENTIAL_ID CREDENTIAL_SECRET DOMAIN_ID PROJECT_ID TOPIC_NAME
 EOF"
 
-echo "kakaocloud: /etc/default/logstash 설정 완료. Logstash 재시작 시 해당 변수 사용 가능."
+echo "kakaocloud: $LOGSTASH_ENV_FILE 파일 끝에 환경변수 추가 완료."
 
+# systemd 재시작
+sudo systemctl daemon-reload
+sudo systemctl restart logstash
 
 ##########################################################################
 # (선택) 3) Flask 앱 서비스(flask_app.service)에도 같은 변수를 써야 한다면
