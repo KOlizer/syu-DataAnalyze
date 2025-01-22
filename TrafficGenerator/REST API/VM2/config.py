@@ -3,18 +3,32 @@
 import logging
 
 PUBSUB_ENDPOINT = "https://pub-sub.kr-central-2.kakaocloud.com"
-DOMAIN_ID = "{조직 ID}"
-PROJECT_ID = "{프로젝트 ID}"
-TOPIC_NAME = "{Topic 이름}"
+DOMAIN_ID = "fa22d0db818f48829cf8b7849e3a0a26"
+PROJECT_ID = "0aa67b93c3ec48e587a51c9f842ca407"
+#TOPIC_NAME은 통신할 토픽 및 보낼 토픽이름이고 mk는 만들토픽
+TOPIC_NAME = "Test-Topic-sh"
+TOPIC_NAME_MK = "Test-Topic-sh-1"
+TOPIC_DESCRIPTION = ""
+TOPIC_RETENTION_DURATION="600s"
 
-CREDENTIAL_ID     = "{액세스 키 ID}"
-CREDENTIAL_SECRET = "{보안 액세스 키}"
+CREDENTIAL_ID     = "ad5a9ef37e18454dbfb1110ad34d07da"
+CREDENTIAL_SECRET = "8d6d9b673e7d9c8a5c5c3499a0c3a920bc2a246dbe3fd893f282a7ee25fe005f796062"
 
 # 구독 설정
-SUBSCRIPTION_NAME = "${구독이름}"  # 구독 이름
+SUBSCRIPTION_NAME = "pull-topic-sh"  # 구독 이름
 SUBSCRIPTION_ENDPOINT = (
     f"{PUBSUB_ENDPOINT}/v1/domains/{DOMAIN_ID}/projects/{PROJECT_ID}/subscriptions/{SUBSCRIPTION_NAME}/pull"
 )
+
+# Object Storage 서브스크립션 환경변수
+OBJECT_STORAGE_SUBSCRIPTION_NAME = "obj-test"  #obj_sub로 만들 서브스크립션 이름
+OBJECT_STORAGE_BUCKET              = "apiserver-sh"
+OBJECT_STORAGE_EXPORT_INTERVAL_MIN = 10    # exportIntervalMinutes
+OBJECT_STORAGE_FILE_PREFIX         = ""
+OBJECT_STORAGE_FILE_SUFFIX         = ".log"
+OBJECT_STORAGE_CHANNEL_COUNT       = 4
+OBJECT_STORAGE_MAX_CHANNEL_COUNT   = 10
+OBJECT_STORAGE_IS_EXPORT_ENABLED   = True  # bool
 
 #################################
 # 로그 설정
