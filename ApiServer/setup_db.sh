@@ -4,6 +4,7 @@
 # 실제 환경에 맞게 수정 가능
 MYSQL_USER="${MYSQL_USER:-admin}"
 MYSQL_PASS="${MYSQL_PASS:-admin1234}"
+source /home/ubuntu/.bashrc
 
 # MySQL 포트 체크 (선택사항)
 if ! timeout 3 bash -c "</dev/tcp/$MYSQL_HOST/3306" 2>/dev/null; then
