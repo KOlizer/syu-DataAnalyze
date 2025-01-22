@@ -2,7 +2,6 @@
 
 # 환경변수 설정(필요한 경우)
 # 실제 환경에 맞게 수정 가능
-MYSQL_HOST="${MYSQL_HOST:-az-a.mysql-lys.0aa67b93c3ec48e587a51c9f842ca407.mysql.managed-service.kr-central-2.kakaocloud.com}"
 MYSQL_USER="${MYSQL_USER:-admin}"
 MYSQL_PASS="${MYSQL_PASS:-admin123}"
 
