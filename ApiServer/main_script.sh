@@ -1,6 +1,5 @@
 #!/bin/bash
 
-export MYSQL_HOST="az-a.mysql-lys.0aa67b93c3ec48e587a51c9f842ca407.mysql.managed-service.kr-central-2.kakaocloud.com"
 echo "MYSQL_HOST set to: $MYSQL_HOST"
 
 
