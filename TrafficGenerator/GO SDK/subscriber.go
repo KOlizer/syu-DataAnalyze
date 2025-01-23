@@ -1,4 +1,4 @@
-// 파일: cmd/pubsub-subscriber/subscriber.go
+// subscriber.go
 package main
 
 import (
@@ -16,11 +16,11 @@ import (
 
 func main() {
     // 환경 설정
-    domainID := "fa22d0db818f48829cf8b7849e3a0a26"
-    projectID := "86099dec56044a43ac3f92a40784929b"
-    subscriptionName := "go-sdk-pull-sub-auto"
-    credentialID := "833ee541fdf64847bc0ed63ff37fc565"
-    credentialSecret := "a664a8068502c2e4ce55024a6cf28b6358f501ddca3812e4fa94c22ea58e65162b7269"
+    domainID := config.DomainID
+    projectID := config.ProjectID
+    subscriptionName := config.SubscriptionName
+    credentialID := config.CredentialID
+    credentialSecret := config.CredentialSecret
 
     // 클라이언트 초기화
     ctx, cancel := context.WithCancel(context.Background())
