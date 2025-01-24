@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MYSQL_HOST="az-a.api-db-sh.0aa67b93c3ec48e587a51c9f842ca407.mysql.managed-service.kr-central-2.kakaocloud.com"
+MYSQL_HOST="{DB 엔드포인트}"
 DOMAIN_ID="{조직 ID}"
 PROJECT_ID="{프로젝트 ID}"
 TOPIC_NAME="{Topic 이름}"
