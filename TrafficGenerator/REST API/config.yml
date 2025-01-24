@@ -3,14 +3,14 @@
 # Pub/Sub 설정
 pubsub:
   endpoint: "https://pub-sub.kr-central-2.kakaocloud.com"
-  domain_id: "프로젝트가 속한 조직 ID"
-  project_id: "카카오클라우드의 프로젝트 ID"
-  topic_name: "pulish 진행할 토픽 이름"
-  topic_name_mk: "생성할 토픽 이름"
+  domain_id: "{프로젝트가 속한 조직 ID}"
+  project_id: "{카카오클라우드의 프로젝트 ID}"
+  topic_name: "{pulish 진행할 토픽 이름}"
+  topic_name_mk: "{생성할 토픽 이름}"
   topic_description: ""
   topic_retention_duration: "600s"
-  credential_id: "액세스 키 ID"
-  credential_secret: "보안 액세스 키"
+  credential_id: "{액세스 키 ID}"
+  credential_secret: "{보안 액세스 키}"
 
 # 구독 설정
 subscription:
@@ -18,8 +18,8 @@ subscription:
 
 # Object Storage 서브스크립션 설정
 object_storage_subscription:
-  name: "obj_sub로 만들 서브스크립션 이름"
-  bucket: "Object Storage 버킷 이름"
+  name: "{obj_sub로 만들 서브스크립션 이름}"
+  bucket: "{Object Storage 버킷 이름}"
   export_interval_min: 10
   file_prefix: ""
   file_suffix: ".log"
@@ -40,7 +40,7 @@ threads:
 
 # API 서버 정보
 api:
-  base_url: "실제 로드밸런서/API 서버 IP/도메인"
+  base_url: "{실제 로드밸런서/API 서버 IP/도메인}"
   endpoints:
     add_user: "add_user"
     delete_user: "delete_user"
