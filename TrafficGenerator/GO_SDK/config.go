@@ -1,4 +1,3 @@
-ubuntu@host-10-0-3-24:~/gosdk/cmd$ cat config.go
 package main
 
 import (
@@ -9,12 +8,14 @@ import (
 
 // Config 구조체는 설정 변수를 포함합니다.
 type Config struct {
-    DomainID         string `yaml:"domain_id"`
-    ProjectID        string `yaml:"project_id"`
+    Pubsub struct {
+        DomainID         string `yaml:"domain_id"`
+        ProjectID        string `yaml:"project_id"`
+        TopicName        string `yaml:"topic_name"`
+        CredentialID     string `yaml:"credential_id"`
+        CredentialSecret string `yaml:"credential_secret"`
+    } `yaml:"pubsub"`
     SubscriptionName string `yaml:"subscription_name"`
-    TopicName        string `yaml:"topic_name"`
-    CredentialID     string `yaml:"credential_id"`
-    CredentialSecret string `yaml:"credential_secret"`
 }
 
 // 전역 설정 변수
@@ -31,4 +32,11 @@ func init() {
     if err != nil {
         log.Fatalf("Error unmarshalling config.yml: %v", err)
     }
+
+    // 읽어온 설정 값 출력 (디버깅용)
+    log.Printf("DomainID: %s", config.Pubsub.DomainID)
+    log.Printf("ProjectID: %s", config.Pubsub.ProjectID)
+    log.Printf("TopicName: %s", config.Pubsub.TopicName)
+    log.Printf("CredentialID: %s", config.Pubsub.CredentialID)
+    log.Printf("CredentialSecret: %s", config.Pubsub.CredentialSecret)
 }
