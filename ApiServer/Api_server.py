@@ -103,9 +103,7 @@ def create_session_id():
             conn.close()
     return session_id
     
-#################################
-메시지 저장 Endpoint
-#################################
+
 messages_storage = []
 
 @app.route('/push-subscription', methods=['POST'])
@@ -133,10 +131,6 @@ def push_subscription():
         print(f"Error while processing push message: {e}")
         return f"An error occurred: {e}", 500
 
-
-#################################
-메시지 조회 Endpoint
-#################################
 
 
 @app.route('/push-messages', methods=['GET'])
