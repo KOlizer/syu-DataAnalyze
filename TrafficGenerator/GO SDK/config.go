@@ -2,10 +2,10 @@
 package main
 
 import (
-    "fmt"
     "io/ioutil"
     "log"
     "os"
+    "path/filepath"
 
     "gopkg.in/yaml.v2"
 )
@@ -38,7 +38,7 @@ type SubscriptionConfig struct {
     Name string `yaml:"name"`
 }
 
-// ConfigFile 구조체는 config.yaml 파일의 전체 구조를 나타냅니다.
+// ConfigFile 구조체는 config.yml 파일의 전체 구조를 나타냅니다.
 type ConfigFile struct {
     Pubsub                 PubsubConfig        `yaml:"pubsub"`
     Subscription           SubscriptionConfig  `yaml:"subscription"`
@@ -78,23 +78,29 @@ type ConfigFile struct {
 var config Config
 
 func init() {
-    // YAML 파일 경로 지정 (필요에 따라 변경 가능)
-    configPath := "config.yaml"
-
-    // YAML 파일 읽기
-    data, err := ioutil.ReadFile(configPath)
+    // 홈 디렉토리 경로 가져오기
+    homeDir, err := os.UserHomeDir()
     if err != nil {
-        log.Fatalf("설정 파일 읽기 실패: %v", err)
+        log.Fatalf("홈 디렉토리 가져오기 실패: %v", err)
     }
 
-    // ConfigFile 구조체에 파싱
+    // config.yml 파일 경로 설정
+    configPath := filepath.Join(homeDir, "config.yml")
+
+    // config.yml 파일 읽기
+    data, err := ioutil.ReadFile(configPath)
+    if err != nil {
+        log.Fatalf("config.yml 파일 읽기 실패: %v", err)
+    }
+
+    // YAML 파싱
     var cfgFile ConfigFile
     err = yaml.Unmarshal(data, &cfgFile)
     if err != nil {
-        log.Fatalf("설정 파일 파싱 실패: %v", err)
+        log.Fatalf("config.yml 파일 파싱 실패: %v", err)
     }
 
-    // 민감한 정보는 환경 변수에서 로드 (보안 강화)
+    // 환경 변수에서 민감한 정보 로드 (보안 강화)
     credentialID := os.Getenv("CREDENTIAL_ID")
     if credentialID == "" {
         credentialID = cfgFile.Pubsub.CredentialID
@@ -105,7 +111,7 @@ func init() {
         credentialSecret = cfgFile.Pubsub.CredentialSecret
     }
 
-    // 필요한 필드만 Config에 할당
+    // 필요한 설정 변수만 Config 구조체에 할당
     config = Config{
         DomainID:         cfgFile.Pubsub.DomainID,
         ProjectID:        cfgFile.Pubsub.ProjectID,
@@ -116,5 +122,5 @@ func init() {
     }
 
     // 디버깅: 설정 로드 확인 (필요 시 주석 해제)
-    // fmt.Printf("Config loaded: %+v\n", config)
+    // log.Printf("Config loaded: %+v", config)
 }
