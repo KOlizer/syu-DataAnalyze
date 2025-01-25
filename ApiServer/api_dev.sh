@@ -352,9 +352,11 @@ echo "kakaocloud: 스크립트 실행 (sudo -E)"
 
 
 
-sudo -E ./setup_db.sh
 
 sudo -E ./main_script.sh
+
+sudo -E ./setup_db.sh
+
 
 
 
