@@ -5,7 +5,7 @@ pubsub:
   endpoint: "https://pub-sub.kr-central-2.kakaocloud.com"
   domain_id: "{프로젝트가 속한 조직 ID}"
   project_id: "{카카오클라우드의 프로젝트 ID}"
-  topic_name: "{pulish 진행할 토픽 이름}"
+  topic_name: "{콘솔에서 생성한 토픽 이름}"
   topic_name_mk: "{생성할 토픽 이름}"
   topic_description: ""
   topic_retention_duration: "600s"
