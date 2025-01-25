@@ -9,6 +9,7 @@ pubsub:
   topic_name_mk: "{생성할 토픽 이름}"
   topic_description: ""
   topic_retention_duration: "600s"
+  sub_name: "{서브 스크립션 이름}"
   credential_id: "{액세스 키 ID}"
   credential_secret: "{보안 액세스 키}"
 
