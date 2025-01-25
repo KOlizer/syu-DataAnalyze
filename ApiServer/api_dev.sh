@@ -298,27 +298,16 @@ fi
 
 echo "kakaocloud: main_script.sh, setup_db.sh 다운로드 링크 확인..."
 
-curl --output /dev/null --silent --head --fail \
+curl --output /dev/null --silent --head --fail "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/heads/main/ApiServer/main_script.sh" || {
+  echo "main_script.sh 다운로드 링크가 유효하지 않습니다."
+  exit 1
+}
 
-  "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/heads/main/ApiServer/main_script.sh" || {
+curl --output /dev/null --silent --head --fail "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/heads/main/ApiServer/setup_db.sh" || {
+  echo "setup_db.sh 다운로드 링크가 유효하지 않습니다."
+  exit 1
+}
 
-    echo "main_script.sh 다운로드 링크가 유효하지 않습니다."
-
-    exit 1
-
-  }
-
-
-
-curl --output /dev/null --silent --head --fail \
-
-  "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/heads/main/ApiServer/setup_db.sh" || {
-
-    echo "setup_db.sh 다운로드 링크가 유효하지 않습니다."
-
-    exit 1
-
-  }
 
 
 
