@@ -14,6 +14,7 @@ type Config struct {
         TopicName        string `yaml:"topic_name"`
         CredentialID     string `yaml:"credential_id"`
         CredentialSecret string `yaml:"credential_secret"`
+        SubscriptionName string `yaml:"sub_name"` 
     } `yaml:"pubsub"`
     SubscriptionName string `yaml:"subscription_name"`
 }
@@ -39,4 +40,5 @@ func init() {
     log.Printf("TopicName: %s", config.Pubsub.TopicName)
     log.Printf("CredentialID: %s", config.Pubsub.CredentialID)
     log.Printf("CredentialSecret: %s", config.Pubsub.CredentialSecret)
+    log.Printf("SubscriptionName: %s", config.Pubsub.SubscriptionName)
 }
