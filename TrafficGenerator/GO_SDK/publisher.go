@@ -1,4 +1,3 @@
-// publisher.go
 package main
 
 import (
@@ -16,20 +15,24 @@ import (
 
 func main() {
     // 환경 설정
-    domainID := config.DomainID
-    projectID := config.ProjectID
-    topicName := config.TopicName
-    credentialID := config.CredentialID
-    credentialSecret := config.CredentialSecret
+    domainID := config.Pubsub.DomainID       // config.Pubsub.DomainID로 변경
+    projectID := config.Pubsub.ProjectID     // config.Pubsub.ProjectID로 변경
+    topicName := config.Pubsub.TopicName     // config.Pubsub.TopicName으로 변경
+    credentialID := config.Pubsub.CredentialID // config.Pubsub.CredentialID로 변경
+    credentialSecret := config.Pubsub.CredentialSecret // config.Pubsub.CredentialSecret으로 변경
 
-    // 클라이언트 초기화
-    ctx := context.Background()
+    // 액세스 키 생성 (확인용 로그 추가)
+    log.Printf("Using CredentialID: %s, CredentialSecret: %s", credentialID, credentialSecret)
+
     accessKey := pubsub.AccessKey{
         CredentialID:     credentialID,
         CredentialSecret: credentialSecret,
     }
+
+    // 클라이언트 초기화
+    ctx := context.Background()
     opts := []option.ClientOption{
-        option.WithAccessKey(accessKey),
+        option.WithAccessKey(accessKey), // 액세스 키를 옵션에 추가
     }
     client, err := pubsub.NewClient(ctx, domainID, projectID, opts...)
     if err != nil {
