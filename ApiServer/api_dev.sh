@@ -313,15 +313,11 @@ curl --output /dev/null --silent --head --fail "https://github.com/KOlizer/syu-D
 
 echo "kakaocloud: 다운로드 실행"
 
-wget -O main_script.sh \
-
-  "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/heads/main/ApiServer/main_script.sh"
+wget -O main_script.sh "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/heads/main/ApiServer/main_script.sh"
 
 
 
-wget -O setup_db.sh \
-
-  "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/heads/main/ApiServer/setup_db.sh"
+wget -O setup_db.sh "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/heads/main/ApiServer/setup_db.sh"
 
 
 
