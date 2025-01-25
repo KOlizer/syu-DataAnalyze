@@ -1,4 +1,3 @@
-// subscriber.go
 package main
 
 import (
@@ -16,11 +15,11 @@ import (
 
 func main() {
     // 환경 설정
-    domainID := config.DomainID
-    projectID := config.ProjectID
-    subscriptionName := config.SubscriptionName
-    credentialID := config.CredentialID
-    credentialSecret := config.CredentialSecret
+    domainID := config.Pubsub.DomainID        // config.Pubsub.DomainID로 변경
+    projectID := config.Pubsub.ProjectID      // config.Pubsub.ProjectID로 변경
+    subscriptionName := config.Pubsub.SubscriptionName // config.Pubsub.SubscriptionName으로 변경
+    credentialID := config.Pubsub.CredentialID // config.Pubsub.CredentialID로 변경
+    credentialSecret := config.Pubsub.CredentialSecret // config.Pubsub.CredentialSecret으로 변경
 
     // 클라이언트 초기화
     ctx, cancel := context.WithCancel(context.Background())
