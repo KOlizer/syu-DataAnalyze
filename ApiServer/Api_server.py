@@ -65,6 +65,9 @@ def get_or_create_session_id():
     session_id = request.cookies.get('session_id')
     if not session_id:
         session_id = str(uuid.uuid4())
+        conn = None
+        cursor = None
+
         # 세션을 DB에 저장
         try:
             conn = get_db_connection()
