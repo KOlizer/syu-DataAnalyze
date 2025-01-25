@@ -35,7 +35,7 @@ run_command apt install -y python3-flask
 
 # 3. Flask 애플리케이션 설정
 APP_DIR="/var/www/flask_app"
-API_SERVER_RAW_URL="https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/main/ApiServer/Api_server.py"
+API_SERVER_RAW_URL="https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/refs/heads/main/ApiServer/%08Api_server.py"
 
 log "Setting up Flask application in $APP_DIR..."
 run_command mkdir -p "$APP_DIR"
