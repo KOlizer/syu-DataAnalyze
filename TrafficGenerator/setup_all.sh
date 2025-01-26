@@ -34,7 +34,7 @@ sudo rm -rf /usr/local/go
 echo "Go를 /usr/local 디렉토리에 설치합니다."
 sudo tar -C /usr/local -xzf "$GO_TAR_FILE"
 
-# 스크립트 실행 환경에 Go 바이너리 경로 추가
+# Go 설치 후 PATH를 즉시 업데이트
 export PATH=$PATH:/usr/local/go/bin
 echo "PATH를 업데이트했습니다: $PATH"
 
@@ -43,9 +43,23 @@ echo "Go 버전을 확인합니다."
 go version
 
 # PATH 설정을 .bashrc에 추가 (추가적으로 영구적으로 적용)
-if ! grep -q 'export PATH=$PATH:/usr/local/go/bin' ~/.bashrc; then
+if ! grep -q 'export PATH=\$PATH:/usr/local/go/bin' ~/.bashrc; then
     echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
     echo ".bashrc에 PATH를 추가했습니다."
+fi
+
+# 환경 변수 설정: GOPATH와 GOCACHE를 사용자 디렉토리로 설정
+export GOPATH="$HOME/go"
+export GOCACHE="$HOME/.cache/go-build"
+echo "GOPATH와 GOCACHE를 설정했습니다: GOPATH=$GOPATH, GOCACHE=$GOCACHE"
+
+# .bashrc에 GOPATH와 GOCACHE 추가 (영구적으로 적용)
+if ! grep -q 'export GOPATH=' ~/.bashrc; then
+    echo "export GOPATH=$GOPATH" >> ~/.bashrc
+fi
+
+if ! grep -q 'export GOCACHE=' ~/.bashrc; then
+    echo "export GOCACHE=$GOCACHE" >> ~/.bashrc
 fi
 
 # gosdk 디렉토리 생성 및 이동
