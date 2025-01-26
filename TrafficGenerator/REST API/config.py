@@ -51,4 +51,12 @@ ACTIONS_PER_USER = config['threads']['actions_per_user']
 
 API_BASE_URL = config['api']['base_url']
 
-# 추가 설정이 필요하면 여기에 작성
+# 추가 설정 변수
+AGE_THRESHOLD_YOUNG = config['age_threshold']['young']
+AGE_THRESHOLD_MIDDLE = config['age_threshold']['middle']
+
+# API 엔드포인트 키를 대문자로 변환
+API_ENDPOINTS = {k.upper(): v for k, v in config['api']['endpoints'].items()}
+
+# 요청 간 대기 시간 범위 (초)
+TIME_SLEEP_RANGE = (config['api']['time_sleep_range']['min'], config['api']['time_sleep_range']['max'])
