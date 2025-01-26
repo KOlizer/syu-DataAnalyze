@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-create_subscription.py
+CreateSubscription.py
 
 - Kakao Cloud Pub/Sub에 서브스크립션(Subscription)을 생성하는 스크립트
 - objectStorageConfig를 config.py에서 읽어와 설정
@@ -8,6 +8,18 @@ create_subscription.py
 
 import requests
 import json
+import sys
+import os
+
+# 현재 스크립트의 디렉토리 경로 가져오기
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# 상위 디렉토리 경로 가져오기 (REST API의 상위 디렉토리는 TrafficGenerator)
+parent_dir = os.path.dirname(current_dir)
+
+# 상위 디렉토리를 Python 경로에 추가하여 config.py를 임포트 가능하게 함
+sys.path.append(parent_dir)
+
 import config
 
 def create_subscription():
@@ -25,21 +37,20 @@ def create_subscription():
         "subscription": {
             "topic": config.TOPIC_NAME_MK,
             "ackDeadlineSeconds": 30,
-            "messageRetentionDuration": "600s",  # 7일 예시
+            "messageRetentionDuration": "600s",  # 10분 예시 (7일은 "604800s")
             "maxDeliveryAttempt": 1
         }
     }
 
     # (3) objectStorageConfig 설정
-    # 필요하다면 조건부로 삽입할 수도 있지만, 지금은 무조건 Object Storage 서브스크립션을 사용한다고 가정
     object_storage_config = {
         "bucket": config.OBJECT_STORAGE_BUCKET,
-        "exportIntervalMinutes": config.OBJECT_STORAGE_EXPORT_INTERVAL_MIN,
-        "filePrefix": config.OBJECT_STORAGE_FILE_PREFIX,
-        "fileSuffix": config.OBJECT_STORAGE_FILE_SUFFIX,
-        "channelCount": config.OBJECT_STORAGE_CHANNEL_COUNT,
-        "maxChannelCount": config.OBJECT_STORAGE_MAX_CHANNEL_COUNT,
-        "isExportEnabled": config.OBJECT_STORAGE_IS_EXPORT_ENABLED
+        "exportIntervalMinutes": config.EXPORT_INTERVAL_MIN,
+        "filePrefix": config.FILE_PREFIX,
+        "fileSuffix": config.FILE_SUFFIX,
+        "channelCount": config.CHANNEL_COUNT,
+        "maxChannelCount": config.MAX_CHANNEL_COUNT,
+        "isExportEnabled": config.IS_EXPORT_ENABLED
     }
     body["subscription"]["objectStorageConfig"] = object_storage_config
 
@@ -50,7 +61,7 @@ def create_subscription():
         "Content-Type": "application/json"
     }
 
-    # (5) POST/PUT 요청 (문서에 맞춰 수정)
+    # (5) PUT 요청 (문서에 맞춰 수정)
     resp = requests.put(url, headers=headers, json=body, timeout=10)
 
     # (6) 응답 검사
