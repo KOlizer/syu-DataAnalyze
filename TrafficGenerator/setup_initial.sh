@@ -1,17 +1,17 @@
 #!/bin/bash
 
 # setup_initial.sh
-# 이 스크립트는 환경 변수를 설정하고 config.yml을 생성한 후, GitHub 저장소를 클론하여 setup_all.sh를 실행합니다.
+# 이 스크립트는 환경 변수를 설정하고 GitHub 저장소를 클론한 후, config.yml을 생성하고 setup_all.sh를 실행합니다.
 
 # 스크립트 실행 중 에러 발생 시 즉시 종료
 set -e
 
 # ----------------------------------------
-# 1. 환경 변수 설정 및 config.yml 생성
+# 1. 환경 변수 설정
 # ----------------------------------------
 
 echo "========================================"
-echo "1. 환경 변수 설정 및 config.yml 생성 시작"
+echo "1. 환경 변수 설정 시작"
 echo "========================================"
 
 # 환경 변수 정의 (필요한 변수만 포함)
@@ -75,11 +75,52 @@ EOL
 
 echo ".bashrc에 환경 변수 추가 완료."
 
-# config.yml 생성
-echo "config.yml을 생성 중..."
+# ----------------------------------------
+# 2. GitHub 저장소 클론 및 setup_all.sh 실행
+# ----------------------------------------
+
+echo "========================================"
+echo "2. GitHub 저장소 클론"
+echo "========================================"
+
+# GitHub 저장소 정보
+REPO_URL="https://github.com/KOlizer/syu-DataAnalyze.git"
+CLONE_DIR="$HOME/syu-DataAnalyze"
+
+# 저장소가 Git 저장소인지 확인하는 함수
+is_git_repo() {
+    [ -d "$1/.git" ]
+}
+
+# 저장소 클론 또는 업데이트
+if is_git_repo "$CLONE_DIR"; then
+    echo "저장소가 이미 클론되어 있습니다: $CLONE_DIR"
+    echo "저장소를 최신 상태로 업데이트합니다."
+    cd "$CLONE_DIR"
+    git pull origin main
+elif [ -d "$CLONE_DIR" ]; then
+    echo "디렉토리가 존재하지만 Git 저장소가 아닙니다: $CLONE_DIR"
+    echo "디렉토리를 삭제하고 저장소를 다시 클론합니다."
+    rm -rf "$CLONE_DIR"
+    echo "저장소를 클론합니다: $REPO_URL"
+    git clone "$REPO_URL" "$CLONE_DIR"
+else
+    echo "저장소를 클론합니다: $REPO_URL"
+    git clone "$REPO_URL" "$CLONE_DIR"
+fi
+
+# ----------------------------------------
+# 3. config.yml 생성
+# ----------------------------------------
+
+echo "========================================"
+echo "3. config.yml 생성"
+echo "========================================"
+
 CONFIG_DIR="$HOME/syu-DataAnalyze/TrafficGenerator"
 mkdir -p "$CONFIG_DIR"
 
+# config.yml 생성
 cat <<EOF > "$CONFIG_DIR/config.yml"
 # 공용 설정 파일: config.yaml
 
@@ -155,40 +196,13 @@ EOF
 echo "config.yml 생성 완료."
 
 # ----------------------------------------
-# 2. GitHub 저장소 클론 및 setup_all.sh 실행
+# 4. setup_all.sh 실행
 # ----------------------------------------
 
 echo "========================================"
-echo "2. GitHub 저장소 클론 및 setup_all.sh 실행"
+echo "4. setup_all.sh 실행"
 echo "========================================"
 
-# GitHub 저장소 정보
-REPO_URL="https://github.com/KOlizer/syu-DataAnalyze.git"
-CLONE_DIR="$HOME/syu-DataAnalyze"
-
-# 저장소가 Git 저장소인지 확인하는 함수
-is_git_repo() {
-    [ -d "$1/.git" ]
-}
-
-# 저장소 클론 또는 업데이트
-if is_git_repo "$CLONE_DIR"; then
-    echo "저장소가 이미 클론되어 있습니다: $CLONE_DIR"
-    echo "저장소를 최신 상태로 업데이트합니다."
-    cd "$CLONE_DIR"
-    git pull origin main
-elif [ -d "$CLONE_DIR" ]; then
-    echo "디렉토리가 존재하지만 Git 저장소가 아닙니다: $CLONE_DIR"
-    echo "디렉토리를 삭제하고 저장소를 다시 클론합니다."
-    rm -rf "$CLONE_DIR"
-    echo "저장소를 클론합니다: $REPO_URL"
-    git clone "$REPO_URL" "$CLONE_DIR"
-else
-    echo "저장소를 클론합니다: $REPO_URL"
-    git clone "$REPO_URL" "$CLONE_DIR"
-fi
-
-# setup_all.sh 실행
 SETUP_ALL_SCRIPT="$CLONE_DIR/TrafficGenerator/setup_all.sh"
 
 if [ -f "$SETUP_ALL_SCRIPT" ]; then
@@ -199,6 +213,10 @@ else
     echo "setup_all.sh 스크립트를 찾을 수 없습니다: $SETUP_ALL_SCRIPT"
     exit 1
 fi
+
+# ----------------------------------------
+# 5. 완료 메시지
+# ----------------------------------------
 
 echo "========================================"
 echo "자동화 스크립트 실행이 완료되었습니다."
