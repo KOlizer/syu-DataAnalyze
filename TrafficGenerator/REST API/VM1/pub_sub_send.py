@@ -10,10 +10,22 @@ Usage:
   (프로그램 실행 후 원하는 값을 입력, Ctrl+D 또는 빈 줄 입력 혹은 "quit"을 입력 시 종료)
 """
 
+import os          # 추가된 부분
+import sys         # 추가된 부분
 import base64
 import json
 import requests
-import config  # config.py를 불러옵니다.
+
+# 현재 스크립트의 디렉토리 경로 가져오기
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# 상위 디렉토리 경로 가져오기 (REST API의 상위 디렉토리는 TrafficGenerator)
+parent_dir = os.path.dirname(current_dir)
+
+# 상위 디렉토리를 Python 경로에 추가하여 config.py를 임포트 가능하게 함
+sys.path.append(parent_dir)
+
+import config
 
 def main():
     print("CLI 입력 -> Kakao Pub/Sub 전송 프로그램입니다.")
