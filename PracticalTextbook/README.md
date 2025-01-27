@@ -11,9 +11,7 @@
 ## Data Catalog 생성
 ## Kafaka 생성
 ## Hadoop
-
 (※ 별도의 가이드 혹은 기존 실습 환경에 맞추어 진행)
-
 ## ObjectStorage 생성
  - LBAccess용 버킷
 ## API 서버 생성 (2대)
