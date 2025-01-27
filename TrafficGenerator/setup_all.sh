@@ -113,6 +113,10 @@ echo "gosdk 및 cmd 디렉토리의 소유권을 ubuntu로 변경합니다."
 sudo chown -R ubuntu:ubuntu "$GOSDK_DIR"
 sudo chown -R ubuntu:ubuntu "$CMD_DIR"
 
+# Go 모듈 캐시와 빌드 캐시도 소유권 변경
+sudo chown -R ubuntu:ubuntu /home/ubuntu/go
+sudo chown -R ubuntu:ubuntu /home/ubuntu/.cache/go-build
+
 echo "Go SDK 설정 완료."
 
 # ----------------------------------------
