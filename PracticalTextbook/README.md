@@ -51,6 +51,7 @@
 ## Test용 topic
 ## Teet용 토픽의 Pull Subscription
 ## Teet용 토픽의 Push Subscription
+- 엔드포인트 url 때문에 무조건 퍼블릭 생성 이후 진행
 
 ## TG 서버 생성 (2대)
 
