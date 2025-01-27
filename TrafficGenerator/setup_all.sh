@@ -38,6 +38,7 @@ sudo tar -C /usr/local -xzf "$GO_TAR_FILE"
 export PATH=$PATH:/usr/local/go/bin
 echo "PATH를 업데이트했습니다: $PATH"
 
+
 # Go 설치 확인
 echo "Go 버전을 확인합니다."
 go version
@@ -107,6 +108,10 @@ echo "Go 파일 다운로드 완료."
 echo "Go 패키지 (gopkg.in/yaml.v2)를 설치하고 의존성을 정리합니다."
 go get gopkg.in/yaml.v2
 go mod tidy
+
+echo "gosdk 및 cmd 디렉토리의 소유권을 ubuntu로 변경합니다."
+sudo chown -R ubuntu:ubuntu "$GOSDK_DIR"
+sudo chown -R ubuntu:ubuntu "$CMD_DIR"
 
 echo "Go SDK 설정 완료."
 
