@@ -3,8 +3,20 @@
 > **주의**  
 > 본 문서는 계속 수정될 수 있습니다. 실습 환경 및 요구 사항에 따라 적절히 수정하여 사용해주세요.
 ---
+# 콘솔에서 만들어야할 자원
+필요한 인프라 생성(TrafficGenerator, APIServer, ALB...)
 
-## API 서버 생성
+## Pub/Sub 생성
+## MySQL 생성
+## Data Catalog 생성
+## Kafaka 생성
+## Hadoop
+
+(※ 별도의 가이드 혹은 기존 실습 환경에 맞추어 진행)
+
+## ObjectStorage 생성
+ - LBAccess용 버킷
+## API 서버 생성 (2대)
 
 - **이름**: `Api-Server`
 - **이미지**: `Ubuntu 22.04`
@@ -17,7 +29,6 @@
 - **보안 그룹(SG) 생성**  
   - 필요 포트 규칙 설정 (예: 22, 80 등)
 
----
 
 ## 로드 밸런서(ALB) 생성
 
@@ -39,9 +50,12 @@
       - **생성**
   - 새로고침 후, 생성된 대상 그룹 선택 → **추가**
 
----
 
-## TG 서버 생성
+## Test용 topic
+## Teet용 토픽의 Pull Subscription
+## Teet용 토픽의 Push Subscription
+
+## TG 서버 생성 (2대)
 
 - **이름**: `Traffic_Generator`
 - **이미지**: `Ubuntu 22.04`
@@ -52,25 +66,3 @@
   - 예: `22, 80, ALL` 등 필요한 포트 및 프로토콜 규칙 설정
 
 ---
-
-## MySQL 생성
-
-(※ 별도의 가이드 혹은 기존 실습 환경에 맞추어 진행)
-
----
-
-## 토픽(Pub/Sub) 생성
-
-(※ Kakao Cloud Pub/Sub 사용 시, 콘솔에서 직접 생성하거나 API를 통해 생성 가능)
-
----
-
-# API 서버 설정
-
-     cd /etc/logstash/conf.d
-     sudo vi logs-to-pubsub.conf
-     ```
-2. **Logstash 재시작**
-   ```bash
-   sudo systemctl daemon-reload
-   sudo systemctl restart logstash
