@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-"""
-traffic_generator.py
-
-- 다양한 사용자 시뮬레이션을 통해 API 서버의 트래픽을 생성
-- config.py와 traffic_config.py에서 설정을 읽어옴
-"""
 import os
 import sys
 import requests
@@ -43,7 +36,7 @@ logging.basicConfig(
 
 # 로깅으로 config 값 확인
 logging.info(f"Config loaded: LOG_FILENAME={config.LOG_FILENAME}, LOG_LEVEL={config.LOG_LEVEL}")
-logging.info(f"API Base URL: {config.API_BASE_URL}")
+logging.info(f"API_URL_WITH_HTTP: {config.API_URL_WITH_HTTP}")
 logging.info(f"Number of Users: {config.NUM_USERS}")
 
 #################################
@@ -64,7 +57,7 @@ def fetch_products(api_base_url: str):
     global products_cache
     headers = {"Accept": "application/json"}
     try:
-        url = "http://" + api_base_url + config.API_ENDPOINTS["PRODUCTS"]
+        url = config.API_URL_WITH_HTTP + config.API_ENDPOINTS["PRODUCTS"]
         resp = requests.get(url, headers=headers)
         if resp.status_code == 200:
             data = resp.json()
@@ -84,7 +77,7 @@ def fetch_categories(api_base_url: str):
     global categories_cache
     headers = {"Accept": "application/json"}
     try:
-        url = "http://" + api_base_url + config.API_ENDPOINTS["CATEGORIES"]
+        url = config.API_URL_WITH_HTTP + config.API_ENDPOINTS["CATEGORIES"]
         resp = requests.get(url, headers=headers)
         if resp.status_code == 200:
             data = resp.json()
@@ -513,8 +506,8 @@ def user_thread(idx: int):
 
 def main():
     # 초기 데이터
-    fetch_products(config.API_BASE_URL)
-    fetch_categories(config.API_BASE_URL)
+    fetch_products(config.API_URL_WITH_HTTP)
+    fetch_categories(config.API_URL_WITH_HTTP)
 
     threads = []
     for i in range(config.NUM_USERS):
