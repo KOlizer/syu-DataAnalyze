@@ -13,10 +13,12 @@ CREDENTIAL_ID="{액세스 키 ID}"
 CREDENTIAL_SECRET="{보안 액세스 키}"
 LOGSTASH_ENV_FILE="/etc/default/logstash"
 LOGSTASH_KAFKA_ENDPOINT="{카프카 엔드포인트}"
+MYSQL_USER="admin"
+MYSQL_PASS="admin1234"
 
 # (원격 RAW 파일 주소)
 FILEBEAT_YML_URL="https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/main/ApiServer/filebeat.yml"
-LOGSTASH_CONF_URL="https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/main/ApiServer/logs-to-pubsub-kafka.conf"
+LOGSTASH_CONF_URL="https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/main/ApiServer/logs-to-pubsub.conf"
 
 # -----------------------
 # 1) ~/.bashrc에 환경 변수 설정
@@ -31,6 +33,8 @@ export TOPIC_NAME_PUBSUB="$TOPIC_NAME_PUBSUB"
 export TOPIC_NAME_KAFKA="$TOPIC_NAME_KAFKA"
 export CREDENTIAL_ID="$CREDENTIAL_ID"
 export CREDENTIAL_SECRET="$CREDENTIAL_SECRET"
+export MYSQL_USER="$MYSQL_USER"
+export MYYSQL_PASS="$MYSQL_PASS"
 EOF
 )
 
@@ -51,6 +55,8 @@ echo "kakaocloud: ~/.bashrc에 환경 변수를 추가 완료."
 echo "kakaocloud: Python 설치"
 sudo apt-get update
 sudo apt-get install -y python3 python3-pip
+sudo apt install -y python3 python3-pip gunicorn nginx python3-mysql.connector mysql-client
+sudo apt install -y python3-flask
 python3 --version
 pip3 --version
 
@@ -82,7 +88,12 @@ DOMAIN_ID=\"$DOMAIN_ID\"
 PROJECT_ID=\"$PROJECT_ID\"
 TOPIC_NAME_PUBSUB=\"$TOPIC_NAME_PUBSUB\"
 TOPIC_NAME_KAFKA=\"$TOPIC_NAME_KAFKA\"
-export CREDENTIAL_ID CREDENTIAL_SECRET DOMAIN_ID PROJECT_ID TOPIC_NAME_PUBSUB TOPIC_NAME_KAFKA
+MYSQL_HOST=\"$MYSQL_HOST\"
+DOMAIN_ID=\"$DOMAIN_ID\"
+PROJECT_ID=\"$PROJECT_ID\"
+MYSQL_USER=\"$MYSQL_USER\"
+MYYSQL_PASS=\"$MYSQL_PASS\"
+export CREDENTIAL_ID CREDENTIAL_SECRET DOMAIN_ID PROJECT_ID TOPIC_NAME_PUBSUB TOPIC_NAME_KAFKA MYSQL_HOST DOMAIN_ID PROJECT_ID MYSQL_USER MYYSQL_PASS
 EOF"
 
 sudo systemctl daemon-reload
@@ -109,34 +120,6 @@ echo "kakaocloud: Logstash 재시작"
 sudo systemctl daemon-reload
 sudo systemctl restart logstash
 
-# -----------------------
-# 5) (선택) flask_app.service 환경 변수 override
-# -----------------------
-SERVICE_FILE="/etc/systemd/system/flask_app.service"
-OVERRIDE_DIR="/etc/systemd/system/flask_app.service.d"
-OVERRIDE_FILE="$OVERRIDE_DIR/env.conf"
-
-if [ -f "$SERVICE_FILE" ]; then
-  echo "kakaocloud: flask_app.service override 설정을 진행합니다."
-  sudo mkdir -p "$OVERRIDE_DIR"
-  sudo bash -c "cat <<EOF > $OVERRIDE_FILE
-  
-[Service]
-Environment=\"MYSQL_HOST=$MYSQL_HOST\"
-Environment=\"DOMAIN_ID=$DOMAIN_ID\"
-Environment=\"PROJECT_ID=$PROJECT_ID\"
-Environment=\"TOPIC_NAME_PUBSUB=$TOPIC_NAME_PUBSUB\"
-Environment=\"TOPIC_NAME_KAFKA=$TOPIC_NAME_KAFKA\"
-Environment=\"CREDENTIAL_ID=$CREDENTIAL_ID\"
-Environment=\"CREDENTIAL_SECRET=$CREDENTIAL_SECRET\"
-EOF"
-  sudo systemctl daemon-reload
-  sudo systemctl restart flask_app
-  echo "kakaocloud: flask_app.service 재시작 완료."
-else
-  echo "kakaocloud: flask_app.service가 없어 override를 생략합니다."
-fi
-
 
 # -----------------------
 # 6) 스크립트들 다운로드 
@@ -156,13 +139,5 @@ wget -O main_script.sh "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/head
 wget -O setup_db.sh "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/heads/main/ApiServer/setup_db.sh"
 chmod +x main_script.sh
 chmod +x setup_db.sh
-
-# -----------------------
-# 7) 스크립트 실행
-# -----------------------
-
-echo "kakaocloud: 스크립트 실행 (sudo -E)"
-sudo -E ./main_script.sh
-sudo -E ./setup_db.sh
 
 echo "kakaocloud: 모든 작업 완료."
