@@ -62,29 +62,39 @@ pip3 --version
 # 1-2) Flask 앱 서비스(flask_app.service)에도 같은 변수를 써야 한다면
 ##########################################################################
 SERVICE_FILE="/etc/systemd/system/flask_app.service"
-OVERRIDE_DIR="/etc/systemd/system/flask_app.service.d"
-OVERRIDE_FILE="$OVERRIDE_DIR/env.conf"
+# 서비스 파일 내용 작성
+sudo bash -c "cat > $SERVICE_FILE <<EOF
+[Unit]
+Description=Gunicorn instance to serve Flask app
+After=network.target
 
-# Flask 앱 서비스가 이미 존재한다고 가정
-if [ -f "$SERVICE_FILE" ]; then
-  echo "kakaocloud: flask_app.service override 설정을 진행합니다."
-  sudo mkdir -p "$OVERRIDE_DIR"
-  sudo bash -c "cat <<EOF > $OVERRIDE_FILE
 [Service]
-Environment=\"MYSQL_HOST=$MYSQL_HOST\"
-Environment=\"DOMAIN_ID=$DOMAIN_ID\"
-Environment=\"PROJECT_ID=$PROJECT_ID\"
-Environment=\"TOPIC_NAME_PUBSUB=$TOPIC_NAME_PUBSUB\"
-Environment=\"CREDENTIAL_ID=$CREDENTIAL_ID\"
-Environment=\"CREDENTIAL_SECRET=$CREDENTIAL_SECRET\"
+User=ubuntu
+Group=www-data
+WorkingDirectory=/var/www/flask_app
+Environment=\"MYSQL_HOST=${MYSQL_HOST}\"
+Environment=\"MYSQL_USER=${MYSQL_USER}\"
+Environment=\"MYSQL_PASS=${MYSQL_PASS}\"
+Environment=\"MYSQL_DB=${MYSQL_DB}\"
+Environment=\"DOMAIN_ID=${DOMAIN_ID}\"
+Environment=\"PROJECT_ID=${PROJECT_ID}\"
+Environment=\"TOPIC_NAME_PUBSUB=${TOPIC_NAME_PUBSUB}\"
+Environment=\"CREDENTIAL_ID=${CREDENTIAL_ID}\"
+Environment=\"CREDENTIAL_SECRET=${CREDENTIAL_SECRET}\"
+ExecStart=/usr/bin/gunicorn --workers 9 --threads 4 -b 127.0.0.1:8080 app:app
+
+[Install]
+WantedBy=multi-user.target
 EOF"
 
-  sudo systemctl daemon-reload
-  sudo systemctl restart flask_app
-  echo "kakaocloud: flask_app.service 재시작 완료."
-else
-  echo "kakaocloud: flask_app.service가 없어 override를 생략합니다."
-fi
+echo "FLASK 앱 환경변수 설정 완료!."
+
+# systemd 데몬 재로드 및 서비스 재시작
+sudo systemctl daemon-reload
+sudo systemctl restart flask_app
+sudo systemctl enable flask_app
+
+echo "flask_app.service has been reloaded and restarted successfully."
 
 # -----------------------
 # 2) Logstash, Filebeat 설치
