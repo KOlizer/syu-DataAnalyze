@@ -56,7 +56,36 @@ sudo apt install -y python3 python3-pip gunicorn nginx python3-mysql.connector m
 sudo apt install -y python3-flask
 python3 --version
 pip3 --version
+##########################################################################
+# 1-2) Flask 앱 서비스(flask_app.service)에도 같은 변수를 써야 한다면
+##########################################################################
+# main_script.sh에서 /etc/systemd/system/flask_app.service를 생성한다고 가정
+# 아래처럼 override 파일을 생성해 [Service] Environment="..." 추가
 
+SERVICE_FILE="/etc/systemd/system/flask_app.service"
+OVERRIDE_DIR="/etc/systemd/system/flask_app.service.d"
+OVERRIDE_FILE="$OVERRIDE_DIR/env.conf"
+
+# Flask 앱 서비스가 존재한다고 가정
+if [ -f "$SERVICE_FILE" ]; then
+  echo "kakaocloud: flask_app.service override 설정을 진행합니다."
+  sudo mkdir -p "$OVERRIDE_DIR"
+  sudo bash -c "cat <<EOF > $OVERRIDE_FILE
+[Service]
+Environment=\"MYSQL_HOST=$MYSQL_HOST\"
+Environment=\"DOMAIN_ID=$DOMAIN_ID\"
+Environment=\"PROJECT_ID=$PROJECT_ID\"
+Environment=\"TOPIC_NAME=$TOPIC_NAME\"
+Environment=\"CREDENTIAL_ID=$CREDENTIAL_ID\"
+Environment=\"CREDENTIAL_SECRET=$CREDENTIAL_SECRET\"
+EOF"
+
+  sudo systemctl daemon-reload
+  sudo systemctl restart flask_app
+  echo "kakaocloud: flask_app.service 재시작 완료."
+else
+  echo "kakaocloud: flask_app.service가 없어 override를 생략합니다."
+fi
 # -----------------------
 # 2) Logstash, Filebeat 설치
 # -----------------------
