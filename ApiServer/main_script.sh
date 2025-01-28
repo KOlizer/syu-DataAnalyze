@@ -49,29 +49,6 @@ WORKERS=$((CPU_CORES * 2 + 1))  # 공식: (코어 수 * 2) + 1
 THREADS=4                       # 스레드 기본값 (I/O 바운드 환경)
 log "Detected $CPU_CORES CPU cores: setting $WORKERS workers and $THREADS threads."
 
-# 5. Gunicorn 서비스 파일 생성
-log "Creating Gunicorn service..."
-
-LOG_FORMAT_NAME="custom_json"
-
-cat > /etc/systemd/system/flask_app.service <<EOL
-[Unit]
-Description=Gunicorn instance to serve Flask app
-After=network.target
-
-[Service]
-User=ubuntu
-Group=www-data
-WorkingDirectory=$APP_DIR
-ExecStart=/usr/bin/gunicorn --workers $WORKERS --threads $THREADS -b 127.0.0.1:8080 app:app
-
-[Install]
-WantedBy=multi-user.target
-EOL
-
-run_command systemctl daemon-reload
-run_command systemctl enable flask_app
-run_command systemctl start flask_app
 
 # Nginx 설정
 NGINX_CONF_MAIN="/etc/nginx/nginx.conf"
