@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, make_response
 import uuid
 import time
@@ -9,12 +10,11 @@ from flask import jsonify
 app = Flask(__name__)
 
 DB_CONFIG = {
-    'user': 'admin',
-    'password': 'admin1234',
-    'host': '${MYSQL_HOST}',
-    'database': 'shopdb',
-    'ssl_disabled': True
-    
+   'user': os.getenv("MYSQL_USER", "admin"),  # 기본값 admin
+   'password': os.getenv("MYSQL_PASS", "admin1234"),  # 기본값 admin1234
+   'host': os.getenv("MYSQL_HOST", "localhost"),  # 기본값 localhost
+   'database': os.getenv("MYSQL_DB", "shopdb"),   # 기본값 shopdb
+   'ssl_disabled': True
 }
 
 @app.before_request
