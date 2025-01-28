@@ -73,9 +73,6 @@ User=ubuntu
 Group=www-data
 WorkingDirectory=/var/www/flask_app
 Environment=\"MYSQL_HOST=${MYSQL_HOST}\"
-Environment=\"MYSQL_USER=${MYSQL_USER}\"
-Environment=\"MYSQL_PASS=${MYSQL_PASS}\"
-Environment=\"MYSQL_DB=${MYSQL_DB}\"
 Environment=\"DOMAIN_ID=${DOMAIN_ID}\"
 Environment=\"PROJECT_ID=${PROJECT_ID}\"
 Environment=\"TOPIC_NAME_PUBSUB=${TOPIC_NAME_PUBSUB}\"
