@@ -30,7 +30,7 @@ APP_DIR="/var/www/flask_app"
 API_SERVER_RAW_URL="https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/refs/heads/main/ApiServer/Api_server.py"
 
 log "Setting up Flask application in $APP_DIR..."
-run_command mkdir -p "$APP_DIR"
+run_command mkdir -p $APP_DIR
 
 # GitHub에서 app.py(= Api_server.py) 파일 다운로드
 log "Downloading Flask app (app.py) from GitHub..."
