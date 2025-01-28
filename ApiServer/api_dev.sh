@@ -16,11 +16,6 @@ CREDENTIAL_SECRET="{보안 액세스 키}"
 LOGSTASH_ENV_FILE="/etc/default/logstash"
 LOGSTASH_KAFKA_ENDPOINT="{카프카 엔드포인트}"
 
-# 스크립트 내에서 TOPIC_NAME이라는 변수가 필요한 경우(예: Gunicorn환경),
-# 따로 정의가 필요하다면 아래처럼 선언합니다.
-# 필요 없으면 삭제해도 됩니다.
-TOPIC_NAME="{특정 토픽 이름}"
-
 # (원격 RAW 파일 주소)
 FILEBEAT_YML_URL="https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/main/ApiServer/filebeat.yml"
 LOGSTASH_CONF_URL="https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/main/ApiServer/logs-to-pubsub.conf"
