@@ -24,14 +24,6 @@ run_command() {
     fi
 }
 
-# 1. 시스템 업데이트 및 필요한 패키지 설치
-log "Updating system and installing Python, Gunicorn, and Nginx..."
-run_command apt update
-run_command apt install -y python3 python3-pip gunicorn nginx python3-mysql.connector mysql-client
-
-# 2. Flask 설치
-log "Installing Flask..."
-run_command apt install -y python3-flask
 
 # 3. Flask 애플리케이션 설정
 APP_DIR="/var/www/flask_app"
