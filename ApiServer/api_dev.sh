@@ -1,6 +1,7 @@
 #!/bin/bash
 
-set -e  # 에러 발생 시 스크립트 중단
+set -e  # 에러 발생 시 스크립트 즉시 중단
+
 # -----------------------
 # 0) 사전 변수 설정
 # -----------------------
@@ -11,9 +12,14 @@ TOPIC_NAME_PUBSUB="{PUB/SUB Topic 이름}(로그 적재용, API로 생성할 이
 TOPIC_NAME_KAFKA="{Kafka Topic 이름}"
 CREDENTIAL_ID="{액세스 키 ID}"
 CREDENTIAL_SECRET="{보안 액세스 키}"
+
 LOGSTASH_ENV_FILE="/etc/default/logstash"
 LOGSTASH_KAFKA_ENDPOINT="{카프카 엔드포인트}"
 
+# 스크립트 내에서 TOPIC_NAME이라는 변수가 필요한 경우(예: Gunicorn환경),
+# 따로 정의가 필요하다면 아래처럼 선언합니다.
+# 필요 없으면 삭제해도 됩니다.
+TOPIC_NAME="{특정 토픽 이름}"
 
 # (원격 RAW 파일 주소)
 FILEBEAT_YML_URL="https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/main/ApiServer/filebeat.yml"
@@ -56,17 +62,15 @@ sudo apt install -y python3 python3-pip gunicorn nginx python3-mysql.connector m
 sudo apt install -y python3-flask
 python3 --version
 pip3 --version
+
 ##########################################################################
 # 1-2) Flask 앱 서비스(flask_app.service)에도 같은 변수를 써야 한다면
 ##########################################################################
-# main_script.sh에서 /etc/systemd/system/flask_app.service를 생성한다고 가정
-# 아래처럼 override 파일을 생성해 [Service] Environment="..." 추가
-
 SERVICE_FILE="/etc/systemd/system/flask_app.service"
 OVERRIDE_DIR="/etc/systemd/system/flask_app.service.d"
 OVERRIDE_FILE="$OVERRIDE_DIR/env.conf"
 
-# Flask 앱 서비스가 존재한다고 가정
+# Flask 앱 서비스가 이미 존재한다고 가정
 if [ -f "$SERVICE_FILE" ]; then
   echo "kakaocloud: flask_app.service override 설정을 진행합니다."
   sudo mkdir -p "$OVERRIDE_DIR"
@@ -75,7 +79,7 @@ if [ -f "$SERVICE_FILE" ]; then
 Environment=\"MYSQL_HOST=$MYSQL_HOST\"
 Environment=\"DOMAIN_ID=$DOMAIN_ID\"
 Environment=\"PROJECT_ID=$PROJECT_ID\"
-Environment=\"TOPIC_NAME=$TOPIC_NAME\"
+Environment=\"TOPIC_NAME_PUBSUB=$TOPIC_NAME_PUBSUB\"
 Environment=\"CREDENTIAL_ID=$CREDENTIAL_ID\"
 Environment=\"CREDENTIAL_SECRET=$CREDENTIAL_SECRET\"
 EOF"
@@ -86,6 +90,7 @@ EOF"
 else
   echo "kakaocloud: flask_app.service가 없어 override를 생략합니다."
 fi
+
 # -----------------------
 # 2) Logstash, Filebeat 설치
 # -----------------------
@@ -115,9 +120,8 @@ PROJECT_ID=\"$PROJECT_ID\"
 TOPIC_NAME_PUBSUB=\"$TOPIC_NAME_PUBSUB\"
 TOPIC_NAME_KAFKA=\"$TOPIC_NAME_KAFKA\"
 MYSQL_HOST=\"$MYSQL_HOST\"
-DOMAIN_ID=\"$DOMAIN_ID\"
-PROJECT_ID=\"$PROJECT_ID\"
-export CREDENTIAL_ID CREDENTIAL_SECRET DOMAIN_ID PROJECT_ID TOPIC_NAME_PUBSUB TOPIC_NAME_KAFKA MYSQL_HOST DOMAIN_ID PROJECT_ID MYSQL_USER MYYSQL_PASS
+
+export CREDENTIAL_ID CREDENTIAL_SECRET DOMAIN_ID PROJECT_ID TOPIC_NAME_PUBSUB TOPIC_NAME_KAFKA MYSQL_HOST
 EOF"
 
 sudo systemctl daemon-reload
@@ -144,9 +148,8 @@ echo "kakaocloud: Logstash 재시작"
 sudo systemctl daemon-reload
 sudo systemctl restart logstash
 
-
 # -----------------------
-# 6) 스크립트들 다운로드 
+# 6) 스크립트들 다운로드
 # -----------------------
 echo "kakaocloud: main_script.sh, setup_db.sh 다운로드 링크 확인..."
 curl --output /dev/null --silent --head --fail "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/heads/main/ApiServer/main_script.sh" || {
