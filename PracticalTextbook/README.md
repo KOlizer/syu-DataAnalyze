@@ -5,7 +5,15 @@
 # 콘솔에서 만들어야할 자원
 필요한 인프라 생성(TrafficGenerator, APIServer, ALB...)
 
+
 ## Pub/Sub 생성
+
+- **이름**: `Pub_sub_test_topic`
+- **기본서브스크립션**: `생성`
+- **토픽 메세지 보존 기간**: `0일 0시 10분`
+- **인스턴스유형**: `m2a.xlarge`
+- **설명**: `없음`
+  
 ## MySQL 생성
 
 - **이름**: `database`
