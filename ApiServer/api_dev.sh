@@ -172,3 +172,9 @@ chmod +x main_script.sh
 chmod +x setup_db.sh
 
 echo "kakaocloud: 모든 작업 완료."
+
+
+# 아래 3가지 명령어는 vm 내에서 실행
+# source /home/ubuntu/.bashrc
+# sudo -E ./setup_db.sh
+# sudo -E ./main_script.sh
