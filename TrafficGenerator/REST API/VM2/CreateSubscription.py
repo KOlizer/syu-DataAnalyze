@@ -29,7 +29,7 @@ def create_subscription():
     # (1) 요청 URL
     url = (
         f"{config.PUBSUB_ENDPOINT}/v1/domains/{config.DOMAIN_ID}/"
-        f"projects/{config.PROJECT_ID}/subscriptions/{config.OBJECT_STORAGE_SUBSCRIPTION_NAME}"
+        f"projects/{config.PROJECT_ID}/subscriptions/{config.OBJECT_STORAGE_SUBSCRIPTION_NAME_MK}"
     )
 
     # (2) subscription 요청 바디
@@ -73,7 +73,7 @@ def create_subscription():
     return resp.json()
 
 def main():
-    print(f"=== Kakao Cloud Pub/Sub: 서브스크립션 '{config.SUBSCRIPTION_NAME}' 생성 (Object Storage) ===")
+    print(f"=== Kakao Cloud Pub/Sub: '{config.TOPIC_NAME_MK}' 서브스크립션 '{config.OBJECT_STORAGE_SUBSCRIPTION_NAME_MK}' 생성 요청 ===")
     try:
         result = create_subscription()
         print("[INFO] 서브스크립션 생성 성공!")
