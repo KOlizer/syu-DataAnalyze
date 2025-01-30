@@ -40,8 +40,19 @@
 
 ## Hadoop
 (※ 별도의 가이드 혹은 기존 실습 환경에 맞추어 진행)
+
 ## ObjectStorage 생성
- - LBAccess용 버킷
+- LB Accesslog용 버킷
+  -**이름**:`LB Accesslog`
+- Nginx 로그 수집용 버킷 (`Pub/Sub` 연동)
+  -**이름**:`Pub/Sub-nginx-log`
+- Nginx 로그 수집용 버킷 (`kafka` 연동)
+  -**이름**:`kafka-nginx-log`
+- `Data Query`의 쿼리 결과 저장용 버킷
+  -**이름**:`Data Query-Result`
+- Spark, Hive 처리 결과에 대한 저장용 버킷
+  -**이름**:`Hive-Result`
+
 ## API 서버 생성 (2대)
 
 - **이름**: `Api-Server`
