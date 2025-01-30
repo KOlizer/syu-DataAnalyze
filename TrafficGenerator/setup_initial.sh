@@ -19,16 +19,16 @@ export PUBSUB_ENDPOINT="https://pub-sub.kr-central-2.kakaocloud.com"
 export DOMAIN_ID="{조직 ID}"
 export PROJECT_ID="{프로젝트 ID}"
 export TOPIC_NAME="{콘솔에서 생성 한 PUB/SUB Topic 이름}"
+export SUB_NAME="{콘솔에서 생성한 PUB/SUB Subcription 이름}"
 export TOPIC_DESCRIPTION=""
 export TOPIC_RETENTION_DURATION="600s"
-export SUB_NAME="{콘솔에서 생성한 PUB/SUB Subcription 이름}"
 export CREDENTIAL_ID="{액세스 키 ID}"
 export CREDENTIAL_SECRET="{보안 액세스 키}"
-export TOPIC_NAME_MK="{실습으로 생성 할 PUB/SUB Topic 이름}"
-export SUBSCRIPTION_NAME="{실습으로 생성 할 PUB/SUB Subscription이름}"
+export API_BASE_URL="{ALB 주소}"
 
-export OBJECT_STORAGE_SUBSCRIPTION_NAME="{ObjectStorage실습으로 생성할 로그 적재용 PUB/SUB Subscription 이름}"
-export OBJECT_STORAGE_BUCKET="생성한 로그 적재용 ObjectStorage 버킷 이름"
+export TOPIC_NAME_MK="{VM2에서 진행하는 CreateTopic실습용 토픽 이름}" 
+export OBJECT_STORAGE_SUBSCRIPTION_NAME_MK="{VM2에서 진행하는 CreateTopic실습용 서브스크립션 이름}"
+export OBJECT_STORAGE_BUCKET="{로그 적재용 ObjectStorage 버킷 이름}"
 export EXPORT_INTERVAL_MIN=10
 export FILE_PREFIX=""
 export FILE_SUFFIX=".log"
@@ -40,7 +40,7 @@ export LOG_LEVEL="INFO"
 export NUM_USERS=20
 export MAX_THREADS=5
 export ACTIONS_PER_USER=30
-export API_BASE_URL="210.109.53.58"
+
 
 echo "환경 변수 설정 완료."
 
@@ -57,7 +57,7 @@ export TOPIC_RETENTION_DURATION="$TOPIC_RETENTION_DURATION"
 export SUB_NAME="$SUB_NAME"
 export CREDENTIAL_ID="$CREDENTIAL_ID"
 export CREDENTIAL_SECRET="$CREDENTIAL_SECRET"
-export SUBSCRIPTION_NAME="$SUBSCRIPTION_NAME"
+
 export OBJECT_STORAGE_SUBSCRIPTION_NAME="$OBJECT_STORAGE_SUBSCRIPTION_NAME"
 export OBJECT_STORAGE_BUCKET="$OBJECT_STORAGE_BUCKET"
 export EXPORT_INTERVAL_MIN=$EXPORT_INTERVAL_MIN
@@ -138,9 +138,6 @@ pubsub:
   credential_id: "$CREDENTIAL_ID"
   credential_secret: "$CREDENTIAL_SECRET"
 
-# 구독 설정
-subscription:
-  name: "$SUBSCRIPTION_NAME"
 
 # Object Storage 서브스크립션 설정
 object_storage_subscription:
