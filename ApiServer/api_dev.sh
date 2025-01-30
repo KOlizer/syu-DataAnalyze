@@ -59,18 +59,6 @@ sudo apt install -y python3 python3-pip gunicorn nginx python3-mysql.connector m
 sudo apt install -y python3-flask
 python3 --version
 pip3 --version
-sudo apt update
-sudo apt install -y openjdk-21-jdk
-
-cat << EOF | sudo tee -a /etc/profile
-export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
-export PATH=\$JAVA_HOME/bin:\$PATH
-export CLASSPATH=\$CLASSPATH:\$JAVA_HOME/lib/ext:\$JAVA_HOME/lib/tools.jar
-EOF
-
-curl https://archive.apache.org/dist/kafka/3.7.1/kafka_2.13-3.7.1.tgz -o kafka_2.13-3.7.1.tgz
-tar -xzf kafka_2.13-3.7.1.tgz
-rm kafka_2.13-3.7.1.tgz
 ##########################################################################
 # 1-2) Flask 앱 서비스(flask_app.service)에도 같은 변수를 써야 한다면
 ##########################################################################
