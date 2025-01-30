@@ -31,11 +31,9 @@ SUB_NAME = config['pubsub']['sub_name']
 CREDENTIAL_ID = config['pubsub']['credential_id']
 CREDENTIAL_SECRET = config['pubsub']['credential_secret']
 
-# 구독 설정
-SUBSCRIPTION_NAME = config['subscription']['name']
 
 # Object Storage 서브스크립션 설정
-OBJECT_STORAGE_SUBSCRIPTION_NAME = config['object_storage_subscription']['name']
+OBJECT_STORAGE_SUBSCRIPTION_NAME_MK = config['object_storage_subscription']['name']
 OBJECT_STORAGE_BUCKET = config['object_storage_subscription']['bucket']
 EXPORT_INTERVAL_MIN = config['object_storage_subscription']['export_interval_min']
 FILE_PREFIX = config['object_storage_subscription']['file_prefix']
