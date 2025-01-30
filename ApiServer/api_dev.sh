@@ -8,7 +8,7 @@ set -e  # 에러 발생 시 스크립트 즉시 중단
 MYSQL_HOST="{DB 엔드포인트}"
 DOMAIN_ID="{조직 ID}"
 PROJECT_ID="{프로젝트 ID}"
-TOPIC_NAME_PUBSUB="{PUB/SUB Topic 이름}(로그 적재용, API로 생성할 이름)"
+TOPIC_NAME_PUBSUB="{PUB/SUB Topic 이름}(로그 적재용, TG에서 API로 생성할 이름)"
 TOPIC_NAME_KAFKA="{object storage 적재용 Kafka Topic 이름}"
 CREDENTIAL_ID="{액세스 키 ID}"
 CREDENTIAL_SECRET="{보안 액세스 키}"
