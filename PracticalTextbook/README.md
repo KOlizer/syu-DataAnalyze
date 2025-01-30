@@ -6,9 +6,9 @@
 필요한 인프라 생성(TrafficGenerator, APIServer, ALB...)
 
 
-## Pub/Sub 생성
+## Pub/Sub 토픽 생성
 
-- **이름**: `pub-sub-test-topic`
+- **이름**: `TestTopic`
 - **기본서브스크립션**: `생성 안함`
 - **토픽 메세지 보존 기간**: `0일 0시 10분`
 - **인스턴스유형**: `m2a.xlarge`
@@ -67,6 +67,20 @@
 - **보안 그룹(SG) 생성**   
   - 필요 포트 규칙 설정:
     - 인바운드: `22, 3306, 80, 5044`
+   
+
+- api 서버 ssh 접속 후 아래 사이트에서 스크립트 작성 후 붙여넣기
+  ```
+  https://github.com/KOlizer/syu-DataAnalyze/blob/main/ApiServer/api_dev.sh
+  ```
+
+  - 아래 코드 붙여넣기
+
+  ```
+  source /home/ubuntu/.bashrc
+  sudo -E ./setup_db.sh
+  sudo -E ./main_script.sh
+  ```
 
 
 ## 로드 밸런서(ALB) 생성
@@ -84,27 +98,27 @@
       - 대상 그룹 이름: `ApiServer`
       - 상태 확인: `미사용`
         
-      - **다음**  
+      - `다음`  
       - 연결할 인스턴스 선택: `api vm` 2대  
-      - **대상추가**  
-      - **다음**  
-      - **생성**
-  - 새로고침 후, 생성된 대상 그룹 선택 → **추가**
+      - `대상추가`
+      - `다음` 
+      - `생성`
+  - 새로고침 후, 생성된 대상 그룹 선택 → `추가`
 
 
-## Test용 topic
-## Test용 토픽의 Pull Subscription
+
+## TestTopic 토픽의 Pull Subscription
 - **이름**: `PullSubscription`
 - **토픽 선택**: `TestTopic`
 - **유형**: `Pull`
   
-## Test용 토픽의 Push Subscription
+## TestTopic 토픽의 Push Subscription
 - **이름**: `PushSubscription`
 - **토픽 선택**: `TestTopic`
 - **유형**: `Push`
   - **엔드포인트**: `http://` + `ALB 퍼블릭 아이피`
 
-## TG 서버 생성 (2대)
+## Traffic_Generator 서버 생성 (2대)
 
 - **이름**: `Traffic_Generator`
 - **이미지**: `Ubuntu 22.04`
@@ -113,5 +127,11 @@
 - **VPC**: 실습 환경
 - **보안 그룹(SG) 생성**  
   - 예: `22, 80, ALL` 등 필요한 포트 및 프로토콜 규칙 설정
+ 
 
+- Traffic_Generator서버 ssh 접속 후 아래 사이트에서 스크립트 작성 후 붙여넣기
+  ```
+  https://github.com/KOlizer/syu-DataAnalyze/blob/main/TrafficGenerator/setup_initial.sh
+  ```
+- 실습 진행
 ---
