@@ -178,3 +178,8 @@ echo "kakaocloud: 모든 작업 완료."
 # source /home/ubuntu/.bashrc
 # sudo -E ./setup_db.sh
 # sudo -E ./main_script.sh
+
+# 오류 뜨면 flask 재실행 후 확인
+# sudo systemctl restart flask_app
+# sudo systemctl status flask_app
+
