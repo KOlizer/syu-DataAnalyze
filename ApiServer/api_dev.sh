@@ -102,6 +102,11 @@ echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee 
 sudo apt-get update
 sudo apt-get install -y filebeat logstash
 
+sudo systemctl enable filebeat
+sudo systemctl start filebeat
+sudo systemctl enable logstash
+sudo systemctl start logstash
+
 # -----------------------
 # /etc/default/logstash에 환경 변수 추가 (재시작은 나중에)
 # -----------------------
