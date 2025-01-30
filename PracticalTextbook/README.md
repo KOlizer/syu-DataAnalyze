@@ -7,6 +7,18 @@
 
 ## Pub/Sub 생성
 ## MySQL 생성
+
+- **이름**: `database`
+- **인스턴스 가용성**: `단일`
+- **MySQL 사용자 이름**: `admin`
+- **MySQL 비밀번호**: `admin1234`
+- **인스턴스 유형**: `m2a.large`
+- **VPC**: `실습환경`
+- **Subnet**: `실습환경`
+- **자동 백업 옵션**: `미사용`
+
+
+
 ## Data Catalog 생성
 ## Kafaka 생성
 ## Hadoop
