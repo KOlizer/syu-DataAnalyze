@@ -1,0 +1,12 @@
+[Unit]
+Description=Kafka Connect Standalone Service
+After=network.target
+
+[Service]
+User=ubuntu
+ExecStart=/home/ubuntu/kafka/bin/connect-standalone.sh /opt/kafka/config/connect-standalone.properties
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
