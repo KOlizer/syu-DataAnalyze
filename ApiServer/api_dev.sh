@@ -9,12 +9,12 @@ MYSQL_HOST="{DB 엔드포인트}"
 DOMAIN_ID="{조직 ID}"
 PROJECT_ID="{프로젝트 ID}"
 TOPIC_NAME_PUBSUB="{PUB/SUB Topic 이름}(로그 적재용, API로 생성할 이름)"
-TOPIC_NAME_KAFKA="{Kafka Topic 이름}"
+TOPIC_NAME_KAFKA="{object storage 적재용 Kafka Topic 이름}"
 CREDENTIAL_ID="{액세스 키 ID}"
 CREDENTIAL_SECRET="{보안 액세스 키}"
 
 LOGSTASH_ENV_FILE="/etc/default/logstash"
-LOGSTASH_KAFKA_ENDPOINT="{카프카 엔드포인트}"
+LOGSTASH_KAFKA_ENDPOINT="{kafka 부트스트랩 서버}"
 
 # (원격 RAW 파일 주소)
 FILEBEAT_YML_URL="https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/main/ApiServer/filebeat.yml"
