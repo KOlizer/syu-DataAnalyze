@@ -79,8 +79,8 @@
 
 
 ## Test용 topic
-## Teet용 토픽의 Pull Subscription
-## Teet용 토픽의 Push Subscription
+## Test용 토픽의 Pull Subscription
+## Test용 토픽의 Push Subscription
 
 
 ## TG 서버 생성 (2대)
