@@ -50,7 +50,7 @@ source /home/ubuntu/.bashrc
 echo "kakaocloud: ~/.bashrc에 환경 변수를 추가 완료."
 
 # -----------------------
-# 1-1) Python,Flask gunicorn nginx mysql.conneter ,client, kafka 설치
+# 1-1) Python,Flask gunicorn nginx mysql.conneter ,client 설치
 # -----------------------
 echo "kakaocloud: Python 설치"
 sudo apt-get update
