@@ -18,7 +18,9 @@ LOGSTASH_KAFKA_ENDPOINT="{카프카 엔드포인트}"
 
 # (원격 RAW 파일 주소)
 FILEBEAT_YML_URL="https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/main/ApiServer/filebeat.yml"
-LOGSTASH_CONF_URL="https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/main/ApiServer/logs-to-pubsub.conf"
+LOGSTASH_CONF_1_URL="https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/main/ApiServer/logs-to-pubsub.conf"
+LOGSTASH_CONF_2_URL="https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/main/ApiServer/logs-to-kafka.conf"
+
 
 # -----------------------
 # 1) ~/.bashrc에 환경 변수 설정
@@ -155,8 +157,9 @@ sudo systemctl restart filebeat
 # -----------------------
 # 4) Logstash conf 다운로드
 # -----------------------
-echo "kakaocloud: Logstash 구성 파일 다운로드: $LOGSTASH_CONF_URL"
-sudo wget -O /etc/logstash/conf.d/logs-to-pubsub-and-kafka.conf "$LOGSTASH_CONF_URL"
+echo "kakaocloud: Logstash 구성 파일 다운로드: $LOGSTASH_CONF_1_URL and 2"
+sudo wget -O /etc/logstash/conf.d/logs-to-pubsub.conf "$LOGSTASH_CONF_1_URL"
+sudo wget -O /etc/logstash/conf.d/logs-to-kafka.conf "$LOGSTASH_CONF_2_URL"
 echo "kakaocloud: Logstash 재시작"
 sudo systemctl daemon-reload
 sudo systemctl restart logstash
