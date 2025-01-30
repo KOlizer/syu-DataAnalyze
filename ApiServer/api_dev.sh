@@ -50,20 +50,22 @@ source /home/ubuntu/.bashrc
 echo "kakaocloud: ~/.bashrc에 환경 변수를 추가 완료."
 
 # -----------------------
-# 1-1) Python,Flask gunicorn nginx mysql.conneter ,client 설치
+# 1-1) Python,Flask, Gunicorn, Nginx, MySQL 관련 패키지 설치
 # -----------------------
-echo "kakaocloud: Python 설치"
+echo "kakaocloud: Python, Flask, Gunicorn, Nginx, MySQL 관련 패키지 설치"
 sudo apt-get update
 sudo apt-get install -y python3 python3-pip
 sudo apt install -y python3 python3-pip gunicorn nginx python3-mysql.connector mysql-client
 sudo apt install -y python3-flask
 python3 --version
 pip3 --version
-##########################################################################
-# 1-2) Flask 앱 서비스(flask_app.service)에도 같은 변수를 써야 한다면
-##########################################################################
+
+# -----------------------
+# 1-2) Flask 앱 서비스(flask_app.service) 구성
+# -----------------------
 SERVICE_FILE="/etc/systemd/system/flask_app.service"
-# 서비스 파일 내용 작성
+echo "kakaocloud: flask_app.service 설정 파일 생성"
+
 sudo bash -c "cat > $SERVICE_FILE <<EOF
 [Unit]
 Description=Gunicorn instance to serve Flask app
@@ -77,6 +79,7 @@ Environment=\"MYSQL_HOST=${MYSQL_HOST}\"
 Environment=\"DOMAIN_ID=${DOMAIN_ID}\"
 Environment=\"PROJECT_ID=${PROJECT_ID}\"
 Environment=\"TOPIC_NAME_PUBSUB=${TOPIC_NAME_PUBSUB}\"
+Environment=\"TOPIC_NAME_KAFKA=${TOPIC_NAME_KAFKA}\"
 Environment=\"CREDENTIAL_ID=${CREDENTIAL_ID}\"
 Environment=\"CREDENTIAL_SECRET=${CREDENTIAL_SECRET}\"
 ExecStart=/usr/bin/gunicorn --workers 9 --threads 4 -b 127.0.0.1:8080 app:app
@@ -85,32 +88,22 @@ ExecStart=/usr/bin/gunicorn --workers 9 --threads 4 -b 127.0.0.1:8080 app:app
 WantedBy=multi-user.target
 EOF"
 
-echo "FLASK 앱 환경변수 설정 완료!."
+echo "kakaocloud: flask_app.service 설정 완료."
 
-# systemd 데몬 재로드 및 서비스 재시작
-sudo systemctl daemon-reload
-sudo systemctl restart flask_app
-sudo systemctl enable flask_app
-
-echo "flask_app.service has been reloaded and restarted successfully."
 
 # -----------------------
-# 2) Logstash, Filebeat 설치
+# 2) Logstash, Filebeat 설치(설정 파일 만 적용, 재시작은 맨 끝에서)
 # -----------------------
-echo "kakaocloud: Logstash, Filebeat 설치 및 설정"
+echo "kakaocloud: Logstash, Filebeat 설치"
 curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee /etc/apt/sources.list.d/beats.list
 sudo apt-get update
 sudo apt-get install -y filebeat logstash
-sudo systemctl enable filebeat
-sudo systemctl start filebeat
-sudo systemctl enable logstash
-sudo systemctl start logstash
 
 # -----------------------
-# /etc/default/logstash에 환경 변수 추가
+# /etc/default/logstash에 환경 변수 추가 (재시작은 나중에)
 # -----------------------
-echo "kakaocloud: /etc/default/logstash에 환경 변수를 추가합니다."
+echo "kakaocloud: /etc/default/logstash에 환경 변수를 추가"
 sudo chmod 644 "$LOGSTASH_ENV_FILE"
 sudo bash -c "cat <<EOF >> $LOGSTASH_ENV_FILE
 
@@ -127,33 +120,23 @@ MYSQL_HOST=\"$MYSQL_HOST\"
 export CREDENTIAL_ID CREDENTIAL_SECRET DOMAIN_ID PROJECT_ID TOPIC_NAME_PUBSUB TOPIC_NAME_KAFKA MYSQL_HOST
 EOF"
 
-sudo systemctl daemon-reload
-sudo systemctl restart logstash
-
 # -----------------------
-# 3) Filebeat 설정 파일 다운로드
+# 3) Filebeat 구성 파일 다운로드 (재시작은 나중에)
 # -----------------------
 echo "kakaocloud: Filebeat 구성 파일 다운로드: $FILEBEAT_YML_URL"
 sudo wget -O /etc/filebeat/filebeat.yml "$FILEBEAT_YML_URL"
-echo "kakaocloud: Filebeat 구성 파일 권한 설정"
 sudo chmod 644 /etc/filebeat/filebeat.yml
 sudo chown root:root /etc/filebeat/filebeat.yml
-echo "kakaocloud: Filebeat 서비스 재시작"
-sudo systemctl daemon-reload
-sudo systemctl restart filebeat
 
 # -----------------------
-# 4) Logstash conf 다운로드
+# 4) Logstash conf 다운로드 (재시작은 나중에)
 # -----------------------
-echo "kakaocloud: Logstash 구성 파일 다운로드: $LOGSTASH_CONF_1_URL and 2"
+echo "kakaocloud: Logstash 구성 파일 다운로드: $LOGSTASH_CONF_1_URL, $LOGSTASH_CONF_2_URL"
 sudo wget -O /etc/logstash/conf.d/logs-to-pubsub.conf "$LOGSTASH_CONF_1_URL"
 sudo wget -O /etc/logstash/conf.d/logs-to-kafka.conf "$LOGSTASH_CONF_2_URL"
-echo "kakaocloud: Logstash 재시작"
-sudo systemctl daemon-reload
-sudo systemctl restart logstash
 
 # -----------------------
-# 6) 스크립트들 다운로드
+# 5) 스크립트들 다운로드
 # -----------------------
 echo "kakaocloud: main_script.sh, setup_db.sh 다운로드 링크 확인..."
 curl --output /dev/null --silent --head --fail "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/heads/main/ApiServer/main_script.sh" || {
@@ -171,15 +154,32 @@ wget -O setup_db.sh "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/heads/m
 chmod +x main_script.sh
 chmod +x setup_db.sh
 
+# -----------------------
+# 마지막에 몰아서 재시작/enable 처리
+# -----------------------
+echo "kakaocloud: 모든 설정이 끝났습니다. 이제 서비스를 재시작하고 활성화합니다."
+
+# 1) systemd 데몬 재로드
+sudo systemctl daemon-reload
+
+# 2) flask_app
+sudo systemctl enable flask_app
+sudo systemctl restart flask_app
+
+# 3) filebeat
+sudo systemctl enable filebeat
+sudo systemctl restart filebeat
+
+# 4) logstash
+sudo systemctl enable logstash
+sudo systemctl restart logstash
+
+echo "kakaocloud: 모든 서비스를 재시작하였습니다."
+
 echo "kakaocloud: 모든 작업 완료."
-
-
-# 아래 3가지 명령어는 vm 내에서 실행
-# source /home/ubuntu/.bashrc
-# sudo -E ./setup_db.sh
-# sudo -E ./main_script.sh
-
-# 오류 뜨면 flask 재실행 후 확인
-# sudo systemctl restart flask_app
-# sudo systemctl status flask_app
-
+echo ""
+echo "추가 안내:"
+echo "  - 환경 변수 적용 확인: source /home/ubuntu/.bashrc"
+echo "  - DB 세팅 스크립트:   sudo -E ./setup_db.sh"
+echo "  - 메인 스크립트:       sudo -E ./main_script.sh"
+echo "  - Flask 재실행:       sudo systemctl restart flask_app && sudo systemctl status flask_app"
