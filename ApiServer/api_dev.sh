@@ -175,6 +175,10 @@ sudo systemctl daemon-reload
 sudo systemctl enable flask_app
 sudo systemctl restart flask_app
 
+sudo systemctl enable filebeat
+sudo systemctl start filebeat
+sudo systemctl enable logstash
+sudo systemctl start logstash
 
 echo "kakaocloud: 모든 서비스를 재시작하였습니다."
 
