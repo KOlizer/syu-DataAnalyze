@@ -38,6 +38,7 @@ source ~/.bashrc
 ```
 cd kafka_2.13-3.7.1
 bin/kafka-topics.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --create --topic ${TOPIC_NAME} --partitions 1 --replication-factor 2
+```
 
 프로듀서 실행
 ```
