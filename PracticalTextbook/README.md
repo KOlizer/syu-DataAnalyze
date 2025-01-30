@@ -94,8 +94,15 @@
 
 ## Test용 topic
 ## Test용 토픽의 Pull Subscription
+- **이름**: `PullSubscription`
+- **토픽 선택**: `TestTopic`
+- **유형**: `Pull`
+  
 ## Test용 토픽의 Push Subscription
-
+- **이름**: `PushSubscription`
+- **토픽 선택**: `TestTopic`
+- **유형**: `Push`
+  - **엔드포인트**: `http://` + `ALB 퍼블릭 아이피`
 
 ## TG 서버 생성 (2대)
 
