@@ -1,11 +1,14 @@
 #!/bin/bash
 
+set -e  # 에러 발생 시 스크립트 즉시 중단
+
 echo "MYSQL_HOST set to: $MYSQL_HOST"
 source /home/ubuntu/.bashrc
 
 # 전역 변수 초기화
 LOG_PREFIX="kakaocloud: "
 LOG_COUNTER=0
+LOG_FORMAT_NAME="custom_json"  # Nginx log_format 이름
 
 # 로깅 함수 정의
 log() {
@@ -23,7 +26,6 @@ run_command() {
         exit 1
     fi
 }
-
 
 # 3. Flask 애플리케이션 설정
 APP_DIR="/var/www/flask_app"
@@ -49,13 +51,12 @@ WORKERS=$((CPU_CORES * 2 + 1))  # 공식: (코어 수 * 2) + 1
 THREADS=4                       # 스레드 기본값 (I/O 바운드 환경)
 log "Detected $CPU_CORES CPU cores: setting $WORKERS workers and $THREADS threads."
 
-
 # Nginx 설정
 NGINX_CONF_MAIN="/etc/nginx/nginx.conf"
 
 if ! grep -q "log_format $LOG_FORMAT_NAME" $NGINX_CONF_MAIN; then
-    echo "Adding custom_json log format to NGINX configuration..."
-    sed -i "/http {/a \
+    log "Adding $LOG_FORMAT_NAME log format to Nginx configuration..."
+    sudo sed -i "/http {/a \
         log_format $LOG_FORMAT_NAME escape=json '{\\n\
             \"timestamp\":\"\$time_local\",\\n\
             \"remote_addr\":\"\$remote_addr\",\\n\
@@ -76,13 +77,15 @@ if ! grep -q "log_format $LOG_FORMAT_NAME" $NGINX_CONF_MAIN; then
             \"x_forwarded_for\":\"\$http_x_forwarded_for\",\\n\
             \"host\":\"\$host\"\\n\
         }';" $NGINX_CONF_MAIN
-    echo "custom_json log format added successfully."
+    log "$LOG_FORMAT_NAME log format added successfully."
 else
-    echo "custom_json log format already exists. Skipping addition."
+    log "$LOG_FORMAT_NAME log format already exists. Skipping addition."
 fi
 
 NGINX_CONF="/etc/nginx/sites-available/flask_app"
-cat > "$NGINX_CONF" <<EOL
+log "Configuring Nginx site for Flask application..."
+
+sudo bash -c "cat > $NGINX_CONF <<EOL
 server {
     listen 80;
     server_name _;
@@ -98,13 +101,34 @@ server {
     error_log /var/log/nginx/flask_app_error.log;
     access_log /var/log/nginx/flask_app_access.log $LOG_FORMAT_NAME;
 }
-EOL
+EOL"
 
 run_command ln -sf "$NGINX_CONF" /etc/nginx/sites-enabled/
 run_command rm -f /etc/nginx/sites-enabled/default
 
+log "Testing Nginx configuration..."
 run_command nginx -t
+
+log "Reloading and restarting Nginx..."
 run_command systemctl restart nginx
 
-log "Setup complete. Flask application is running with Gunicorn and Nginx."
-echo "You can access your application at http://<your_server_ip>/"
+
+
+# -----------------------
+# Flask 애플리케이션 재시작 추가
+# -----------------------
+log "Restarting Flask application to apply new changes..."
+run_command sudo systemctl restart flask_app
+
+log "Flask application has been restarted successfully."
+
+log "Nginx and Gunicorn have been configured and restarted successfully."
+echo "이제 퍼블릭 아이피로 접속하여 웹페이지를 확인해보세요!"
+
+echo "스크립트가 모든 작업을 완료했습니다."
+echo ""
+echo "추가 안내:"
+echo "  - 환경 변수 적용 확인: source /home/ubuntu/.bashrc"
+echo "  - DB 세팅 스크립트:   sudo -E ./setup_db.sh"
+echo "  - 메인 스크립트:       sudo -E ./main_script.sh"
+echo "  - Flask 재실행:       sudo systemctl restart flask_app && sudo systemctl status flask_app"
