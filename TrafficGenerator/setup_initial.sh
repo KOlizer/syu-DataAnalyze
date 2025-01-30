@@ -24,10 +24,11 @@ export TOPIC_RETENTION_DURATION="600s"
 export SUB_NAME="{콘솔에서 생성한 PUB/SUB Subcription 이름}"
 export CREDENTIAL_ID="{액세스 키 ID}"
 export CREDENTIAL_SECRET="{보안 액세스 키}"
-export TOPIC_NAME_MK="{실습으로 생성 할 PUB/SUB Topic 이름}
-export SUBSCRIPTION_NAME=""{실습으로 생성 할 PUB/SUB Subscription이름}"
-export OBJECT_STORAGE_SUBSCRIPTION_NAME="{생성한 Objectstorage의 서브스크립션}"
-export OBJECT_STORAGE_BUCKET="생성한 Objectstorage 버킷 이름"
+export TOPIC_NAME_MK="{실습으로 생성 할 PUB/SUB Topic 이름}"
+export SUBSCRIPTION_NAME="{실습으로 생성 할 PUB/SUB Subscription이름}"
+
+export OBJECT_STORAGE_SUBSCRIPTION_NAME="{ObjectStorage실습으로 생성할 로그 적재용 PUB/SUB Subscription 이름}"
+export OBJECT_STORAGE_BUCKET="생성한 로그 적재용 ObjectStorage 버킷 이름"
 export EXPORT_INTERVAL_MIN=10
 export FILE_PREFIX=""
 export FILE_SUFFIX=".log"
