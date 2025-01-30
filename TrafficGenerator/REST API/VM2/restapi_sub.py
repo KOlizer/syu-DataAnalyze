@@ -191,7 +191,7 @@ def receive_and_ack_messages(subscription_name, max_messages=10, wait_time="3s")
 #################################
 def main():
     # Pull Subscription 이름 설정
-    subscription_name = SUBSCRIPTION_NAME  # 실제 Subscription 이름으로 변경
+    subscription_name = SUB_NAME  # 실제 Subscription 이름으로 변경
 
     while True:
         # 메시지 수신 및 Ack 처리
