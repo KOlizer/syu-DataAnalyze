@@ -72,5 +72,37 @@ bin/kafka-topics.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --create --top
 bin/kafka-topics.sh --bootstrap-server $KAFKA_BOOTSTRAP_SERVERS --create --topic $KAFKA_NGINX_TOPIC --partitions 3 --replication-factor 2
 ```
 
+api서버에서 logstash 설정
+```
+input {
+  beats {
+    port => 5045
+  }
+}
+filter {
+
+}
+output {
+  # Kafka로 데이터 전송 (원본 메시지 사용)
+  kafka {
+    bootstrap_servers => "${LOGSTASH_KAFKA_ENDPOINT}"
+    topic_id => "${TOPIC_NAME_KAFKA}"
+    codec => json  # 데이터 형식에 맞게 조정하세요 (예: json, plain)
+    # 필요에 따라 추가 Kafka 설정을 여기에 추가하세요
+    # 예: security_protocol, sasl_mechanism 등
+  }
+}
+
+```
+
+Logstash 재실행 및 상태 확인
+```
+sudo systemctl restart logstash
+sudo systemctl status logstash
+```
+
+
+
+
 
 
