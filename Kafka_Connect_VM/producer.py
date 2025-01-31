@@ -1,13 +1,24 @@
-from kafka import KafkaProducer
+from confluent_kafka import Producer
 import time
 
-producer = KafkaProducer(bootstrap_servers=${KAFKA_BOOTSTRAP_SERVERS})
 
+# 프로듀서 인스턴스 생성
+p = Producer({'bootstrap.servers': KAFKA_BOOTSTRAP_SERVERS})
+
+# 메시지 전송 완료 시 호출될 콜백 함수
+def delivery_callback(err, msg):
+    if err:
+        print(f"Message failed delivery: {err}")
+    else:
+        print(f"Message delivered")
+
+# 5개의 메시지를 1초 간격으로 전송
 for i in range(5):
-    message = f"메시지 {i+1}"
-    producer.send(${KAFKA_PYTHON_TOPIC}, value=message.encode('utf-8'))
-    print(f"전송: {message}")
+    message = f"Message {i}"
+    p.produce(topic, message.encode('utf-8'), callback=delivery_callback)
+    p.poll(0)  # 이벤트 큐를 폴링하여 콜백이 실행되도록
     time.sleep(1)
 
-producer.flush()
-producer.close()
+# 남은 메시지 전송 후 종료
+p.flush()
+print("Producer finished sending 5 messages.")
