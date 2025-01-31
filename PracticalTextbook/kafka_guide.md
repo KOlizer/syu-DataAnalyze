@@ -84,6 +84,12 @@ bin/kafka-topics.sh --bootstrap-server $KAFKA_BOOTSTRAP_SERVERS --create --topic
 
 api서버에서 logstash 설정
 ```
+cd /etc/filebeat/conf.d
+cat logs-to-kafka.conf
+```
+
+아래 코드와 동일한지 확인
+```
 input {
   beats {
     port => 5045
@@ -110,6 +116,14 @@ Logstash 재실행 및 상태 확인
 sudo systemctl restart logstash
 sudo systemctl status logstash
 ```
+
+데이터 보내기
+```
+bin/kafka-console-consumer.sh --bootstrap-server $KAFKA_BOOTSTRAP_SERVERS --topic $KAFKA_NGINX_TOPIC --from-beginning
+```
+
+
+콘솔로 데이터가 쌓이고 있는지 체크
 
 
 
