@@ -46,4 +46,10 @@ bin/kafka-console-producer.sh --broker-list ${KAFKA_BOOTSTRAP_SERVERS} --topic $
 ```
 
 
+---
+# nginx 로그 → kafka로 프로듀싱 실습 (logstash 활용)
+콘솔 스크립트(바이너리)로 새로운 토픽 생성
+```
+bin/kafka-topics.sh --bootstrap-server $KAFKA_BOOTSTRAP_SERVERS --create --topic $KAFKA_NGINX_TOPIC --partitions 3 --replication-factor 2
+```
 
