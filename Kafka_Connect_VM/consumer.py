@@ -2,7 +2,7 @@ from confluent_kafka import Consumer, KafkaError, TopicPartition
 
 
 c = Consumer({
-    'bootstrap.servers': KAFKA_BOOTSTRAP_SERVERS,
+    'bootstrap.servers': ${KAFKA_BOOTSTRAP_SERVERS},
     'group.id': 'python-group',
     'enable.auto.commit': False,
     'auto.offset.reset': 'earliest'
@@ -10,7 +10,7 @@ c = Consumer({
 
 # 특정 파티션 오프셋 설정 (예: 0번 파티션, 오프셋 2부터 시작)
 # 만약 여러 파티션이면 리스트 형태로 여러 TopicPartition을 지정
-c.assign([TopicPartition(KAFKA_PYTHON_TOPIC, 0, 2)])  
+c.assign([TopicPartition(${KAFKA_PYTHON_TOPIC}, 0, 2)])  
 
 try:
     while True:
