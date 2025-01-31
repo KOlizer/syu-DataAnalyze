@@ -64,6 +64,15 @@ python 토픽 생성
 bin/kafka-topics.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --create --topic ${KAFKA_PYTHON_TOPIC} --partitions 1 --replication-factor 2
 ```
 
+python실행 코드 불러오기
+```
+wget -O main_script.sh "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/heads/main/Kafka_Connect_VM/consumer.py"
+wget -O main_script.sh "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/heads/main/Kafka_Connect_VM/producer.py"
+chmod +x consumer.py
+chmod +x producer.py
+```
+
+
 
 ---
 # nginx 로그 → kafka로 프로듀싱 실습 (logstash 활용)
