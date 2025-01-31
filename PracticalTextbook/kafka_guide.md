@@ -28,6 +28,7 @@ nc -zv 10.0.2.112 9092 #부트스트랩 주소2 (kakaocloud 클러스터 참고)
 
 echo export KAFKA_BOOTSTRAP_SERVERS="{부트스트랩 주소}" >> ~/.bashrc
 echo export KAFKA_CONSOL_TOPIC="kafka_consol" >> ~/.bashrc
+echo export KAFKA_PYTHON_TOPIC="kafka-python" >> ~/.bashrc
 echo export KAFKA_NGINX_TOPIC="kafka_nginx" >> ~/.bashrc
 source ~/.bashrc
 
@@ -37,12 +38,29 @@ source ~/.bashrc
 토픽 생성
 ```
 cd kafka_2.13-3.7.1
-bin/kafka-topics.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --create --topic ${TOPIC_NAME} --partitions 1 --replication-factor 2
+bin/kafka-topics.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --create --topic ${KAFKA_CONSOL_TOPIC} --partitions 1 --replication-factor 2
 ```
 
 프로듀서 실행
 ```
-bin/kafka-console-producer.sh --broker-list ${KAFKA_BOOTSTRAP_SERVERS} --topic ${TOPIC_NAME}
+bin/kafka-console-producer.sh --broker-list ${KAFKA_BOOTSTRAP_SERVERS} --topic ${KAFKA_CONSOL_TOPIC}
+```
+
+컨슈머 실행
+earliest 설정:
+```
+bin/kafka-console-consumer.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --topic ${KAFKA_CONSOL_TOPIC} --group consumer-group-earliest --from-beginning
+```
+
+latest 설정:
+```
+bin/kafka-console-consumer.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --topic ${KAFKA_CONSOL_TOPIC} --group consumer-group-latest
+```
+
+# python 코드로 메시지 프로듀싱/컨슈밍 실습
+python 토픽 생성
+```
+bin/kafka-topics.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --create --topic ${KAFKA_PYTHON_TOPIC} --partitions 1 --replication-factor 2
 ```
 
 
@@ -52,4 +70,6 @@ bin/kafka-console-producer.sh --broker-list ${KAFKA_BOOTSTRAP_SERVERS} --topic $
 ```
 bin/kafka-topics.sh --bootstrap-server $KAFKA_BOOTSTRAP_SERVERS --create --topic $KAFKA_NGINX_TOPIC --partitions 3 --replication-factor 2
 ```
+
+
 
