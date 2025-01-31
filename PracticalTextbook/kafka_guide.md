@@ -47,6 +47,7 @@ bin/kafka-console-producer.sh --broker-list ${KAFKA_BOOTSTRAP_SERVERS} --topic $
 ```
 
 컨슈머 실행
+
 earliest 설정:
 ```
 bin/kafka-console-consumer.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --topic ${KAFKA_CONSOL_TOPIC} --group consumer-group-earliest --from-beginning
