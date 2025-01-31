@@ -120,13 +120,13 @@ fi
 
 echo "kakaocloud: 3. 스크립트 다운로드 링크 유효성 체크"
 curl --output /dev/null --silent --head --fail \
-  "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/heads/main/ApiServer/main_script.sh" || {
+  "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/heads/lys-test/ApiServer/main_script.sh" || {
     echo "main_script.sh 다운로드 링크가 유효하지 않습니다."
     exit 1
   }
 
 curl --output /dev/null --silent --head --fail \
-  "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/heads/main/ApiServer/setup_db.sh" || {
+  "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/heads/lys-test/ApiServer/setup_db.sh" || {
     echo "setup_db.sh 다운로드 링크가 유효하지 않습니다."
     exit 1
   }
@@ -136,9 +136,9 @@ echo "kakaocloud: 스크립트 다운로드 링크가 모두 유효합니다."
 
 echo "kakaocloud: 4. 실제 스크립트 다운로드 및 실행 권한 설정"
 wget -O main_script.sh \
-  "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/heads/main/ApiServer/main_script.sh"
+  "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/heads/lys-test/ApiServer/main_script.sh"
 wget -O setup_db.sh \
-  "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/heads/main/ApiServer/setup_db.sh"
+  "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/heads/lys-test/ApiServer/setup_db.sh"
 
 chmod +x main_script.sh
 chmod +x setup_db.sh
