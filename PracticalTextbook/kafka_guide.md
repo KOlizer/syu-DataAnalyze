@@ -117,7 +117,7 @@ sudo systemctl restart logstash
 sudo systemctl status logstash
 ```
 
-데이터 보내기
+TG에서 데이터 보내기
 ```
 bin/kafka-console-consumer.sh --bootstrap-server $KAFKA_BOOTSTRAP_SERVERS --topic $KAFKA_NGINX_TOPIC --from-beginning
 ```
