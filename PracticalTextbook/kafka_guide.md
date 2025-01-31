@@ -27,8 +27,8 @@ nc -zv 10.0.2.112 9092 #부트스트랩 주소2 (kakaocloud 클러스터 참고)
 ```
 
 echo export KAFKA_BOOTSTRAP_SERVERS="{부트스트랩 주소}" >> ~/.bashrc
-echo export KAFKA_CONSOL_TOPIC="kafka-consol" >> ~/.bashrc
-
+echo export KAFKA_CONSOL_TOPIC="kafka_consol" >> ~/.bashrc
+echo export KAFKA_NGINX_TOPIC="kafka_nginx" >> ~/.bashrc
 source ~/.bashrc
 
 ```
