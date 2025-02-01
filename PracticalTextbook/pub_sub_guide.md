@@ -150,16 +150,28 @@ go build -o subscriber config.go subscriber.go
   
 **이후 카카오 콘솔에서 publish된 메세지 확인** 
 
+</br>
+  </br>
+  
 ## API 서버에서 PUB/SUB PUSH 서브스크립션 확인
+</br>
+  </br>
 
-
-  {API서버1 vm 퍼블릭 IP}/push-subscription 으로 push 된 메세지들 저장
-  {API서버1 vm 퍼블릭 IP}/push-messages 메세지 보기
+  **{API서버1 vm 퍼블릭 IP}/push-subscription 으로 push 된 메세지들 저장
+  {API서버1 vm 퍼블릭 IP}/push-messages 메세지 보기**
+  
+  </br>
+  </br>
   
 **이전 VM2 에서 받아진 메세지들이 오면 정상!**
 
+</br>
+  </br>
+  
 ## API 서버에서 logstash로 보내진 PUB/SUB 확인
-
+</br>
+  </br>
+  
 - **카카오 콘솔에 접속**
 - **Nginx 로그 수집용 버킷 (Pub/Sub 연동):Pub/Sub-nginx-log 확인**
 
