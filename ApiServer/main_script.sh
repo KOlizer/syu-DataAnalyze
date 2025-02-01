@@ -46,8 +46,19 @@ import random
 import mysql.connector
 from mysql.connector import Error
 from flask import jsonify
+from flask.json import JSONEncoder
+from decimal import Decimal
+
+class CustomJSONEncoder(JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            return float(obj)  # 또는 str(obj)로 변환할 수도 있습니다.
+        return super(CustomJSONEncoder, self).default(obj)
 
 app = Flask(__name__)
+
+app.json_encoder = CustomJSONEncoder
+
 
 DB_CONFIG = {
     'user': 'admin',
