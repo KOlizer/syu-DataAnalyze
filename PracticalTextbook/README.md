@@ -210,7 +210,7 @@ chmod +x setup_db.sh
 echo "kakaocloud: 7. 스크립트 실행을 시작합니다."
 sudo -E ./main_script.sh
 sudo -E ./setup_db.sh
-```
+
 
 
 ##########################################################################
@@ -234,7 +234,7 @@ sudo systemctl restart filebeat
 sudo systemctl restart logstash
 
 echo "kakaocloud: 모든 작업 완료"
-
+```
 ## 로드 밸런서(ALB) 생성
 
 - **유형**: `ALB`
