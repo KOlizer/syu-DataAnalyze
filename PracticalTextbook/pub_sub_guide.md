@@ -41,7 +41,38 @@
 </br>
 </br>
 
+# Traffic Generator VM 2를 이용해 PUB/SUB 토픽, 서브스크립션 생성
 
+  </br>
+  </br>
+
+  ## 1. VM2: PUB/SUB 토픽생성 
+
+- **스크립트 실행**  
+  터미널에서 다음 명령어를 입력하여 `CreateTopic.py` 스크립트를 실행합니다.
+
+```
+python3 CreateTopic.py
+```
+**실행후 카카오 클라우드 콘솔에서 확인**
+
+</br>
+  </br>
+  
+## 2. VM2: PUB/SUB 서브스크립션 생성 
+
+- **스크립트 실행**  
+  터미널에서 다음 명령어를 입력하여 `CreateSubscription.py` 스크립트를 실행합니다.
+
+```
+python3 CreateSubscription.py
+```
+
+  </br>
+  </br>
+  </br>
+  </br>
+  
 # Traffic Generator VM 1,2를 이용해 PUB/SUB 통신하기
 
 이 가이드는 VM1과 VM2를 사용하여 PUB/SUB 통신을 설정하는 방법을 설명합니다.
@@ -81,33 +112,9 @@
   </br>
   </br>
   </br>
-
-# Traffic Generator VM 2를 이용해 PUB/SUB 토픽, 서브스크립션 생성
-
-  </br>
-  </br>
-
-  ## 1. VM2: PUB/SUB 토픽생성 
-
-- **스크립트 실행**  
-  터미널에서 다음 명령어를 입력하여 `CreateTopic.py` 스크립트를 실행합니다.
-
-```
-python3 CreateTopic.py
-```
-**실행후 카카오 클라우드 콘솔에서 확인**
-
-</br>
-  </br>
   
-## 2. VM2: PUB/SUB 서브스크립션 생성 
+**이후 카카오 콘솔에서 publish된 메세지 확인** 
 
-- **스크립트 실행**  
-  터미널에서 다음 명령어를 입력하여 `CreateSubscription.py` 스크립트를 실행합니다.
-
-```
-python3 CreateSubscription.py
-```
 
 </br>
   </br>
@@ -135,3 +142,25 @@ cd /home/ubuntu/gosdk/cmd
 go build -o subscriber config.go subscriber.go
 ./subscriber
 ```
+
+</br>
+  </br>
+  </br>
+  </br>
+  
+**이후 카카오 콘솔에서 publish된 메세지 확인** 
+
+## API 서버에서 PUB/SUB PUSH 서브스크립션 확인
+
+
+  {API서버1 vm 퍼블릭 IP}/push-subscription 으로 push 된 메세지들 저장
+  {API서버1 vm 퍼블릭 IP}/push-messages 메세지 보기
+  
+**이전 VM2 에서 받아진 메세지들이 오면 정상!**
+
+## API 서버에서 logstash로 보내진 PUB/SUB 확인
+
+- **카카오 콘솔에 접속**
+- **Nginx 로그 수집용 버킷 (Pub/Sub 연동):Pub/Sub-nginx-log 확인**
+
+  
