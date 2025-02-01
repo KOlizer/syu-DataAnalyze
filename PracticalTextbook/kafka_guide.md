@@ -1,14 +1,30 @@
-카프카 설치
-```
-sudo apt update
-sudo apt install -y openjdk-21-jdk
-java -version
+### **1.3 각 VM에 Kafka 클라이언트(바이너리) 설치**
 
-wget https://archive.apache.org/dist/kafka/3.7.1/kafka_2.13-3.7.1.tgz
-tar -xzf kafka_2.13-3.7.1.tgz
-cd kafka_2.13-3.7.1
-
-```
+1. **Java 설치**
+    
+    ```bash
+    sudo apt update
+    sudo apt install -y openjdk-21-jdk
+    java -version
+    ```
+    
+2. **Kafka 바이너리 다운로드 및 설치**
+    
+    ```bash
+    cd /opt
+    sudo wget https://archive.apache.org/dist/kafka/3.7.1/kafka_2.13-3.7.1.tgz
+    sudo tar -xzf kafka_2.13-3.7.1.tgz
+    sudo mv kafka_2.13-3.7.1 kafka
+    sudo rm kafka_2.13-3.7.1.tgz
+    ```
+    
+3. **환경 변수 설정**
+    
+    ```bash
+    echo 'export KAFKA_HOME=/opt/kafka' >> ~/.bashrc
+    echo 'export PATH=$PATH:$KAFKA_HOME/bin' >> ~/.bashrc
+    source ~/.bashrc
+    ```
 
 파이썬 환경 준비
 ```
