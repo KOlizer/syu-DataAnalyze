@@ -154,11 +154,12 @@ go build -o subscriber config.go subscriber.go
   </br>
   
 ## API 서버에서 PUB/SUB PUSH 서브스크립션 확인
-</br>
+  </br>
   </br>
 
-  **{API서버1 vm 퍼블릭 IP}/push-subscription 으로 push 된 메세지들 저장
-  {API서버1 vm 퍼블릭 IP}/push-messages 메세지 보기**
+**{API서버1 vm 퍼블릭 IP}/push-subscription 으로 push 된 메세지들 저장**
+   </br>
+ **{API서버1 vm 퍼블릭 IP}/push-messages 메세지 보기**
   
   </br>
   </br>
