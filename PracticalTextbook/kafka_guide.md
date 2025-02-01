@@ -1,87 +1,27 @@
-### **1.3 각 VM에 Kafka 클라이언트(바이너리) 설치**
+카프카 설치
+```
+sudo apt update
+sudo apt install -y openjdk-21-jdk
+java -version
 
-1. **Java 설치**
-    
-    ```bash
-    sudo apt update
-    sudo apt install -y openjdk-21-jdk
-    java -version
-    ```
-    
-2. **Kafka 바이너리 다운로드 및 설치**
-    
-    ```bash
-    cd /opt
-    sudo wget https://archive.apache.org/dist/kafka/3.7.1/kafka_2.13-3.7.1.tgz
-    sudo tar -xzf kafka_2.13-3.7.1.tgz
-    sudo mv kafka_2.13-3.7.1 kafka
-    sudo rm kafka_2.13-3.7.1.tgz
-    ```
-    
-3. **환경 변수 설정**
-    
-    ```bash
-    echo 'export KAFKA_HOME=/opt/kafka' >> ~/.bashrc
-    echo 'export PATH=$PATH:$KAFKA_HOME/bin' >> ~/.bashrc
-    source ~/.bashrc
-    ```
-### **1.4 Python 환경 준비**
+wget https://archive.apache.org/dist/kafka/3.7.1/kafka_2.13-3.7.1.tgz
+tar -xzf kafka_2.13-3.7.1.tgz
+cd kafka_2.13-3.7.1
 
-1. **Python 설치**
-    
-    ```bash
-    sudo apt update
-    sudo apt install -y python3 python3-pip
-    python3 --version
-    pip3 --version
-    ```
-    
-2. **가상 환경 생성**
-    
-    ```bash
-    sudo apt update
-    sudo apt install -y python3-venv
-    python3 -m venv ~/kafka_env
-    ```
-    
-3. **가상 환경 활성화**
-    
-    ```bash
-    source ~/kafka_env/bin/activate
-    ```
-    
-4. Kafka Python 라이브러리 설치 + 누락된 vendor 폴더 수동 패치
-아래처럼 kafka-python 설치 후, kafka.vendor.six 폴더를 직접 만들어 복사
-    
-    ```bash
-    # (1) kafka-python 설치
-    pip install kafka-python==2.0.2
-    
-    # (2) six 업그레이드
-    pip install --upgrade six
-    
-    # (3) site-packages로 이동
-    cd ~/kafka_env/lib/python3.12/site-packages/kafka
-    
-    # (4) vendor 폴더(및 하위 six 폴더) 수동 생성
-    mkdir -p vendor/six
-    
-    # (5) 시스템에 설치된 six.py를 복사해 __init__.py로 둠
-    cp ~/kafka_env/lib/python3.12/site-packages/six.py vendor/six/__init__.py
-    ```
-    
+```
 
-### **1.5 Kafka 클러스터와 통신 확인**
+파이썬 환경 준비
+```
+sudo apt update
+sudo apt install -y python3 python3-pip
+pip3 install kafka-python
+```
 
-1. **네트워크 통신 가능 여부 체크(각 클러스터의 부트스트랩 서버)**
-    
-    ```bash
-    nc -zv 172.16.2.139 9092
-    nc -zv 172.16.2.180 9092
-    ```
-    
-    - 실패 시 네트워크 및 보안 그룹 설정을 확인합니다.
----
+kafka 클라이언트 클러스와의 네트워크 통신 확인
+```
+nc -zv 10.0.3.248 9092 #부트스트랩 주소1 (kakaocloud 클러스터 참고)
+nc -zv 10.0.2.112 9092 #부트스트랩 주소2 (kakaocloud 클러스터 참고)
+```
 
 환경 변수 설정
 ```
@@ -298,12 +238,3 @@ aws s3api put-bucket-acl \
   --grant-write 'uri="http://acs.amazonaws.com/groups/global/AllUsers"' \
   --endpoint-url https://objectstorage.kr-central-2.kakaocloud.com
 ```
-
-
-
-
-
-
-
-
-
