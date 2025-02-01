@@ -84,6 +84,9 @@
 
 # Traffic Generator VM 2를 이용해 PUB/SUB 토픽, 서브스크립션 생성
 
+  </br>
+  </br>
+
   ## 1. VM2: PUB/SUB 토픽생성 
 
 - **스크립트 실행**  
@@ -92,9 +95,11 @@
 ```
 python3 CreateTopic.py
 ```
-
 **실행후 카카오 클라우드 콘솔에서 확인**
 
+</br>
+  </br>
+  
 ## 2. VM2: PUB/SUB 서브스크립션 생성 
 
 - **스크립트 실행**  
@@ -104,8 +109,16 @@ python3 CreateTopic.py
 python3 CreateSubscription.py
 ```
 
+</br>
+  </br>
+  </br>
+  </br>
 
 # GO 실습
+
+</br>
+  </br>
+  
 - publisher.go 실습
 ```
 cd /home/ubuntu/gosdk/cmd
@@ -113,6 +126,9 @@ go build -o publisher config.go publisher.go
 ./publisher
 ```
 
+</br>
+  </br>
+  
 - subscriber.go 실습
 ```
 cd /home/ubuntu/gosdk/cmd
