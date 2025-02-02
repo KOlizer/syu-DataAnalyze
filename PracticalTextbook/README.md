@@ -43,15 +43,15 @@
 
 ## ObjectStorage 생성
 - **LB Accesslog용 버킷**
-  -**이름**:`LB Accesslog`
+  -**이름**:`lb-accesslog`
 - **Nginx 로그 수집용 버킷 (`Pub/Sub` 연동)**
-  -**이름**:`Pub/Sub-nginx-log`
+  -**이름**:`pubsub-nginx-log`
 - **Nginx 로그 수집용 버킷 (`kafka` 연동)**
   -**이름**:`kafka-nginx-log`
 - **`Data Query`의 쿼리 결과 저장용 버킷**
-  -**이름**:`Data Query-Result`
+  -**이름**:`data-query-result`
 - **Spark, Hive 처리 결과에 대한 저장용 버킷**
-  -**이름**:`Hive-Result`
+  -**이름**:`hive-result`
 
 ## API 서버 생성 (2대)
 
