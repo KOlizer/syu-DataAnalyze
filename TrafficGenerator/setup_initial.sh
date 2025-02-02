@@ -27,7 +27,7 @@ export CREDENTIAL_SECRET="{보안 액세스 키}"
 export API_BASE_URL="{ALB 주소}"
 
 export TOPIC_NAME_MK="{CreateTopic실습용 토픽 이름}" 
-export OBJECT_STORAGE_SUBSCRIPTION_NAME_MK="{CreateTopic실습용 서브스크립션 이름}"
+export OBJECT_STORAGE_SUBSCRIPTION_NAME_MK="{CreateTopic실습용 object storage 서브스크립션 이름}"
 export OBJECT_STORAGE_BUCKET="{로그 적재용 ObjectStorage 버킷 이름}"
 export EXPORT_INTERVAL_MIN=10
 export FILE_PREFIX=""
