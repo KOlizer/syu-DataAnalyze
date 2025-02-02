@@ -137,30 +137,30 @@
 토픽 생성
 ```
 cd kafka_2.13-3.7.1
-bin/kafka-topics.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --create --topic ${KAFKA_CONSOL_TOPIC} --partitions 1 --replication-factor 2
+bin/kafka-topics.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --create --topic consol-topic --partitions 1 --replication-factor 2
 ```
 
 프로듀서 실행
 ```
-bin/kafka-console-producer.sh --broker-list ${KAFKA_BOOTSTRAP_SERVERS} --topic ${KAFKA_CONSOL_TOPIC}
+bin/kafka-console-producer.sh --broker-list ${KAFKA_BOOTSTRAP_SERVERS} --topic consol-topic
 ```
 
 컨슈머 실행
 
 earliest 설정:
 ```
-bin/kafka-console-consumer.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --topic ${KAFKA_CONSOL_TOPIC} --group consumer-group-earliest --from-beginning
+bin/kafka-console-consumer.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --topic consol-topic --group consumer-group-earliest --from-beginning
 ```
 
 latest 설정:
 ```
-bin/kafka-console-consumer.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --topic ${KAFKA_CONSOL_TOPIC} --group consumer-group-latest
+bin/kafka-console-consumer.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --topic consol-topic --group consumer-group-latest
 ```
 
 # python 코드로 메시지 프로듀싱/컨슈밍 실습
 python 토픽 생성
 ```
-bin/kafka-topics.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --create --topic ${KAFKA_PYTHON_TOPIC} --partitions 1 --replication-factor 2
+bin/kafka-topics.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --create --topic python-topic --partitions 1 --replication-factor 2
 ```
 
 producer.py실행(vm1)
@@ -181,7 +181,7 @@ sudo ./consumer.py
 # nginx 로그 → kafka로 프로듀싱 실습 (logstash 활용)
 콘솔 스크립트(바이너리)로 새로운 토픽 생성
 ```
-bin/kafka-topics.sh --bootstrap-server $KAFKA_BOOTSTRAP_SERVERS --create --topic $KAFKA_NGINX_TOPIC --partitions 3 --replication-factor 2
+bin/kafka-topics.sh --bootstrap-server $KAFKA_BOOTSTRAP_SERVERS --create --topic nginx-logs --partitions 3 --replication-factor 2
 ```
 
 api서버에서 logstash 설정
@@ -221,7 +221,7 @@ sudo systemctl status logstash
 
 TG에서 데이터 보내기
 ```
-bin/kafka-console-consumer.sh --bootstrap-server $KAFKA_BOOTSTRAP_SERVERS --topic $KAFKA_NGINX_TOPIC --from-beginning
+bin/kafka-console-consumer.sh --bootstrap-server $KAFKA_BOOTSTRAP_SERVERS --topic nginx-logs --from-beginning
 ```
 
 
