@@ -1,38 +1,137 @@
-카프카 설치
-```
-sudo apt update
-sudo apt install -y openjdk-21-jdk
-java -version
+### **1. 사전준비**
 
-wget https://archive.apache.org/dist/kafka/3.7.1/kafka_2.13-3.7.1.tgz
-tar -xzf kafka_2.13-3.7.1.tgz
-cd kafka_2.13-3.7.1
+### **1.1 카카오클라우드 콘솔에서 Kafka 클러스터 생성**
 
-```
+1. **카카오클라우드 콘솔 접속 및 로그인**
+    - [카카오클라우드 콘솔](https://console.kakaocloud.com/)에 접속하여 로그인합니다.
+2. **Kafka 클러스터 생성**
+    - **서비스 선택:** 좌측 메뉴에서 `Analytics` > `Advanced Managed Kafka`를 선택합니다.
+    - **클러스터 생성:** `클러스터 생성` 버튼을 클릭합니다.
+    - **클러스터 설정**
+        - **클러스터 이름:** 예를 들어, `my-managed-kafka-cluster`로 지정합니다.
+        - **Region:** `kr-central-2`를 선택합니다.
+        - **Kafka 버전:** 권장 버전인 `3.7.1`을 선택합니다.
+        - **포트:** 기본값 `9092`를 사용합니다.
+        - **인스턴스 유형:** `r2a.2xlarge` 선택.
+        - **네트워크 설정**
+            - **VPC:** `tutorial-amk-vpc` (사전 생성한 VPC)
+            - **서브넷:** `main (10.0.0.0/20)`
+        - **보안 그룹**
+            - `[보안 그룹 생성]` 버튼을 클릭합니다.
+            - **설정**
+                - **보안 그룹 이름:** `tutorial-amk-sg`
+                - **설명:** `Advanced Managed Kafka 보안 그룹`
+            - **인바운드 규칙 추가**
+                - **프로토콜:** `ALL`
+                - **포트 범위:** 9092
+                - **출발지:** `0.0.0.0/0`
+            - **생성 완료:** `[생성]` 버튼을 클릭합니다.
+        - **브로커 구성**
+            - **가용 영역 수:** 2
+            - **브로커 수:** 2 (가용 영역당 1개씩 배포)
+            - **볼륨 타입:** `SSD`
+            - **볼륨 크기:** `50 GB` (브로커당)
+            - **최대 IOPS:** `3000` (볼륨 크기 50GB 기준)
+    - **생성 완료:** 설정을 확인한 후 `생성` 버튼을 클릭하여 클러스터 생성을 시작합니다.
+3. **Kafka 브로커 조회**
+    - 생성된 클러스터의 상태가 `Active`가 될 때까지 기다립니다.
+    - 클러스터 이름을 클릭하여 상세 페이지로 이동합니다.
+    - **브로커 정보:** 브로커의 부트스트랩 서버 주소 (`bootstrap.servers`)를 확인합니다.
+        
+        예시: `172.16.0.194:9092,172.16.2.91:9092`
+        
 
-파이썬 환경 준비
-```
-sudo apt update
-sudo apt install -y python3 python3-pip
-pip3 install kafka-python
-```
+### **Traffic Generator 1/2 VM 사전 준비**
 
-kafka 클라이언트 클러스와의 네트워크 통신 확인
-```
-nc -zv 10.0.3.248 9092 #부트스트랩 주소1 (kakaocloud 클러스터 참고)
-nc -zv 10.0.2.112 9092 #부트스트랩 주소2 (kakaocloud 클러스터 참고)
-```
+1. **SSH 접속**
+    - 각 VM에 SSH로 접속합니다.
 
-환경 변수 설정
-```
+### **1.3 각 VM에 Kafka 클라이언트(바이너리) 설치**
 
-echo export KAFKA_BOOTSTRAP_SERVERS="{부트스트랩 주소}" >> ~/.bashrc
-echo export KAFKA_CONSOL_TOPIC="kafka_consol" >> ~/.bashrc
-echo export KAFKA_PYTHON_TOPIC="kafka-python" >> ~/.bashrc
-echo export KAFKA_NGINX_TOPIC="kafka_nginx" >> ~/.bashrc
-source ~/.bashrc
+1. **Java 설치**
+    
+    ```bash
+    sudo apt update
+    sudo apt install -y openjdk-21-jdk
+    java -version
+    ```
+    
+2. **Kafka 바이너리 다운로드 및 설치**
+    
+    ```bash
+    cd /opt
+    sudo wget https://archive.apache.org/dist/kafka/3.7.1/kafka_2.13-3.7.1.tgz
+    sudo tar -xzf kafka_2.13-3.7.1.tgz
+    sudo mv kafka_2.13-3.7.1 kafka
+    sudo rm kafka_2.13-3.7.1.tgz
+    ```
+    
+3. **환경 변수 설정 (선택 사항)**
+    
+    ```bash
+    echo 'export KAFKA_HOME=/opt/kafka' >> ~/.bashrc
+    echo 'export PATH=$PATH:$KAFKA_HOME/bin' >> ~/.bashrc
+    source ~/.bashrc
+    ```
+    
 
-```
+### **1.4 Python 환경 준비**
+
+1. **Python 설치**
+    
+    ```bash
+    sudo apt update
+    sudo apt install -y python3 python3-pip
+    python3 --version
+    pip3 --version
+    ```
+    
+2. **가상 환경 생성**
+    
+    ```bash
+    sudo apt update
+    sudo apt install -y python3-venv
+    python3 -m venv ~/kafka_env
+    ```
+    
+3. **가상 환경 활성화**
+    
+    ```bash
+    source ~/kafka_env/bin/activate
+    ```
+    
+4. Kafka Python 라이브러리 설치 + 누락된 vendor 폴더 수동 패치
+아래처럼 kafka-python 설치 후, kafka.vendor.six 폴더를 직접 만들어 복사
+    
+    ```bash
+    # (1) kafka-python 설치
+    pip install kafka-python==2.0.2
+    
+    # (2) six 업그레이드
+    pip install --upgrade six
+    
+    # (3) site-packages로 이동
+    cd ~/kafka_env/lib/python3.12/site-packages/kafka
+    
+    # (4) vendor 폴더(및 하위 six 폴더) 수동 생성
+    mkdir -p vendor/six
+    
+    # (5) 시스템에 설치된 six.py를 복사해 __init__.py로 둠
+    cp ~/kafka_env/lib/python3.12/site-packages/six.py vendor/six/__init__.py
+    ```
+    
+
+### **1.5 Kafka 클러스터와 통신 확인**
+
+1. **네트워크 통신 가능 여부 체크(각 클러스터의 부트스트랩 서버)**
+    
+    ```bash
+    nc -zv 172.16.2.139 9092
+    nc -zv 172.16.2.180 9092
+    ```
+    
+    - 실패 시 네트워크 및 보안 그룹 설정을 확인합니다.
+---
 
 # 콘솔 스크립트(바이너리)로 메시지 프로듀싱/컨슈밍 실습
 토픽 생성
