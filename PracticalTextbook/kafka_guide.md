@@ -71,6 +71,7 @@
     ```bash
     echo 'export KAFKA_HOME=/opt/kafka' >> ~/.bashrc
     echo 'export PATH=$PATH:$KAFKA_HOME/bin' >> ~/.bashrc
+    echo export KAFKA_BOOTSTRAP_SERVERS="카프카 부트스트랩 서버" >> ~/.bashrc
     source ~/.bashrc
     ```
     
