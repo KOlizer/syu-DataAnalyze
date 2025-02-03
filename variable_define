@@ -12,22 +12,22 @@
 - export API_BASE_URL="{ALB 주소}"
 
 - TOPIC_NAME_MK="실습용 토픽 이름(crate-topic)"
-- OBJECT_STORAGE_SUBSCRIPTION_NAME_MK="실습용 서브스크립션 이름{objectstoragesubscription}" **(여기 쌈뽕한 이름 추천 받아요)**
+- OBJECT_STORAGE_SUBSCRIPTION_NAME_MK="실습용 서브스크립션 이름(objectstoragesubscription)" **(여기 쌈뽕한 이름 추천 받아요)**
 - OBJECT_STORAGE_BUCKET="{로그 적재용 ObjectStorage 버킷 이름}”
 
 ---
 
 # APIServer
 
-- MYSQL_HOST="MySQL 엔드포인트"
-- DOMAIN_ID="조직 ID"
-- PROJECT_ID="프로젝트 ID"
-- PUBSUB_TOPIC_NAME="Pub/Sub 토픽 이름(log-topic)”
-- KAFKA_TOPIC_NAME="Kafka 토픽 이름(nginx-topic)”
-- CREDENTIAL_ID="액세스 키 ID"
-- CREDENTIAL_SECRET="보안 액세스 키"
+- MYSQL_HOST="{MySQL 엔드포인트}"
+- DOMAIN_ID="{조직 ID}"
+- PROJECT_ID="{프로젝트 ID]"
+- PUBSUB_TOPIC_NAME="{Pub/Sub 토픽 이름(log-topic)}”
+- KAFKA_TOPIC_NAME="{Kafka 토픽 이름(nginx-topic)}”
+- CREDENTIAL_ID="{액세스 키 ID}"
+- CREDENTIAL_SECRET="{보안 액세스 키}"
 - LOGSTASH_ENV_FILE="/etc/default/logstash"
-- LOGSTASH_KAFKA_ENDPOINT="Kafka 클러스터 부트스트랩 서버"
+- LOGSTASH_KAFKA_ENDPOINT="{Kafka 클러스터 부트스트랩 서버}"
 
 ---
 
