@@ -104,9 +104,13 @@
 ---
 
 # 콘솔 스크립트(바이너리)로 메시지 프로듀싱/컨슈밍 실습
-토픽 생성 (TG1)
+카프카 디렉토리로 이동 (TG1, 2)
 ```
 cd kafka
+```
+
+토픽 생성 (TG1)
+```
 bin/kafka-topics.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --create --topic consol-topic --partitions 1 --replication-factor 2
 ```
 
