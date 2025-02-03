@@ -137,14 +137,14 @@ producer.py실행(vm1)
 ```
 sudo wget -O producer.py "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/heads/main/Kafka_Connect_VM/producer.py"
 sudo chmod +x producer.py
-sudo ./producer.py
+sudo -E ./producer.py
 ```
 
 consumer.py실행(vm2)
 ```
 sudo wget -O consumer.py "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/heads/main/Kafka_Connect_VM/consumer.py"
 sudo chmod +x consumer.py
-sudo ./consumer.py
+sudo -E ./consumer.py
 ```
 
 ---
