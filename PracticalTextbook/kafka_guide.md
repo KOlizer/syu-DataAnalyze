@@ -358,8 +358,8 @@ source /home/ubuntu/.bashrc
     - 다음 내용을 추가합니다 .
         
         ```bash
-        export AWS_ACCESS_KEY_ID="**{S3_ACCESS_KEY}**"
-        export AWS_SECRET_ACCESS_KEY="**{S3_SECRET_ACCESS_KEY}**"
+        export AWS_ACCESS_KEY_ID="{S3_ACCESS_KEY}"
+        export AWS_SECRET_ACCESS_KEY="{S3_SECRET_ACCESS_KEY}"
         ```
         
         - 입력 예시
