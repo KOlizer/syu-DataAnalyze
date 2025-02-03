@@ -104,18 +104,18 @@
 ---
 
 # 콘솔 스크립트(바이너리)로 메시지 프로듀싱/컨슈밍 실습
-토픽 생성
+토픽 생성 (TG1)
 ```
 cd kafka
 bin/kafka-topics.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --create --topic consol-topic --partitions 1 --replication-factor 2
 ```
 
-프로듀서 실행
+프로듀서 실행(TG1)
 ```
 bin/kafka-console-producer.sh --broker-list ${KAFKA_BOOTSTRAP_SERVERS} --topic consol-topic
 ```
 
-컨슈머 실행
+컨슈머 실행(TG2)
 
 earliest 설정:
 ```
@@ -128,19 +128,19 @@ bin/kafka-console-consumer.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --to
 ```
 
 # python 코드로 메시지 프로듀싱/컨슈밍 실습
-python 토픽 생성
+python 토픽 생성(TG1)
 ```
 bin/kafka-topics.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --create --topic python-topic --partitions 1 --replication-factor 2
 ```
 
-producer.py실행(vm1)
+producer.py실행(TG1)
 ```
 sudo wget -O producer.py "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/heads/main/Kafka_Connect_VM/producer.py"
 sudo chmod +x producer.py
 sudo -E ./producer.py
 ```
 
-consumer.py실행(vm2)
+consumer.py실행(TG2)
 ```
 sudo wget -O consumer.py "https://github.com/KOlizer/syu-DataAnalyze/raw/refs/heads/main/Kafka_Connect_VM/consumer.py"
 sudo chmod +x consumer.py
@@ -149,7 +149,7 @@ sudo -E ./consumer.py
 
 ---
 # nginx 로그 → kafka로 프로듀싱 실습 (logstash 활용)
-콘솔 스크립트(바이너리)로 새로운 토픽 생성
+콘솔 스크립트(바이너리)로 새로운 토픽 생성(TG1)
 ```
 bin/kafka-topics.sh --bootstrap-server $KAFKA_BOOTSTRAP_SERVERS --create --topic nginx-topic --partitions 1 --replication-factor 2
 ```
@@ -174,7 +174,7 @@ output {
   # Kafka로 데이터 전송 (원본 메시지 사용)
   kafka {
     bootstrap_servers => "${LOGSTASH_KAFKA_ENDPOINT}"
-    topic_id => "${TOPIC_NAME_KAFKA}"
+    topic_id => "nginx-topic"
     codec => json  # 데이터 형식에 맞게 조정하세요 (예: json, plain)
     # 필요에 따라 추가 Kafka 설정을 여기에 추가하세요
     # 예: security_protocol, sasl_mechanism 등
@@ -191,7 +191,7 @@ sudo systemctl status logstash
 
 TG에서 데이터 보내기
 ```
-bin/kafka-console-consumer.sh --bootstrap-server $KAFKA_BOOTSTRAP_SERVERS --topic nginx-logs --from-beginning
+bin/kafka-console-consumer.sh --bootstrap-server $KAFKA_BOOTSTRAP_SERVERS --topic nginx-topic --from-beginning
 ```
 
 
