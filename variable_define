@@ -1,0 +1,55 @@
+---
+
+# TrafficGenerator
+
+- export PUBSUB_ENDPOINT="[https://pub-sub.kr-central-2.kakaocloud.com](https://pub-sub.kr-central-2.kakaocloud.com/)"
+- export DOMAIN_ID="{조직 ID}"
+- export PROJECT_ID="{프로젝트 ID}"
+- TOPIC_NAME="{test-topic}
+- SUB_NAME={pull-subscription}
+- export CREDENTIAL_ID="{액세스 키 ID}"
+- export CREDENTIAL_SECRET="{보안 액세스 키}"
+- export API_BASE_URL="{ALB 주소}"
+
+- TOPIC_NAME_MK={crate-topic}
+- OBJECT_STORAGE_SUBSCRIPTION_NAME_MK={objectstoragesubscription} **(여기 쌈뽕한 이름 추천 받아요)**
+- OBJECT_STORAGE_BUCKET="{로그 적재용 ObjectStorage 버킷 이름}”
+
+---
+
+# APIServer
+
+- MYSQL_HOST="MySQL 엔드포인트"
+- DOMAIN_ID="조직 ID"
+- PROJECT_ID="프로젝트 ID"
+- PUBSUB_TOPIC_NAME="Pub/Sub 토픽 이름” {log-topic}
+- KAFKA_TOPIC_NAME="Kafka 토픽 이름” {nginx-topic}
+- CREDENTIAL_ID="액세스 키 ID"
+- CREDENTIAL_SECRET="보안 액세스 키"
+- LOGSTASH_ENV_FILE="/etc/default/logstash"
+- LOGSTASH_KAFKA_ENDPOINT="Kafka 클러스터 부트스트랩 서버"
+
+---
+
+# KafKa
+
+- consol-topic= 콘솔 스크립트(바이너리)로 메시지 프로듀싱/컨슈밍 실습
+- python-topic= Python 코드로 메시지 프로듀싱/컨슈밍 (수동 커밋) 실습
+- nginx-topic= nginx 로그 → kafka로 프로듀싱 실습
+
+---
+
+# Pubsub 상황
+
+**Topic & Sub**
+
+pub/sub 실습
+
+- test-topic - {Pull/ Push Subscription}
+- log-topic - {ObjectStorageSubscription}
+
+kafka 실습
+
+- consol-topic
+- python-topic
+- nginx-topic
