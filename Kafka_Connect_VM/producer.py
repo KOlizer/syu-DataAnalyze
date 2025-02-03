@@ -4,7 +4,7 @@ from kafka import KafkaProducer
 import time
 import os
 
-bootstrap_servers = os.environ.get('KAFKA_BOOTSTRAP_SERVER')
+bootstrap_servers = os.environ.get('KAFKA_BOOTSTRAP_SERVERS')
 
 producer = KafkaProducer(bootstrap_servers=bootstrap_servers)
 
