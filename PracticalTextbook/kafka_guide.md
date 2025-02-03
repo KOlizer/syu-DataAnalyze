@@ -160,7 +160,7 @@ bin/kafka-topics.sh --bootstrap-server $KAFKA_BOOTSTRAP_SERVERS --create --topic
 
 api서버에서 logstash 설정(API VM1, 2)
 ```
-cd /etc/filebeat/conf.d
+cd /etc/logstash/conf.d
 cat logs-to-kafka.conf
 ```
 
