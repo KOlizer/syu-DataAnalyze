@@ -307,11 +307,11 @@ source /home/ubuntu/.bashrc
         - **카카오클라우드 콘솔 메인 화면** 상단의 **작업 중인 프로젝트**에서 `프로젝트 ID`를 확인합니다.
         
         ```bash
-        echo $(curl -s -X POST -i https://iam.kakaocloud.com/identity/v3/users/**{사용자 고유 ID}**/credentials/OS-EC2 \
+        echo $(curl -s -X POST -i https://iam.kakaocloud.com/identity/v3/users/{사용자 고유 ID}/credentials/OS-EC2 \
          -H "Content-Type: application/json" \
          -H "X-Auth-Token: ${API_TOKEN}" -d \
          '{
-             "tenant_id": "**{프로젝트 ID}**"
+             "tenant_id": "{프로젝트 ID}"
          }')
         ```
         
