@@ -187,13 +187,13 @@ output {
 
 ```
 
-Logstash 재실행 및 상태 확인
+Logstash 재실행 및 상태 확인 (API VM1, 2)
 ```
 sudo systemctl restart logstash
 sudo systemctl status logstash
 ```
 
-TG에서 데이터 보내기
+TG에서 데이터 보내기 (TG1)
 ```
 bin/kafka-console-consumer.sh --bootstrap-server $KAFKA_BOOTSTRAP_SERVERS --topic nginx-topic --from-beginning
 ```
