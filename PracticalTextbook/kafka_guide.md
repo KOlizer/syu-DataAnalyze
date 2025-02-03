@@ -193,7 +193,7 @@ sudo systemctl restart logstash
 sudo systemctl status logstash
 ```
 
-TG에서 데이터 보내기 (TG1)
+TG에서 데이터 받기 (TG2)
 ```
 bin/kafka-console-consumer.sh --bootstrap-server $KAFKA_BOOTSTRAP_SERVERS --topic nginx-topic --from-beginning
 ```
