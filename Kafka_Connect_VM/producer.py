@@ -8,7 +8,7 @@ producer = KafkaProducer(bootstrap_servers=bootstrap_servers)
 
 for i in range(5):
     message = f"메시지 {i+1}"
-    producer.send('test-topic-py', value=message.encode('utf-8'))
+    producer.send('python-topic', value=message.encode('utf-8'))
     print(f"전송: {message}")
     time.sleep(1)
 
