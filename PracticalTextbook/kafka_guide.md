@@ -85,7 +85,7 @@
     sudo apt install -y python3 python3-pip
     python3 --version
     pip3 --version
-    pip3 install kafka-python
+    sudo pip3 install kafka-python
     ```
     
 
