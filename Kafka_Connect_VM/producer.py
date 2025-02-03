@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from kafka import KafkaProducer
 import time
 import os
