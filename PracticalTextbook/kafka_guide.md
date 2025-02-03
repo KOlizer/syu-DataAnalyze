@@ -158,7 +158,7 @@ sudo -E ./consumer.py
 bin/kafka-topics.sh --bootstrap-server $KAFKA_BOOTSTRAP_SERVERS --create --topic nginx-topic --partitions 1 --replication-factor 2
 ```
 
-api서버에서 logstash 설정
+api서버에서 logstash 설정(API VM1, 2)
 ```
 cd /etc/filebeat/conf.d
 cat logs-to-kafka.conf
