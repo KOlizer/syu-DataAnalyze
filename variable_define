@@ -5,14 +5,14 @@
 - export PUBSUB_ENDPOINT="[https://pub-sub.kr-central-2.kakaocloud.com](https://pub-sub.kr-central-2.kakaocloud.com/)"
 - export DOMAIN_ID="{조직 ID}"
 - export PROJECT_ID="{프로젝트 ID}"
-- TOPIC_NAME="{test-topic}
-- SUB_NAME={pull-subscription}
+- TOPIC_NAME="콘솔에서 생성한 토픽 이름(test-topic)"
+- SUB_NAME="콘솔에서 생성한 서브 스크립션 이름(pull-subscription)"
 - export CREDENTIAL_ID="{액세스 키 ID}"
 - export CREDENTIAL_SECRET="{보안 액세스 키}"
 - export API_BASE_URL="{ALB 주소}"
 
-- TOPIC_NAME_MK={crate-topic}
-- OBJECT_STORAGE_SUBSCRIPTION_NAME_MK={objectstoragesubscription} **(여기 쌈뽕한 이름 추천 받아요)**
+- TOPIC_NAME_MK="실습용 토픽 이름(crate-topic)"
+- OBJECT_STORAGE_SUBSCRIPTION_NAME_MK="실습용 서브스크립션 이름{objectstoragesubscription}" **(여기 쌈뽕한 이름 추천 받아요)**
 - OBJECT_STORAGE_BUCKET="{로그 적재용 ObjectStorage 버킷 이름}”
 
 ---
@@ -22,8 +22,8 @@
 - MYSQL_HOST="MySQL 엔드포인트"
 - DOMAIN_ID="조직 ID"
 - PROJECT_ID="프로젝트 ID"
-- PUBSUB_TOPIC_NAME="Pub/Sub 토픽 이름” {log-topic}
-- KAFKA_TOPIC_NAME="Kafka 토픽 이름” {nginx-topic}
+- PUBSUB_TOPIC_NAME="Pub/Sub 토픽 이름(log-topic)”
+- KAFKA_TOPIC_NAME="Kafka 토픽 이름(nginx-topic)”
 - CREDENTIAL_ID="액세스 키 ID"
 - CREDENTIAL_SECRET="보안 액세스 키"
 - LOGSTASH_ENV_FILE="/etc/default/logstash"
