@@ -66,7 +66,7 @@
     sudo rm kafka_2.13-3.7.1.tgz
     ```
     
-3. **환경 변수 설정 (선택 사항)**
+3. **환경 변수 설정**
     
     ```bash
     echo 'export KAFKA_HOME=/opt/kafka' >> ~/.bashrc
@@ -121,12 +121,12 @@ bin/kafka-console-producer.sh --broker-list ${KAFKA_BOOTSTRAP_SERVERS} --topic c
 
 컨슈머 실행(TG2)
 
-earliest 설정:
+earliest 설정
 ```
 bin/kafka-console-consumer.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --topic consol-topic --group consumer-group-earliest --from-beginning
 ```
 
-latest 설정:
+latest 설정
 ```
 bin/kafka-console-consumer.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --topic consol-topic --group consumer-group-latest
 ```
