@@ -1,9 +1,10 @@
 
 ## PUB/SUB TOPIC 콘솔에서 생성
 </br>
-
-
-## 1. Test용 topic, Data Catalog 실습용 topic 생성
+  
+## 1. 사전 준비
+## 카카오클라우드 콘솔
+## 1.1 Test용 topic, Data Catalog 실습용 topic 생성
 
 - **이름**: `TestTopic`
 - **기본서브스크립션**: `생성 안함`
@@ -20,7 +21,7 @@
 </br>
 </br>
 
-## 2. Test용 topic Subscription 생성
+## 1.2 Test용 topic Subscription 생성
 
 - **이름**: `TestTopic-pull`
 - **토픽선택**: `TestTopic`
@@ -97,7 +98,15 @@ python3 CreateSubscription.py
   ```
   </br>
   </br>
-
+## 1-1. 카카오 콘솔에 접속하여 PUB/SUB 서브스크립션에 메세지 전송 확인
+</br>
+  </br>
+  
+ - [카카오클라우드 콘솔](https://console.kakaocloud.com/)에 접속하여 **VM1** 에서 입력한 메세지가 출력되는지 확인함
+   
+   </br>
+  </br>
+  
 ## 2. VM2: SUB 메시지 수신
 - **스크립트 실행**
   터미널에서 다음 명령어를 입력하여 restapi_sub.py 스크립트를 실행합니다.
