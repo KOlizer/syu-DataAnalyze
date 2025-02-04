@@ -96,6 +96,16 @@ GO_DOWNLOAD_URL="https://go.dev/dl/${GO_TAR_FILE}"
 
 echo "Go ${GO_VERSION} 다운로드 및 설치 중..."
 wget "$GO_DOWNLOAD_URL" -O "/tmp/$GO_TAR_FILE"
+
+# 파일 무결성 체크: 최소 50MB (52428800 바이트) 이상이어야 함
+MIN_SIZE=52428800
+FILE_SIZE=$(stat -c%s "/tmp/$GO_TAR_FILE")
+if [ "$FILE_SIZE" -lt "$MIN_SIZE" ]; then
+  echo "오류: 다운로드된 Go tarball 크기가 너무 작습니다. (파일 크기: $FILE_SIZE bytes)"
+  exit 1
+fi
+
+# 기존 설치 제거 및 tarball 추출
 sudo rm -rf /usr/local/go
 sudo tar -C /usr/local -xzf "/tmp/$GO_TAR_FILE"
 rm "/tmp/$GO_TAR_FILE"
@@ -107,7 +117,7 @@ if ! grep -q 'export PATH=\$PATH:/usr/local/go/bin' ~/.bashrc; then
 fi
 
 echo "Go 설치 완료. 버전 정보:"
-go version
+/usr/local/go/bin/go version
 
 # GOPATH 및 GOCACHE 설정
 export GOPATH="$HOME/go"
@@ -132,15 +142,15 @@ rm pubsub.tgz
 
 # Go 모듈 초기화 (이미 초기화된 경우 건너뜀)
 if [ ! -f go.mod ]; then
-    go mod init trafficgenerator-go-sdk
+    /usr/local/go/bin/go mod init trafficgenerator-go-sdk
 fi
 
 # Pub/Sub SDK 의존성 추가 및 로컬 경로 교체
-go mod edit -require github.kakaoenterprise.in/cloud-platform/kc-pub-sub-sdk-go@v1.0.0
-go mod edit -replace github.kakaoenterprise.in/cloud-platform/kc-pub-sub-sdk-go@v1.0.0=$GOSDK_DIR
-go mod tidy
+/usr/local/go/bin/go mod edit -require github.kakaoenterprise.in/cloud-platform/kc-pub-sub-sdk-go@v1.0.0
+/usr/local/go/bin/go mod edit -replace github.kakaoenterprise.in/cloud-platform/kc-pub-sub-sdk-go@v1.0.0=$GOSDK_DIR
+/usr/local/go/bin/go mod tidy
 
-# 필요한 Go 파일들을 cmd 디렉토리에 다운로드
+# cmd 디렉토리 생성 후 이동
 CMD_DIR="$GOSDK_DIR/cmd"
 mkdir -p "$CMD_DIR"
 cd "$CMD_DIR"
@@ -150,8 +160,8 @@ wget -O config.go https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/main
 wget -O publisher.go https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/main/TrafficGenerator/GO_SDK/publisher.go
 wget -O subscriber.go https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/main/TrafficGenerator/GO_SDK/subscriber.go
 
-go get gopkg.in/yaml.v2
-go mod tidy
+/usr/local/go/bin/go get gopkg.in/yaml.v2
+/usr/local/go/bin/go mod tidy
 
 # 소유권 변경 (예: ubuntu 사용자)
 sudo chown -R ubuntu:ubuntu "$GOSDK_DIR"
