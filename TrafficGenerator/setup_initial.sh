@@ -12,21 +12,22 @@ echo "========================================"
 
 # ----------------------------------------
 # 1. 환경 변수 정의 (필요에 따라 실제 값으로 수정)
+# 중괄호는 제거하고 알맞은 값을 넣어 진행해 주시고 소괄호가 있다면 소괄호 안에 있는 값을 사용해주세요
 # ----------------------------------------
 export PUBSUB_ENDPOINT="https://pub-sub.kr-central-2.kakaocloud.com"
-export DOMAIN_ID="fa22d0db818f48829cf8b7849e3a0a26"
-export PROJECT_ID="0aa67b93c3ec48e587a51c9f842ca407"
-export TOPIC_NAME="test-topic"
-export SUB_NAME="pull-subscription"
+export DOMAIN_ID="{조직 ID}"
+export PROJECT_ID="{프로젝트 ID}"
+export TOPIC_NAME="콘솔에서 생성한 토픽 이름(test-topic)"
+export SUB_NAME="콘솔에서 생성한 서브 스크립션 이름(pull-subscription)"
 export TOPIC_DESCRIPTION=""
 export TOPIC_RETENTION_DURATION="600s"
-export CREDENTIAL_ID="618260d9181d4d1ead8b4b70a8608ec4"
-export CREDENTIAL_SECRET="846b5e041cdba312829f167a4719721b74580192b42aa0e29dc39fb46e7aaaece5273e"
-export API_BASE_URL="210.109.54.27"
+export CREDENTIAL_ID="{액세스 키 ID}"
+export CREDENTIAL_SECRET="{보안 액세스 키}"
+export API_BASE_URL="{ALB 주소}"
 
-export TOPIC_NAME_MK="crate-topic"
-export OBJECT_STORAGE_SUBSCRIPTION_NAME="objectstoragesubscription"
-export OBJECT_STORAGE_BUCKET="lb-accesslog"
+export TOPIC_NAME_MK="{실습용 토픽 이름(crate-topic)}"
+export OBJECT_STORAGE_SUBSCRIPTION_NAME="{실습용 서브스크립션 이름(objectstoragesubscription)"
+export OBJECT_STORAGE_BUCKET="{로그 적재용 ObjectStorage 버킷 이름}"
 export EXPORT_INTERVAL_MIN=10
 export FILE_PREFIX=""
 export FILE_SUFFIX=".log"
