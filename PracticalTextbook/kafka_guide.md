@@ -217,11 +217,16 @@ sudo apt update
 sudo apt install -y python3 python3-pip openjdk-21-jdk unzip jq
 ```
 
-### 1-2. Kafka 다운로드 및 압축 해제
+### 1-2. Kafka 다운로드
 
+다운로드
 ```bash
 cd /home/ubuntu
 curl https://archive.apache.org/dist/kafka/3.7.1/kafka_2.13-3.7.1.tgz -o kafka_2.13-3.7.1.tgz
+```
+
+압축해제
+```
 tar -xzf /home/ubuntu/kafka_2.13-3.7.1.tgz
 rm /home/ubuntu/kafka_2.13-3.7.1.tgz
 mv /home/ubuntu/kafka_2.13-3.7.1 /home/ubuntu/kafka
