@@ -1,7 +1,7 @@
 #!/bin/bash
 # setup_all.sh
 # 이 스크립트는 ~/syu-DataAnalyze/TrafficGenerator 디렉토리에 config.yml을 생성하고,
-# Go SDK 및 REST API 환경 설정을 자동으로 진행합니다.
+# Go SDK 및 REST API 환경 설정(깃 클론된 전체 파일들의 소유권/쓰기 권한 변경)을 자동으로 진행합니다.
 # (환경 변수들은 setup_initial.sh에서 이미 설정된 상태라고 가정합니다.)
 
 set -e
@@ -104,7 +104,7 @@ GO_DOWNLOAD_URL="https://go.dev/dl/${GO_TAR_FILE}"
 echo "Go ${GO_VERSION} 다운로드 및 설치 중..."
 wget "$GO_DOWNLOAD_URL" -O "/tmp/$GO_TAR_FILE"
 
-# 파일 무결성 체크: Go 1.20.5 tarball은 약 100MB 이상이어야 함 (최소 50MB로 체크)
+# 파일 무결성 체크: Go tarball의 최소 크기 50MB 이상
 MIN_SIZE=52428800
 FILE_SIZE=$(stat -c%s "/tmp/$GO_TAR_FILE")
 if [ "$FILE_SIZE" -lt "$MIN_SIZE" ]; then
@@ -177,39 +177,20 @@ sudo chown -R ubuntu:ubuntu "$USER_HOME/.cache/go-build"
 echo "Go SDK 설정 완료."
 
 ###############################################################################
-# 6. REST API 설치 및 설정
+# 6. REST API 관련 전체 파일 권한 수정 (깃 클론된 전체 파일에 대해)
 ###############################################################################
 echo "========================================"
-echo "6. REST API 설치 및 설정"
+echo "6. 전체 파일 소유권 및 쓰기 권한 설정"
 echo "========================================"
 
-REST_API_DIR="$USER_HOME/syu-DataAnalyze/TrafficGenerator/REST API"
-mkdir -p "$REST_API_DIR/VM1" "$REST_API_DIR/VM2"
+# 깃 클론한 저장소 전체에 대해 소유자 및 쓰기 권한 부여
+sudo chown -R ubuntu:ubuntu "$USER_HOME/syu-DataAnalyze"
+chmod -R u+rw "$USER_HOME/syu-DataAnalyze"
 
-sudo apt install -y python3 python3-pip
-
-pip3 install --user requests pyyaml
-
-echo "VM1 Python 권한 설정 중..."
-
-
-sudo chown -R ubuntu:ubuntu "$HOME/syu-DataAnalyze"
-chmod -R u+rw "$HOME/syu-DataAnalyze"
-
-echo "REST API 설정 완료."
+echo "전체 파일 권한 설정 완료."
 
 ###############################################################################
-# 7. 로그 파일 및 디렉토리 권한 수정 (REST API VM1)
-###############################################################################
-echo "========================================"
-echo "로그 파일 및 디렉토리 소유권/쓰기 권한 설정"
-echo "========================================"
-sudo chown -R ubuntu:ubuntu "$REST_API_DIR/VM1"
-chmod -R u+w "$REST_API_DIR/VM1"
-echo "로그 파일 및 디렉토리 권한 설정 완료."
-
-###############################################################################
-# 8. 환경 변수 변경 사항 적용
+# 7. 환경 변수 변경 사항 적용
 ###############################################################################
 echo "========================================"
 echo "환경 변수 변경 사항을 적용합니다."
@@ -223,9 +204,9 @@ else
 fi
 
 ###############################################################################
-# 9. 완료 메시지
+# 8. 완료 메시지
 ###############################################################################
 echo "========================================"
 echo "자동화 스크립트 실행 완료."
-echo "Go SDK 및 REST API 설정이 완료되었습니다."
+echo "Go SDK 및 REST API (전체 파일 권한 수정) 설정이 완료되었습니다."
 echo "========================================"
