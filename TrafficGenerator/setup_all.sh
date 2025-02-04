@@ -190,18 +190,11 @@ sudo apt install -y python3 python3-pip
 
 pip3 install --user requests pyyaml
 
-echo "VM1 Python 스크립트 다운로드 중..."
-cd "$REST_API_DIR/VM1"
-wget -O pub_sub_send.py https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/main/TrafficGenerator/REST%20API/VM1/pub_sub_send.py
-wget -O traffic_generator.py https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/main/TrafficGenerator/REST%20API/VM1/traffic_generator.py
+echo "VM1 Python 권한 설정 중..."
 
-echo "VM2 Python 스크립트 다운로드 중..."
-cd "$REST_API_DIR/VM2"
-wget -O CreateSubscription.py https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/main/TrafficGenerator/REST%20API/VM2/CreateSubscription.py
-wget -O CreateTopic.py https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/main/TrafficGenerator/REST%20API/VM2/CreateTopic.py
-wget -O restapi_sub.py https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/main/TrafficGenerator/REST%20API/VM2/restapi_sub.py
 
-chmod +x "$REST_API_DIR/VM1/"*.py "$REST_API_DIR/VM2/"*.py
+sudo chown -R ubuntu:ubuntu "$HOME/syu-DataAnalyze"
+chmod -R u+rw "$HOME/syu-DataAnalyze"
 
 echo "REST API 설정 완료."
 
