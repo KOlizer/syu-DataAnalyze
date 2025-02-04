@@ -145,7 +145,16 @@ go build -o publisher config.go publisher.go
 </br>
   </br>
   
+##  카카오 콘솔에 접속하여 PUB/SUB 서브스크립션에 메세지 전송 확인
+</br>
+  </br>
+  
+ - [카카오클라우드 콘솔](https://console.kakaocloud.com/)에 접속하여 **VM1** 에서 입력한 메세지가 출력되는지 확인함
 - subscriber.go 실습
+
+  </br>
+  </br>
+  
 ```
 cd /home/ubuntu/gosdk/cmd
 go build -o subscriber config.go subscriber.go
