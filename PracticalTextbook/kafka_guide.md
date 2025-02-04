@@ -445,7 +445,7 @@ Kakao Cloud Object Storage 특성상 CORS 및 ACL 설정이 필요하다.
 
 ```bash
 aws s3api put-bucket-acl \
-  --bucket **{버킷 이름}** \
+  --bucket {버킷 이름} \
   --grant-write 'uri="http://acs.amazonaws.com/groups/global/AllUsers"' \
   --endpoint-url https://objectstorage.kr-central-2.kakaocloud.com
 ```
@@ -493,7 +493,7 @@ vi /opt/kafka/config/s3-sink-connector.properties
     tasks.max=1
     
     # 연결할 토픽 (쉼표로 여러 개 지정 가능)
-    topics=nginx-logs
+    topics=nginx-topic
     
     # Object Storage/S3 관련 설정
     s3.region=kr-central-2
