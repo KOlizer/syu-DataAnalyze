@@ -1,18 +1,26 @@
 #!/bin/bash
 # setup_all.sh
-# 이 스크립트는 config.yml 생성, Go SDK 및 REST API 환경 설정을 자동으로 진행합니다.
-# 환경 변수들은 setup_initial.sh에서 이미 설정된 상태라고 가정합니다.
+# 이 스크립트는 ~/syu-DataAnalyze/TrafficGenerator 디렉토리에 config.yml을 생성하고,
+# Go SDK 및 REST API 환경 설정을 자동으로 진행합니다.
+# (환경 변수들은 setup_initial.sh에서 이미 설정된 상태라고 가정합니다.)
 
 set -e
 
+# 일반 사용자 홈 디렉토리 (예: ubuntu)
+if [ -d "/home/ubuntu" ]; then
+    USER_HOME="/home/ubuntu"
+else
+    USER_HOME="$HOME"
+fi
+
 ###############################################################################
-# 1. config.yml 파일 생성
+# 1. config.yml 파일 생성 (~/syu-DataAnalyze/TrafficGenerator)
 ###############################################################################
 echo "========================================"
 echo "1. config.yml 파일 생성"
 echo "========================================"
 
-CONFIG_DIR="$HOME/syu-DataAnalyze/TrafficGenerator"
+CONFIG_DIR="$USER_HOME/syu-DataAnalyze/TrafficGenerator"
 mkdir -p "$CONFIG_DIR"
 
 cat <<EOF > "$CONFIG_DIR/config.yml"
@@ -86,7 +94,6 @@ echo "========================================"
 echo "2. Go SDK 설치 및 설정"
 echo "========================================"
 
-# 시스템 패키지 업데이트
 sudo apt update
 
 # Go 다운로드 및 설치 (예: Go 1.20.5)
@@ -97,7 +104,7 @@ GO_DOWNLOAD_URL="https://go.dev/dl/${GO_TAR_FILE}"
 echo "Go ${GO_VERSION} 다운로드 및 설치 중..."
 wget "$GO_DOWNLOAD_URL" -O "/tmp/$GO_TAR_FILE"
 
-# 파일 무결성 체크: 최소 50MB (52428800 바이트) 이상이어야 함
+# 파일 무결성 체크: Go 1.20.5 tarball는 약 100MB 이상이어야 함 (여기서는 최소 50MB로 체크)
 MIN_SIZE=52428800
 FILE_SIZE=$(stat -c%s "/tmp/$GO_TAR_FILE")
 if [ "$FILE_SIZE" -lt "$MIN_SIZE" ]; then
@@ -105,32 +112,31 @@ if [ "$FILE_SIZE" -lt "$MIN_SIZE" ]; then
   exit 1
 fi
 
-# 기존 설치 제거 및 tarball 추출
 sudo rm -rf /usr/local/go
 sudo tar -C /usr/local -xzf "/tmp/$GO_TAR_FILE"
 rm "/tmp/$GO_TAR_FILE"
 
 # PATH 업데이트 (현재 세션 및 영구 적용)
 export PATH=$PATH:/usr/local/go/bin
-if ! grep -q 'export PATH=\$PATH:/usr/local/go/bin' ~/.bashrc; then
-    echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
+if ! grep -q 'export PATH=\$PATH:/usr/local/go/bin' "$USER_HOME/.bashrc"; then
+    echo 'export PATH=$PATH:/usr/local/go/bin' >> "$USER_HOME/.bashrc"
 fi
 
 echo "Go 설치 완료. 버전 정보:"
 /usr/local/go/bin/go version
 
-# GOPATH 및 GOCACHE 설정
-export GOPATH="$HOME/go"
-export GOCACHE="$HOME/.cache/go-build"
-if ! grep -q 'export GOPATH=' ~/.bashrc; then
-    echo "export GOPATH=$GOPATH" >> ~/.bashrc
+# GOPATH 및 GOCACHE 설정 (일반 사용자용)
+export GOPATH="$USER_HOME/go"
+export GOCACHE="$USER_HOME/.cache/go-build"
+if ! grep -q 'export GOPATH=' "$USER_HOME/.bashrc"; then
+    echo "export GOPATH=$GOPATH" >> "$USER_HOME/.bashrc"
 fi
-if ! grep -q 'export GOCACHE=' ~/.bashrc; then
-    echo "export GOCACHE=$GOCACHE" >> ~/.bashrc
+if ! grep -q 'export GOCACHE=' "$USER_HOME/.bashrc"; then
+    echo "export GOCACHE=$GOCACHE" >> "$USER_HOME/.bashrc"
 fi
 
 # Pub/Sub SDK 다운로드 및 설치
-GOSDK_DIR="$HOME/gosdk"
+GOSDK_DIR="$USER_HOME/gosdk"
 mkdir -p "$GOSDK_DIR"
 cd "$GOSDK_DIR"
 
@@ -140,7 +146,7 @@ wget "$PUBSUB_SDK_URL" -O pubsub.tgz
 tar -xf pubsub.tgz
 rm pubsub.tgz
 
-# Go 모듈 초기화 (이미 초기화된 경우 건너뜀)
+# Go 모듈 초기화 (없으면)
 if [ ! -f go.mod ]; then
     /usr/local/go/bin/go mod init trafficgenerator-go-sdk
 fi
@@ -163,10 +169,10 @@ wget -O subscriber.go https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/
 /usr/local/go/bin/go get gopkg.in/yaml.v2
 /usr/local/go/bin/go mod tidy
 
-# 소유권 변경 (예: ubuntu 사용자)
+# 소유권 변경 (일반 사용자: ubuntu)
 sudo chown -R ubuntu:ubuntu "$GOSDK_DIR"
-sudo chown -R ubuntu:ubuntu "$HOME/go"
-sudo chown -R ubuntu:ubuntu "$HOME/.cache/go-build"
+sudo chown -R ubuntu:ubuntu "$USER_HOME/go"
+sudo chown -R ubuntu:ubuntu "$USER_HOME/.cache/go-build"
 
 echo "Go SDK 설정 완료."
 
@@ -177,40 +183,50 @@ echo "========================================"
 echo "3. REST API 설치 및 설정"
 echo "========================================"
 
-REST_API_DIR="$HOME/syu-DataAnalyze/TrafficGenerator/REST API"
+REST_API_DIR="$USER_HOME/syu-DataAnalyze/TrafficGenerator/REST API"
 mkdir -p "$REST_API_DIR/VM1" "$REST_API_DIR/VM2"
 
-# Python3 및 pip3 설치
 sudo apt install -y python3 python3-pip
 
-# 필요한 Python 패키지 설치
 pip3 install --user requests pyyaml
 
-# VM1 Python 스크립트 다운로드
 echo "VM1 Python 스크립트 다운로드 중..."
 cd "$REST_API_DIR/VM1"
 wget -O pub_sub_send.py https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/main/TrafficGenerator/REST%20API/VM1/pub_sub_send.py
 wget -O traffic_generator.py https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/main/TrafficGenerator/REST%20API/VM1/traffic_generator.py
 
-# VM2 Python 스크립트 다운로드
 echo "VM2 Python 스크립트 다운로드 중..."
 cd "$REST_API_DIR/VM2"
 wget -O CreateSubscription.py https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/main/TrafficGenerator/REST%20API/VM2/CreateSubscription.py
 wget -O CreateTopic.py https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/main/TrafficGenerator/REST%20API/VM2/CreateTopic.py
 wget -O restapi_sub.py https://raw.githubusercontent.com/KOlizer/syu-DataAnalyze/main/TrafficGenerator/REST%20API/VM2/restapi_sub.py
 
-# Python 스크립트 실행 권한 부여
 chmod +x "$REST_API_DIR/VM1/"*.py "$REST_API_DIR/VM2/"*.py
 
 echo "REST API 설정 완료."
 
 ###############################################################################
-# 4. 완료 메시지
+# 4. 환경 변경 사항 적용
+###############################################################################
+echo "========================================"
+echo "환경 변수 변경 사항을 적용합니다."
+# 현재 셸이 루트가 아니라면 .bashrc 소스
+if [ "$EUID" -ne 0 ]; then
+    echo "현재 셸에 '$USER_HOME/.bashrc'를 소스합니다..."
+    source "$USER_HOME/.bashrc"
+else
+    echo "현재 스크립트는 루트 권한으로 실행되었습니다."
+    echo "일반 사용자(ubuntu)로 재로그인하거나 다음 명령어를 실행하여 환경 변수가 적용되도록 하세요:"
+    echo "    source $USER_HOME/.bashrc"
+fi
+
+###############################################################################
+# 5. 완료 메시지
 ###############################################################################
 echo "========================================"
 echo "자동화 스크립트 실행 완료."
 echo "Go SDK 및 REST API 설정이 완료되었습니다."
-echo "필요 시, 아래 명령으로 Python 스크립트를 실행하세요:"
+echo "아래 명령어로 Python 스크립트를 실행해보세요:"
 echo "  cd \"$REST_API_DIR/VM1\" && python3 pub_sub_send.py"
 echo "  cd \"$REST_API_DIR/VM1\" && python3 traffic_generator.py"
 echo "  cd \"$REST_API_DIR/VM2\" && python3 restapi_sub.py"
