@@ -565,7 +565,7 @@ vi /opt/kafka/config/s3-sink-connector.properties
 vi /opt/kafka/config/worker.properties
 ```
 
-- `/opt/kafka/config/connect-standalone.properties`
+- `/opt/kafka/config/worker.properties`
     
     ```bash
     # 워커 기본 설정
