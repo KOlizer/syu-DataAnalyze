@@ -111,7 +111,7 @@ cd kafka
 
 토픽 생성 (TG1)
 ```
-bin/kafka-topics.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --create --topic consol-topic --partitions 1 --replication-factor 2
+bin/kafka-topics.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --create --topic consol-topic --partitions 2 --replication-factor 2
 ```
 
 프로듀서 실행(TG1)
@@ -134,7 +134,7 @@ bin/kafka-console-consumer.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --to
 # python 코드로 메시지 프로듀싱/컨슈밍 실습
 python 토픽 생성(TG1)
 ```
-bin/kafka-topics.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --create --topic python-topic --partitions 1 --replication-factor 2
+bin/kafka-topics.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} --create --topic python-topic --partitions 2 --replication-factor 2
 ```
 
 producer.py실행(TG1)
@@ -155,7 +155,7 @@ sudo -E ./consumer.py
 # nginx 로그 → kafka로 프로듀싱 실습 (logstash 활용)
 콘솔 스크립트(바이너리)로 새로운 토픽 생성(TG1)
 ```
-bin/kafka-topics.sh --bootstrap-server $KAFKA_BOOTSTRAP_SERVERS --create --topic nginx-topic --partitions 1 --replication-factor 2
+bin/kafka-topics.sh --bootstrap-server $KAFKA_BOOTSTRAP_SERVERS --create --topic nginx-topic --partitions 2 --replication-factor 2
 ```
 
 api서버에서 logstash 설정(API VM1, 2)
