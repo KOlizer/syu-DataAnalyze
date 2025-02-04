@@ -211,8 +211,8 @@ echo "REST API 설정 완료."
 echo "========================================"
 echo "로그 파일 및 디렉토리 소유권/쓰기 권한 설정"
 echo "========================================"
-sudo chown -R ubuntu:ubuntu "$REST_API_DIR/VM1"
-chmod -R u+w "$REST_API_DIR/VM1"
+sudo chown -R ubuntu:ubuntu "$REST_API_DIR/VM1" "$REST_API_DIR/VM2"
+chmod -R u+w "$REST_API_DIR/VM1" "$REST_API_DIR/VM2"
 echo "로그 파일 및 디렉토리 권한 설정 완료."
 
 ###############################################################################
