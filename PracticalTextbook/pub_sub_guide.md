@@ -3,16 +3,21 @@
 </br>
   
 ## 1. 사전 준비
+- 콘솔로 자원 미리 구축
+  - Traffice generator VM 2개
+  - ALB
+  - API Server VM 2개
+
 ## 카카오클라우드 콘솔
 ## 1.1 Test용 topic, Data Catalog 실습용 topic 생성
 
-- **이름**: `TestTopic`
+- **이름**: `test-topic`
 - **기본서브스크립션**: `생성 안함`
 - **토픽 메세지 보존 기간**: `0일 0시 10분`
 - **인스턴스유형**: `m2a.xlarge`
 - **설명**: `없음`
 --------------------------------------------------
-- **이름**: `DataCatalogTopic`
+- **이름**: `datacatalog-topic`
 - **기본서브스크립션**: `생성 안함`
 - **토픽 메세지 보존 기간**: `0일 0시 10분`
 - **인스턴스유형**: `m2a.xlarge`
@@ -23,14 +28,14 @@
 
 ## 1.2 Test용 topic Subscription 생성
 
-- **이름**: `TestTopic-pull`
-- **토픽선택**: `TestTopic`
+- **이름**: `pull-subscription`
+- **토픽선택**: `test-topic`
 - **유형**: `PULL`
 - **서브스크립션 메세지 보존 기간**: `0일 0시 10분`
 - **응답 대기 시간**: `20초`
 ------------------------------------------------------
-- **이름**: `TestTopic-push`
-- **토픽선택**: `TestTopic`
+- **이름**: `push-subscription`
+- **토픽선택**: `test-topic`
 - **유형**: `PUSH`
 - **프로토콜**:`http://`
 - **엔드포인트URL**:{API서버1 URL}
@@ -50,29 +55,31 @@
   ## 1. VM2: PUB/SUB 토픽생성 
 
 - **스크립트 실행**  
-  터미널에서 다음 명령어를 입력하여 `CreateTopic.py` 스크립트를 실행합니다.
+  터미널에서 다음 명령어를 입력하여 `create_topic.py` 스크립트를 실행합니다.
+  - 파일 경로로 이동 후 파이썬 파일 실행
 
 ```
-python3 CreateTopic.py
+python3 create_topic.py
 ```
-**실행후 카카오 클라우드 콘솔에서 확인**
+
+- 실행후 카카오 클라우드 콘솔에서 확인
 
 </br>
-  </br>
+</br>
   
 ## 2. VM2: PUB/SUB 서브스크립션 생성 
 
 - **스크립트 실행**  
-  터미널에서 다음 명령어를 입력하여 `CreateSubscription.py` 스크립트를 실행합니다.
+  터미널에서 다음 명령어를 입력하여 `create_subscription.py` 스크립트를 실행합니다.
+  - 파일 경로로 이동 후 파이썬 파일 실행
 
 ```
-python3 CreateSubscription.py
+python3 create_subscription.py
 ```
 
   </br>
   </br>
-  </br>
-  </br>
+
   
 # Traffic Generator VM 1,2를 이용해 PUB/SUB 통신하기
 
@@ -85,10 +92,12 @@ python3 CreateSubscription.py
 
 - **스크립트 실행**  
   터미널에서 다음 명령어를 입력하여 `pub_sub_send.py` 스크립트를 실행합니다.
+  - 파일 경로로 이동 후 파이썬 파일 실행
 
   ```
   python3 pub_sub_send.py
   ```
+  
 - **정상 실행 시 출력 메시지**
   스크립트가 정상적으로 실행되면 아래와 같은 메시지가 출력됩니다.
   ```
@@ -98,6 +107,7 @@ python3 CreateSubscription.py
   ```
   </br>
   </br>
+  
 ## 1-1. 카카오 콘솔에 접속하여 PUB/SUB 서브스크립션에 메세지 전송 확인
 </br>
   </br>
@@ -112,15 +122,15 @@ python3 CreateSubscription.py
   터미널에서 다음 명령어를 입력하여 restapi_sub.py 스크립트를 실행합니다.
 
   ```
-  python3 restapi_sub.py
+  python3 restapi_pull_sub.py
   ```
+  
   **정상 실행 시 동작**
   스크립트가 정상적으로 실행되면 VM2에서 지속적으로 메시지를 받아옵니다.
 
   </br>
   </br>
-  </br>
-  </br>
+
   
 **이후 카카오 콘솔에서 publish된 메세지 확인** 
 
