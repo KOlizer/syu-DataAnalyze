@@ -26,7 +26,7 @@
    - 테이블 이름: `data_table`
    - 데이터 저장경로
      - 버킷 이름: {카프카와 연동된 버킷}
-     - 디렉터리: {topics/nginx-topic/partition_0} // 임의로 테스트
+     - 디렉터리: {topics/nginx-topic} // 임의로 테스트, or 여기 보다 한 단계 위의  경로
    - 데이터 유형: `JSON` // 테스트
    - Pub/Sub 연동: `사용` // 테스트
      - 토픽 선택: {data-catalog-topic}
@@ -53,13 +53,13 @@
   
 # 메시지 확인 실습
 ## 1. pub/sub 연동을 통한 메시지 확인
-   ## 서브스크립션 생성
+   ### 서브스크립션 생성
    기본설정
       - 이름: pull-subscription-cjm
       - 토픽: data-catalog-topic
       - 유형: Pull
 
-   ## TG에서 메시지 확인 코드 실행
+   ### TG에서 메시지 확인 코드 실행
    - 기존에 쓰던 메시지 확인 코드에서 subscription 이름만 변경하는 방향이 나을것 같다는 생각
    ```
    import requests
@@ -264,14 +264,14 @@
 
    ```
 
-   ## 콘솔에서 이벤트 발생
+   ### 콘솔에서 이벤트 발생
    - 데이터 속성 추가
    - 스키마 필드 추가
    - 스키마 필드 삭제
    - 터미널 창에서 실시간 메시지 수신 확인
    
-
-## Hadoop 생성
+## 2. pub/sub 연동을 통한 메시지 확인
+### Hadoop 생성
    1. 콘솔에서 Analytics -> Hadoop Eco -> 클러스터 접속
    2. `클러스터 생성` 클릭
    3. 클러스터 정보
@@ -320,10 +320,19 @@
       ```
       use {database 이름};
       ```
-   7. 테이블에 파티션 
-   8. ```
-      
+   7. 테이블에 파티션 추가
+      ```
+      ALTER TABLE part_test_lsh
+      ADD PARTITION (partition_key='{특정값(5)')
+      LOCATION 's3a://kafka-data/topics/nginx-topic/partition=0';
+      ```
+   8. 테이블 파이션 키 삭제
+      ```
+      ALTER TABLE part_test_lsh DROP PARTITION (partition_key='{특정값(5)');
+      ```
+   
 
+</br>
 
 ## 5. 크롤러
 
