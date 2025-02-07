@@ -569,7 +569,7 @@ vi /opt/kafka/config/worker.properties
     ```bash
     # 워커 기본 설정
     
-    bootstrap.servers=kafka 부트스트랩 서버
+    bootstrap.servers={kafka 부트스트랩 서버}
     key.converter=org.apache.kafka.connect.json.JsonConverter
     value.converter=org.apache.kafka.connect.json.JsonConverter
     key.converter.schemas.enable=false
