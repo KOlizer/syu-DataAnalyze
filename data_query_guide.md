@@ -93,6 +93,7 @@
     ```
 
 6. HTTP status code별 count로 에러율 추출 (현재 권한 문제)
+  - 쿼리는 성공하는데 테이블이 안 뜨는 문제
     ```
     SELECT 
       ERROR_CODE,
@@ -104,3 +105,10 @@
     ORDER BY 
         error_count DESC;
     ```
+
+
+```
+	1.	performance_schema 활성화 여부 확인:
+	•	performance_schema는 MySQL 서버 설정에서 활성화되어 있어야 사용할 수 있습니다.
+	•	performance_schema를 활성화하려면 MySQL 서버의 my.cnf 또는 my.ini 설정 파일에서 아래 항목이 포함되어 있는지 확인하고, 포함되지 않으면 추가합니다.
+```
