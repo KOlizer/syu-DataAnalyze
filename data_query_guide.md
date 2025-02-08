@@ -92,7 +92,7 @@
     LIMIT 5;
     ```
 
-6. HTTP status code별 count로 에러율 추출 (점검 필요)
+6. HTTP status code별 count로 에러율 추출 (현재 권한 문제)
     ```
     SELECT 
       ERROR_CODE,
