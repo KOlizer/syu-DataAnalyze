@@ -78,22 +78,29 @@
     ORDER BY
         visitors_count DESC;
     ```
-5. 상품 상세 페이지 접근 로그를 집계하여 인기 상품 상위 5개 추출 (수정 해야할듯?)
+5. 상품 상세 페이지 접근 로그를 집계하여 인기 상품 상위 5개 추출 
    ```
-   SELECT
-    p.name AS product_name,
-    COUNT(sl.search_query) AS search_count
-    FROM
-        search_logs sl
-    JOIN
-        products p ON sl.search_query = p.name
-    GROUP BY
-        p.name
-    ORDER BY
-        search_count DESC
-    LIMIT 5;
-  ```
-6. HTTP status code별 count로 에러율 추출 (진행중)
+   SELECT 
+    search_query AS product_name,
+    COUNT(*) AS search_count
+  FROM 
+      shopdb.search_logs
+  GROUP BY 
+      search_query
+  ORDER BY 
+      search_count DESC
+  LIMIT 5;
   ```
 
+6. HTTP status code별 count로 에러율 추출 (점검 필요)
+  ```
+  SELECT 
+    ERROR_CODE,
+    COUNT(*) AS error_count
+  FROM 
+      performance_schema.error_log
+  GROUP BY 
+      ERROR_CODE
+  ORDER BY 
+      error_count DESC;
   ```
