@@ -83,24 +83,24 @@
    SELECT 
     search_query AS product_name,
     COUNT(*) AS search_count
-  FROM 
-      shopdb.search_logs
-  GROUP BY 
-      search_query
-  ORDER BY 
-      search_count DESC
-  LIMIT 5;
-  ```
+    FROM 
+        shopdb.search_logs
+    GROUP BY 
+        search_query
+    ORDER BY 
+        search_count DESC
+    LIMIT 5;
+    ```
 
 6. HTTP status code별 count로 에러율 추출 (점검 필요)
-  ```
-  SELECT 
-    ERROR_CODE,
-    COUNT(*) AS error_count
-  FROM 
-      performance_schema.error_log
-  GROUP BY 
-      ERROR_CODE
-  ORDER BY 
-      error_count DESC;
-  ```
+    ```
+    SELECT 
+      ERROR_CODE,
+      COUNT(*) AS error_count
+    FROM 
+        performance_schema.error_log
+    GROUP BY 
+        ERROR_CODE
+    ORDER BY 
+        error_count DESC;
+    ```
