@@ -8,7 +8,7 @@
 
 ## Pub/Sub 토픽 생성
 
-- **이름**: `TestTopic`
+- **이름**: `test-topic`
 - **기본서브스크립션**: `생성 안함`
 - **토픽 메세지 보존 기간**: `0일 0시 10분`
 - **인스턴스유형**: `m2a.xlarge`
@@ -55,7 +55,7 @@
 
 ## API 서버 생성 (2대)
 
-- **이름**: `Api-Server`
+- **이름**: `api-server`
 - **개수**: `2`
 - **이미지**: `Ubuntu 22.04`
 - **인스턴스유형**: `m2a.xlarge`
@@ -238,7 +238,7 @@ echo "kakaocloud: 모든 작업 완료"
 ## 로드 밸런서(ALB) 생성
 
 - **유형**: `ALB`
-- **이름**: `Trafic_ALB`
+- **이름**: `api-lb`
 - **상태 확인**: `x`
 - **VPC**: `실습 환경`
 - **서브넷**: `실습 환경`
@@ -247,11 +247,11 @@ echo "kakaocloud: 모든 작업 완료"
   - 리스너 추가  
     - **새 대상 그룹 추가**  
       - 리스너: `HTTP:80`  
-      - 대상 그룹 이름: `ApiServer`
+      - 대상 그룹 이름: `api-lb-group`
       - 상태 확인: `미사용`
         
       - `다음`  
-      - 연결할 인스턴스 선택: `api vm` 2대  
+      - 연결할 인스턴스 선택: `api-server` 2대  
       - `대상추가`
       - `다음` 
       - `생성`
@@ -260,19 +260,19 @@ echo "kakaocloud: 모든 작업 완료"
 
 
 ## TestTopic 토픽의 Pull Subscription
-- **이름**: `PullSubscription`
-- **토픽 선택**: `TestTopic`
+- **이름**: `pull-subscription`
+- **토픽 선택**: `test-topic`
 - **유형**: `Pull`
   
 ## TestTopic 토픽의 Push Subscription
-- **이름**: `PushSubscription`
-- **토픽 선택**: `TestTopic`
+- **이름**: `push-subscription`
+- **토픽 선택**: `test-topic`
 - **유형**: `Push`
-  - **엔드포인트**: `http://` + `ALB 퍼블릭 아이피`
+  - **엔드포인트**: `http://` + `ALB 퍼블릭 아이피` + `/push-subscription`
 
 ## Traffic_Generator 서버 생성 (2대)
 
-- **이름**: `Traffic_Generator`
+- **이름**: `traffic-generator`
 - **이미지**: `Ubuntu 22.04`
 - **인스턴스유형**: `m2a.xlarge`
 - **볼륨**: `30GB`
@@ -281,9 +281,9 @@ echo "kakaocloud: 모든 작업 완료"
   - `22, 80, 8080, 443, 3306, 5044, 9092`
  
 
-- Traffic_Generator서버 ssh 접속 후 아래 사이트에서 스크립트 작성 후 붙여넣기
+- 고급 스크립트 부분에 환경변수 수정 후 입력하여 생성
   ```
-  https://github.com/KOlizer/syu-DataAnalyze/blob/main/TrafficGenerator/setup_initial.sh
+  
   ```
 - 실습 진행
 ---
