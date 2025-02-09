@@ -71,7 +71,7 @@
     ```bash
     echo 'export KAFKA_HOME=/opt/kafka' >> ~/.bashrc
     echo 'export PATH=$PATH:$KAFKA_HOME/bin' >> ~/.bashrc
-    echo export KAFKA_BOOTSTRAP_SERVERS="카프카 부트스트랩 서버" >> ~/.bashrc
+    echo export KAFKA_BOOTSTRAP_SERVERS="{카프카 부트스트랩 서버}" >> ~/.bashrc
     source ~/.bashrc
     ```
     
@@ -96,8 +96,14 @@
 1. **네트워크 통신 가능 여부 체크(각 클러스터의 부트스트랩 서버)**
     
     ```bash
-    nc -zv 172.16.2.139 9092
-    nc -zv 172.16.2.180 9092
+    nc -zv {각 클러스터의 부트스트랩 서버}
+    nc -zv {각 클러스터의 부트스트랩 서버}
+    ```
+
+    ```
+    예시
+    nc -zv 0.0.0.0 9092
+    nc -zv 0.0.0.0 9092
     ```
     
     - 실패 시 네트워크 및 보안 그룹 설정을 확인합니다.
@@ -279,8 +285,8 @@ source /home/ubuntu/.bashrc
                         "application_credential"
                     ],
                     "application_credential": {
-                        "id": "ad5a9ef37e18454dbfb1110ad34d07da",
-                        "secret": "8d6d9b673e7d9c8a5c5c3499a0c3a920bc2a246dbe3fd893f282a7ee25fe005f796062"
+                        "id": "{엑세스 키 ID}",
+                        "secret": "{보안 엑세스 키}"
                     }
                 }
             }
@@ -530,7 +536,7 @@ vi /opt/kafka/config/s3-sink-connector.properties
     tasks.max=1
     
     # 연결할 토픽 (쉼표로 여러 개 지정 가능)
-    topics=nginx-logs
+    topics=nginx-topic
     
     # Object Storage/S3 관련 설정
     s3.region=kr-central-2
@@ -591,7 +597,7 @@ vi /opt/kafka/config/worker.properties
     ```bash
     # 워커 기본 설정
     
-    bootstrap.servers=172.16.0.194:9092,172.16.2.91:9092
+    bootstrap.servers={카프카 부트스트랩 서버}
     key.converter=org.apache.kafka.connect.json.JsonConverter
     value.converter=org.apache.kafka.connect.json.JsonConverter
     key.converter.schemas.enable=false
