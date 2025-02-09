@@ -341,19 +341,19 @@
  1. 콘솔에서 Analytics -> Data Catalog -> 크롤러 접속
  2. `크롤러 생성` 클릭
  3. 생성 정보
-      - 데이터베이스: `콘솔에서 생성한 데이터베이스`
-      - 크롤러 이름: `crawler_test`
+      - 데이터베이스: ` 콘솔에서 생성한 데이터베이스 `
+      - 크롤러 이름: ` crawler_test `
       - MySQL 전체 경로
-         - 연결할 MySQL: {사전 생성한 MySQL}
-         - MySQL 데이터베이스 이름: `shopdb`
+         - 연결할 MySQL: ` {사전 생성한 MySQL} `
+         - MySQL 데이터베이스 이름: ` shopdb `
       - MySQL 계정
-         - MySQL 계정 ID: `admin`
-         - MySQL 계정 PW: `admin1234`
+         - MySQL 계정 ID: ` admin `
+         - MySQL 계정 PW: ` admin1234 `
       - 연결테스트 진행
       - 설명 (선택):
       - 테이블 Prefix(선택):
       - 스케줄: 온디멘드
-      - 생성 클릭
+   - 생성 클릭
 
 
 4. 생성된 크롤러 선택 후 실행
