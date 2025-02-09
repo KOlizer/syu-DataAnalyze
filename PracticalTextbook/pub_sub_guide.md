@@ -1,51 +1,14 @@
 # 1. 사전 준비
 - 콘솔로 자원 미리 구축
-  - Traffice generator VM 2개
-  - ALB
+  - Pub/Sub topic
+  - MySQL
+  - Object Storage
   - API Server VM 2개
+  - ALB
+  - Pub/Sub pull,push subscription
+  - Traffice generator VM 2개
 
-# 카카오클라우드 콘솔
-### 1.1 Test용 topic생성
-
-- 이름: `test-topic`
-- 기본서브스크립션: `생성 안함`
-- 토픽 메세지 보존 기간: `0일 0시 10분`
-- 인스턴스유형: `m2a.xlarge`
-- 설명: `없음`
-
-</br>
-
-### 1.2 Data Catalog 실습용 topic 생성
-- 이름: `datacatalog-topic`
-- 기본서브스크립션: `생성 안함`
-- 토픽 메세지 보존 기간: `0일 0시 10분`
-- 인스턴스유형: `m2a.xlarge`
-- 설명: `없음`
-
-</br>
-
-### 1.3 Test용 pull Subscription 생성
-
-- 이름: `pull-subscription`
-- 토픽선택: `test-topic`
-- 유형: `PULL`
-- 서브스크립션 메세지 보존 기간: `0일 0시 10분`
-- 응답 대기 시간: `20초`
-
-</br>
-
-
-### 1.4 Test용 pull Subscription 생성
-- 이름: `push-subscription`
-- 토픽선택: `test-topic`
-- 유형**: `PUSH`
-- 프로토콜:`http://push-subscription`
-- 엔드포인트URL:{API서버1 URL}
-- 서브스크립션 메세지 보존 기간: `0일 0시 10분`
-- 응답 대기 시간: `20초`
-
-</br>
-</br>
+---
 
 # Traffic Generator VM 2를 이용해 PUB/SUB 토픽, 서브스크립션 생성
 
