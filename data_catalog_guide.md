@@ -351,7 +351,7 @@
       - MySQL 계정
          - MySQL 계정 ID: ` admin `
          - MySQL 계정 PW: ` admin1234 `
-   - 연결테스트 진행
+         - 연결테스트 진행
       - 설명 (선택):
       - 테이블 Prefix(선택):
       - 스케줄: 온디멘드
