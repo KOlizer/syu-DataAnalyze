@@ -21,6 +21,10 @@
 1. **VM 접속**
     - Traffic Generator VM 1, 2에 public IP를 통해 연결합니다.
     - 각 VM에 SSH로 접속합니다.
+      ```bash
+      ssh -i {keypair}.pem ubuntu@{vm public ip}
+      ```
+      
 2. **디렉토리 이동**
     - **Traffic-Generator-VM1**
         
