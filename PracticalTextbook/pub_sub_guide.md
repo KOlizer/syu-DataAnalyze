@@ -10,108 +10,124 @@
 
 ---
 
-# Traffic Generator VM 2를 이용해 PUB/SUB 토픽, 서브스크립션 생성
-  </br>
-  </br>
-  ## 1. VM2: PUB/SUB 토픽생성 
-- 새로운 터미널에서 Traffic Generator 2 VM에 SSH 접속합니다.
-  터미널에서 다음 명령어를 입력하여 `create_topic.py` 스크립트를 실행합니다.
-  - 파일 경로로 이동 후 파이썬 파일 실행
-```
-python3 create_topic.py
-```
-- 실행후 카카오 클라우드 콘솔에서 확인
-</br>
-</br>
-  
-## 2. VM2: PUB/SUB 서브스크립션 생성 
-- 터미널에서 다음 명령어를 입력하여 `create_subscription.py` 스크립트를 실행합니다.
-  - 파일 경로로 이동 후 파이썬 파일 실행
-```
-python3 create_subscription.py
-```
-  </br>
-  </br>
-  
-# REST API를 활용한 PUB/SUB 통신
-이 가이드는 VM1과 VM2를 사용하여 PUB/SUB 통신을 설정하는 방법을 설명합니다.
-</br>
-</br>
-## 1. VM1: PUB 메시지 전송
-- 새로운 터미널에서 Traffic Generator 1 VM에 SSH 접속합니다.
-  터미널에서 다음 명령어를 입력하여 `pub_sub_send.py` 스크립트를 실행합니다.
-  - 파일 경로로 이동 후 파이썬 파일 실행
-  ```
-  python3 pub_sub_send.py
-  ```
-  
-  - 정상 실행 시 출력 메시지
-  스크립트가 정상적으로 실행되면 아래와 같은 메시지가 출력됩니다.
-  ```
-  "CLI 입력 -> Kakao Pub/Sub 전송 프로그램입니다."
-  "아래에 전송하고 싶은 문자열을 입력하세요."
-  "빈 줄, Ctrl+D, 혹은 'quit' 입력 시 전송을 마칩니다."
-  ```
-  </br>
-  </br>
-  
-- 1-1. 카카오 콘솔에 접속하여 PUB/SUB 서브스크립션에 메세지 전송 확인
-</br>
-  </br>
-  
- - [카카오클라우드 콘솔](https://console.kakaocloud.com/)에 접속하여 **VM1** 에서 입력한 메세지가 출력되는지 확인함
-   
-   </br>
-  </br>
-  
-## 2. VM2: SUB 메시지 수신
-- 파일 경로로 이동 후 파이썬 파일 실행
-- 터미널에서 다음 명령어를 입력하여 restapi_sub.py 스크립트를 실행합니다.
-  ```
-  python3 restapi_pull_sub.py
-  ```
-  
-  - 정상 실행 시 화면
-  스크립트가 정상적으로 실행되면 VM2에서 지속적으로 메시지를 받아옵니다.
-  </br>
-  </br>
-  
-- 이후 카카오 콘솔에서 publish된 메세지 확인
-</br>
-  </br>
-  </br>
-  </br>
-# GO 실습
-## 1. VM1: 메시지 publish
-  
-```
-cd /home/ubuntu/gosdk/cmd
+##Pub/Sub 가이드
+###이 가이드는 Pub/Sub 기능을 활용한 메시지 송수신, 트래픽 로그 생성, Go SDK 실습, 그리고 NGINX 로그를 Object Storage에 적재하는 전체 과정을 설명합니다.
+- 환경 구성:
+  - Traffic Generator VM 1 & 2: Public IP 연결 및 SSH 접속
+  - API Server 1 & 2: NGINX, Logstash, Filebeat 실행
+
+### 1. 기본 환경 설정
+###VM 접속
+
+Traffic Generator VM 1, 2에 public IP를 통해 연결합니다.
+각 VM에 SSH로 접속합니다.
+디렉토리 이동
+
+VM1 (REST API for VM1):
+bash
+복사
+cd syu-DataAnalyze/TrafficGenerator/REST_API/VM1
+VM2 (REST API for VM2):
+bash
+복사
+cd syu-DataAnalyze/TrafficGenerator/REST_API/VM2
+2. Topic 및 Subscription 생성
+VM2에서 실행
+
+토픽 생성:
+
+bash
+복사
+python3 CreateTopic.py
+Pub/Sub 콘솔에서 토픽 생성 여부를 확인할 수 있습니다.
+
+Subscription 생성:
+
+bash
+복사
+python3 CreateSubscription.py
+3. 메시지 송수신 테스트
+A. Pub/Sub send/receive 스크립트 실행
+VM1 (Publisher):
+bash
+복사
+python3 pub_sub_send.py
+VM2 (Subscriber):
+bash
+복사
+python3 restapi_sub.py
+B. 메시지 전송
+VM1에서:
+
+터미널에 메시지를 입력 후 엔터를 누릅니다.
+전송할 메시지를 모두 입력한 후, 마지막 엔터로 전송합니다.
+VM2에서:
+
+입력한 메시지가 수신되는지 확인합니다.
+4. 웹 API로 메시지 확인
+웹 브라우저에서 아래 URL에 접속합니다.
+url
+복사
+http://{alb public ip 주소}/push-messages
+여러 번 새로고침하여 메시지 적재 여부를 확인합니다.
+종료: Ctrl + C
+(Traceback 메시지가 뜨는 것은 정상입니다.)
+5. Traffic Generator 실행
+VM1에서:
+
+트래픽 생성 스크립트 실행:
+bash
+복사
+python3 traffic_generator.py
+실행 완료 후, 생성된 로그 확인:
+bash
+복사
+cat traffic_generator.log
+6. Go SDK 실습
+A. 작업 디렉토리 이동
+홈 디렉토리로 이동:
+bash
+복사
+cd
+gosdk/cmd 디렉토리로 이동:
+bash
+복사
+cd gosdk/cmd
+B. Publisher 및 Subscriber 실행
+VM1 (Publisher):
+bash
+복사
 go build -o publisher config.go publisher.go
 ./publisher
-```
-</br>
-</br>
-  
-- 카카오 콘솔에 접속하여 PUB/SUB 서브스크립션에 메세지 전송 확인
-</br>
-</br>
-## 2. VM1: 메시지 publish
-```
-cd /home/ubuntu/gosdk/cmd
+VM2 (Subscriber):
+bash
+복사
 go build -o subscriber config.go subscriber.go
 ./subscriber
-```
-</br>
-</br>
-   
-- 이후 카카오 콘솔에서 publish된 메세지 확인
-</br>
-</br>
-  
-# Push Subscription 실습
-- 위에서 전달한 메시지들이 Web의 특정 endpoint로 push 방식으로 전달되어 API 서버에는 데이터가 쌓는 것 확인하는 실습
-- 웹을 통해 확인
-```
-http://{ALB의 IP주소}/push-messages
-```
-# filebeat, Logstash를 활용한 nginx 로그 수집 실습
+확인: VM1에서 입력한 메시지가 VM2에서 정상적으로 수신되는지 확인합니다.
+
+7. NGINX 로그를 Object Storage에 적재
+A. API Server 접속 및 설정 파일 확인
+API Server 1, 2에 SSH 접속 후:
+bash
+복사
+cd /etc/logstash/conf.d
+설정 파일 확인:
+bash
+복사
+cat logs-to-pubsub.conf
+필요 시 편집:
+bash
+복사
+vi logs-to-pubsub.conf
+B. 서비스 상태 확인
+각 서비스를 아래 명령어로 확인합니다.
+
+bash
+복사
+sudo systemctl status filebeat
+sudo systemctl status logstash
+sudo systemctl status nginx
+C. Pub/Sub용 Object Storage 콘솔 확인
+NGINX 로그가 Object Storage에 정상적으로 쌓이는지 Pub/Sub용 Object Storage 콘솔을 통해 확인합니다.
+마
