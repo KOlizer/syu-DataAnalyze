@@ -1,6 +1,6 @@
 ### **Kafka 기반 데이터 스트리밍 및 Object Storage 연동**
 
-Kafka 클러스터 구축부터 메시지 송수신, Nginx 로그 데이터 수집 및 Object Storage 저장까지의 전체 흐름을 실습합니다. 이를 통해 Kafka의 기본 개념과 활용 방식, 실시간 로그 처리 및 데이터 적재 기법을 익힐 수 있습니다.
+Kafka를 활용하여 메시지를 송수신하고, Nginx 로그를 실시간으로 수집 및 처리하는 과정을 다룹니다. 또한, Kafka Connect와 S3 Sink Connector를 활용하여 수집된 데이터를 Object Storage에 저장하는 방법을 실습합니다.
 
 ---
 ### **1. 사전준비**
