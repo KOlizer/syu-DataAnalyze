@@ -9,7 +9,6 @@
   - Traffice generator VM 2개
 
 ---
-# Pub/Sub guide
 
 # Pub/Sub 가이드
 
