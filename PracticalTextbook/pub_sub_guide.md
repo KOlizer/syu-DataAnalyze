@@ -80,7 +80,7 @@
 - **Traffic-Generator-VM2 (Subscriber):**
     
     ```bash
-    python3 restapi_sub.py
+    python3 restapi_pull_sub.py
     ```
     
 
