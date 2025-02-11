@@ -47,11 +47,10 @@
 
 #### 쿼리 실습
 1. 콘솔 -> Analytics -> Data Query -> 쿼리 편집기
-2. 편집기 설정 정보
-   - 데이터 원본: `data_orign`
-   - 데이터 베이스: `shopdb`
+2. 편집기 설정 정보 확인하며 실습 진행
   
 3. 시간당 PV(페이지 뷰) count 쿼리
+   - 데이터 원본: `data_orign`
    ```
    SELECT
     DATE_FORMAT(searched_at, '%Y-%m-%d %H:00:00') AS hour,
@@ -64,7 +63,8 @@
      hour DESC;
    ```
 
-4. 세션 쿠키(session_id) 기반 방문자 수 추출
+5. 세션 쿠키(session_id) 기반 방문자 수 추출
+   - 데이터 원본: `data_orign`
     ```
     SELECT
         session_id,
@@ -78,7 +78,8 @@
     ORDER BY
         visitors_count DESC;
     ```
-5. 상품 상세 페이지 접근 로그를 집계하여 인기 상품 상위 5개 추출 
+6. 상품 상세 페이지 접근 로그를 집계하여 인기 상품 상위 5개 추출
+   - 데이터 원본: `data_orign`
    ```
    SELECT 
     search_query AS product_name,
@@ -92,8 +93,8 @@
     LIMIT 5;
     ```
 
-6. HTTP status code별 count로 에러율 추출 (현재 권한 문제)
-  - 쿼리는 성공하는데 테이블이 안 뜨는 문제
+7. HTTP status code별 count로 에러율 추출
+  - 데이터 원본: `data_catalog`
     ```
 	WITH parsed AS (
 	  SELECT 
