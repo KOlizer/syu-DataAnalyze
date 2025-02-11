@@ -217,11 +217,10 @@ mv /home/ubuntu/kafka_2.13-3.7.1 /home/ubuntu/kafka
 
 ```bash
 cd /
-sudo mkdir /confluent-hub
-cd /confluent-hub
-sudo curl -LO http://client.hub.confluent.io/confluent-hub-client-latest.tar.gz
-sudo tar -zxvf /confluent-hub/confluent-hub-client-latest.tar.gz
-sudo mkdir /confluent-hub/plugins
+sudo mkdir -p /confluent-hub/plugins && \
+cd /confluent-hub && \
+sudo curl -LO http://client.hub.confluent.io/confluent-hub-client-latest.tar.gz && \
+sudo tar -zxvf confluent-hub-client-latest.tar.gz
 ```
 
 ### 1-4. 환경 변수 설정
