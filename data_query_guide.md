@@ -94,7 +94,7 @@
     ```
 
 7. HTTP status code별 count로 에러율 추출
-  - 데이터 원본: `data_catalog`
+   - 데이터 원본: `data_catalog`
     ```
 	WITH parsed AS (
 	  SELECT 
