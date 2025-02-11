@@ -175,6 +175,11 @@
 
 ## 7. NGINX 로그를 Object Storage에 적재
 
+### API Public ip를 이용하여 접속 후 로그 생성
+
+- web에 ```http://api server public ip로 접속하여 웹페이지 내용 클릭하여 로그 생성
+
+
 ### Pub/Sub용 Object Storage 콘솔 확인
 
 - NGINX 로그가 Object Storage에 정상적으로 쌓이는지 Pub/Sub용 Object Storage 콘솔을 통해 확인합니다.
