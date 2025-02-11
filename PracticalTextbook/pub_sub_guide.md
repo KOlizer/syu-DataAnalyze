@@ -45,6 +45,10 @@
         ```
 - **파일 생성이 안 되었을 시 아래 명령어 실행**
   ```bash
+  wget -nc -P /home/ubuntu/syu-DataAnalyze/TrafficGenerator/REST_API \
+    https://github.com/kakaocloud-edu/tutorial/raw/refs/heads/main/DataAnalyzeCourse/src/TrafficGenerator/REST_API/config.py
+  ```
+  ```bash
   wget -nc -P /home/ubuntu/syu-DataAnalyze/TrafficGenerator/REST_API/VM1 \
     https://github.com/kakaocloud-edu/tutorial/raw/refs/heads/main/DataAnalyzeCourse/src/TrafficGenerator/REST_API/VM1/pub_sub_send.py \
     https://github.com/kakaocloud-edu/tutorial/raw/refs/heads/main/DataAnalyzeCourse/src/TrafficGenerator/REST_API/VM1/traffic_generator.py
