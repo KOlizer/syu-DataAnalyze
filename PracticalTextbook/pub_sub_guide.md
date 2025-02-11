@@ -44,15 +44,20 @@
         ls -l
         ```
 - **파일 생성이 안 되었을 시 아래 명령어 실행**
+  - **Traffic-Generator-VM1,2 모두 실행**
   ```bash
   wget -nc -P /home/ubuntu/syu-DataAnalyze/TrafficGenerator/REST_API \
     https://github.com/kakaocloud-edu/tutorial/raw/refs/heads/main/DataAnalyzeCourse/src/TrafficGenerator/REST_API/config.py
   ```
+
+  - **Traffic-Generator-VM1에서 실행**
   ```bash
   wget -nc -P /home/ubuntu/syu-DataAnalyze/TrafficGenerator/REST_API/VM1 \
     https://github.com/kakaocloud-edu/tutorial/raw/refs/heads/main/DataAnalyzeCourse/src/TrafficGenerator/REST_API/VM1/pub_sub_send.py \
     https://github.com/kakaocloud-edu/tutorial/raw/refs/heads/main/DataAnalyzeCourse/src/TrafficGenerator/REST_API/VM1/traffic_generator.py
   ```
+
+  - **Traffic-Generator-VM2에서 실행**
   ```bash
   wget -nc -P /home/ubuntu/syu-DataAnalyze/TrafficGenerator/REST_API/VM2 \
     https://github.com/kakaocloud-edu/tutorial/raw/refs/heads/main/DataAnalyzeCourse/src/TrafficGenerator/REST_API/VM2/create_subscription.py \
