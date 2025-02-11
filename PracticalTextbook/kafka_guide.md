@@ -162,7 +162,7 @@ bin/kafka-console-consumer.sh --bootstrap-server $KAFKA_BOOTSTRAP_SERVERS --topi
 ```
 
 
-콘솔로 데이터가 쌓이고 있는지 체크
+콘솔로 데이터가 쌓이고 있는지 체크(시간 좀 걸림)
 
 ---
 # kafka → kafka connector → object storage 실습
