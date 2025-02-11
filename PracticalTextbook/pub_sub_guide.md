@@ -91,12 +91,12 @@
     ```bash
     python3 pub_sub_send.py
     ```
-2. **Traffic-Generator-VM2 (Subscriber)에서 아래 명령어를 입력하여 Pub/Sub receive 스크립트 실행**
+2. **Traffic-Generator-VM1 터미널 창에 전송하고 싶은 메세지 입력 후 키보드의 `Enter`, `Ctrl+D` 키를 눌러 메세지 송신**
+3. **Traffic-Generator-VM2 (Subscriber)에서 아래 명령어를 입력하여 Pub/Sub receive 스크립트 실행**
     
     ```bash
     python3 restapi_pull_sub.py
     ```
-3. **Traffic-Generator-VM1 터미널 창에 전송하고 싶은 메세지 입력 후 `Ctrl+D`**
 4. **Traffic-Generator-VM2 터미널에서 Traffic-Generator-VM1에서 입력한 메세지 수신 확인**
 
 
