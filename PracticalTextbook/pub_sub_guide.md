@@ -29,13 +29,13 @@
     - **Traffic-Generator-VM1**
         
         ```bash
-        cd syu-DataAnalyze/TrafficGenerator/REST_API/VM1
+        cd /home/ubuntu/syu-DataAnalyze/TrafficGenerator/REST_API/VM1
         ```
         
     - **Traffic-Generator-VM2**
         
         ```bash
-        cd syu-DataAnalyze/TrafficGenerator/REST_API/VM2
+        cd /home/ubuntu/syu-DataAnalyze/TrafficGenerator/REST_API/VM2
         ```
 
     - **디렉토리 내부 파일 생성 여부 확인**
