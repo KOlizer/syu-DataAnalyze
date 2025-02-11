@@ -84,29 +84,19 @@
 
 ## 3. 메시지 송수신 테스트
 
-### A. Pub/Sub send/receive 스크립트 실행
-
-1. **Traffic-Generator-VM1 (Publisher)에서 아래 명령어 입력**
+1. **Traffic-Generator-VM1 (Publisher)에서 아래 명령어를 입력하여 Pub/Sub send 스크립트 실행**
     
     ```bash
     python3 pub_sub_send.py
     ```
-2. **Traffic-Generator-VM2 (Subscriber)에서 아래 명령어 입력**
+2. **Traffic-Generator-VM2 (Subscriber)에서 아래 명령어를 입력하여 Pub/Sub receive 스크립트 실행**
     
     ```bash
     python3 restapi_pull_sub.py
     ```
-3. **Traffic-Generator-VM2 터미널 창에 전송하고 싶은 문자열 입력 후 `Ctrl+D`**
+3. **Traffic-Generator-VM1 터미널 창에 전송하고 싶은 메세지 입력 후 `Ctrl+D`**
 4. **Traffic-Generator-VM2 터미널에서 Traffic-Generator-VM1에서 입력한 메세지 수신 확인**
-    
 
-### B. 메시지 전송
-
-1. **VM1**
-    - 터미널에 메시지를 입력 후 엔터를 누릅니다.
-    - 전송할 메시지를 모두 입력한 후, 마지막 엔터로 전송합니다.
-2. **VM2에서:**
-    - 입력한 메시지가 수신되는지 확인합니다.
 
 ---
 
