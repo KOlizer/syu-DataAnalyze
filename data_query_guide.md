@@ -51,6 +51,7 @@
   
 3. 시간당 PV(페이지 뷰) count 쿼리
    - 데이터 원본: `data_orign`
+   - 데이터 베이스: `shopdb`
    ```
    SELECT
     DATE_FORMAT(searched_at, '%Y-%m-%d %H:00:00') AS hour,
@@ -62,9 +63,13 @@
    ORDER BY
      hour DESC;
    ```
+   ![image](https://github.com/user-attachments/assets/7cfcdc3b-dc3f-47b9-a400-9c7212846f96)
+</br>
+
 
 5. 세션 쿠키(session_id) 기반 방문자 수 추출
    - 데이터 원본: `data_orign`
+   - 데이터 베이스: `shopdb`
     ```
     SELECT
         session_id,
@@ -78,23 +83,45 @@
     ORDER BY
         visitors_count DESC;
     ```
-6. 상품 상세 페이지 접근 로그를 집계하여 인기 상품 상위 5개 추출
-   - 데이터 원본: `data_orign`
-   ```
-   SELECT 
-    search_query AS product_name,
-    COUNT(*) AS search_count
-    FROM 
-        shopdb.search_logs
-    GROUP BY 
-        search_query
-    ORDER BY 
-        search_count DESC
-    LIMIT 5;
-    ```
+    ![image](https://github.com/user-attachments/assets/417766ba-bca4-4214-b31a-e1210b9caead)
+</br>
 
-7. HTTP status code별 count로 에러율 추출
+7. 상품 상세 페이지 접근 로그를 집계하여 인기 상품 상위 5개 추출
    - 데이터 원본: `data_catalog`
+   ```
+	 WITH parsed AS (
+	   SELECT 
+	     endpoint,
+	     query_params,
+	     CAST(status AS integer) AS status_int
+	   FROM db3_lsh.partition_test
+	   WHERE endpoint = '/search'
+	 ),
+	 extracted AS (
+	   SELECT 
+	     endpoint,
+	     -- query_params가 "query=Bluetooth"와 같은 형식일 때, 정규식을 통해 "Bluetooth"만 추출
+	     regexp_extract(query_params, 'query=([^&]+)', 1) AS search_term,
+	     status_int
+	   FROM parsed
+	 )
+	 SELECT 
+	   endpoint,
+	   search_term AS subcategory,
+	   COUNT(*) AS total;
+	
+	 FROM extracted
+	 GROUP BY endpoint, search_term
+	 ORDER BY total DESC
+	 LIMIT 5;
+    ```
+   ![image](https://github.com/user-attachments/assets/e3024c3d-bc9f-47a9-8437-9a168c7cc34b)
+</br>
+
+
+8. HTTP status code별 count로 에러율 추출
+   - 데이터 원본: `data_catalog`
+   - subcategory는 제외한 상태
     ```
 	WITH parsed AS (
 	  SELECT 
@@ -126,6 +153,7 @@
 	ORDER BY endpoint;
 
     ```
-    ![image](https://github.com/user-attachments/assets/9f1257d0-8443-4b81-b5d6-84c7b31aa81d)
+    ![image](https://github.com/user-attachments/assets/c4594cd2-9572-44db-8634-c1e174d4a2d6)
+
 
 
