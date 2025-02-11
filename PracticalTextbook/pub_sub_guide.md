@@ -175,7 +175,14 @@
 
 ## 7. NGINX 로그를 Object Storage에 적재
 
-### API Server 접속 및 설정 파일 확인
+### Pub/Sub용 Object Storage 콘솔 확인
+
+- NGINX 로그가 Object Storage에 정상적으로 쌓이는지 Pub/Sub용 Object Storage 콘솔을 통해 확인합니다.
+
+
+
+
+### API Server 접속 및 설정 파일 확인(Object Storage에 적재 안될 시 확인)
 
 1. **API Server 1, 2에 SSH 접속**
     
@@ -211,6 +218,4 @@ sudo systemctl status logstash
 sudo systemctl status nginx
 ```
 
-### Pub/Sub용 Object Storage 콘솔 확인
 
-- NGINX 로그가 Object Storage에 정상적으로 쌓이는지 Pub/Sub용 Object Storage 콘솔을 통해 확인합니다.
