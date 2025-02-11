@@ -206,10 +206,9 @@ ssh -i {keypair}.pem ubuntu@{vm public ip}
 ### 1-2. Kafka 다운로드 및 압축 해제
 
 ```bash
-cd /home/ubuntu
-curl https://archive.apache.org/dist/kafka/3.7.1/kafka_2.13-3.7.1.tgz -o kafka_2.13-3.7.1.tgz
-tar -xzf /home/ubuntu/kafka_2.13-3.7.1.tgz
-rm /home/ubuntu/kafka_2.13-3.7.1.tgz
+curl -o /home/ubuntu/kafka_2.13-3.7.1.tgz https://archive.apache.org/dist/kafka/3.7.1/kafka_2.13-3.7.1.tgz && \
+tar -xzf /home/ubuntu/kafka_2.13-3.7.1.tgz -C /home/ubuntu && \
+rm /home/ubuntu/kafka_2.13-3.7.1.tgz && \
 mv /home/ubuntu/kafka_2.13-3.7.1 /home/ubuntu/kafka
 ```
 
