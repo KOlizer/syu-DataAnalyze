@@ -196,18 +196,11 @@ sudo apt update
 sudo apt install -y python3 python3-pip openjdk-21-jdk unzip jq
 ```
 
-## 1. 새로운 Kafka Connect VM에서 사전 준비
+## 1. 새로운 Kafka Connector VM에서 사전 준비
 
-### 1-1. VM 생성 시 아래 스크립트 삽입
-
+### 1-1. 새로 생성한 Kafka Connector VM에 Public IP 부여 후 SSH 연결
 ```bash
-#!/bin/bash
-
-# apt 패키지 목록 업데이트
-sudo apt update
-
-# 필요한 패키지 설치
-sudo apt install -y python3 python3-pip openjdk-21-jdk unzip jq
+ssh -i {keypair}.pem ubuntu@{vm public ip}
 ```
 
 ### 1-2. Kafka 다운로드 및 압축 해제
