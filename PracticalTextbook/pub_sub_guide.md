@@ -37,7 +37,12 @@
         ```bash
         cd syu-DataAnalyze/TrafficGenerator/REST_API/VM2
         ```
-        
+
+    - **디렉토리 내부 파일 생성 여부 확인**
+
+        ```bash
+        ls -l
+        ```
 
 ---
 
