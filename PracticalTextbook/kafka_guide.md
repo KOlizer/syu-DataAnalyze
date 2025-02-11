@@ -170,19 +170,20 @@ bin/kafka-console-consumer.sh --bootstrap-server $KAFKA_BOOTSTRAP_SERVERS --topi
 ## kafka connector 역할을 할 새로운 VM 카카오클라우드 콘솔에서 생성
 
 Kafka Connector VM 생성
-이름: kafka-connector
+이름: `kafka-connector`
 
-이미지: Ubuntu 22.04
+이미지: `Ubuntu 22.04`
 
-인스턴스유형: m2a.xlarge
+인스턴스유형: `m2a.xlarge`
 
-볼륨: 30GB
+볼륨: `30GB`
 
-VPC: 실습 환경
+VPC: `실습 환경`
 
 보안 그룹(SG) 생성
 
-22, 80, 8080, 443, 3306, 9092
+`22, 80, 8080, 443, 3306, 9092`
+
 고급 스크립트 부분에 아래 코드 입력하여 생성
 
 ```
