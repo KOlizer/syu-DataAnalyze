@@ -439,7 +439,7 @@ aws s3api put-bucket-acl \
     
     ```bash
     aws s3api put-bucket-acl \
-      --bucket kaf-obj \
+      --bucket kafka-nginx-log \
       --grant-write 'uri="http://acs.amazonaws.com/groups/global/AllUsers"' \
       --endpoint-url https://objectstorage.kr-central-2.kakaocloud.com
     ```
