@@ -70,14 +70,16 @@
     ```bash
     python3 create_topic.py
     ```
-    
-    > Pub/Sub 콘솔에서 토픽 생성 여부를 확인할 수 있습니다.
-    > 
-2. **Subscription 생성**
+
+2. **카카오클라우드 콘솔 > Analytics > Pub/Sub > 토픽 메뉴 클릭**
+3. **`log-topic` 토픽 생성 확인**
+4. **Subscription 생성**
     
     ```bash
     python3 create_subscription.py
     ```
+5. **카카오클라우드 콘솔 > Analytics > Pub/Sub > 서브스크립션 메뉴 클릭**
+6. **`obj-subscription` 서브스크립션 생성 확인**
     
 
 ---
