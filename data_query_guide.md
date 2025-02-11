@@ -95,20 +95,34 @@
 6. HTTP status code별 count로 에러율 추출 (현재 권한 문제)
   - 쿼리는 성공하는데 테이블이 안 뜨는 문제
     ```
-    SELECT 
-      ERROR_CODE,
-      COUNT(*) AS error_count
-    FROM 
-        performance_schema.error_log
-    GROUP BY 
-        ERROR_CODE
-    ORDER BY 
-        error_count DESC;
+	WITH parsed AS (
+	  SELECT 
+	    endpoint,
+	    request,
+	    CAST(status AS integer) AS status_int
+	  FROM db3_lsh.partition_test
+	),
+	extracted AS (
+	  SELECT 
+	    endpoint,
+	    -- /search인 경우, request에서 ?query= 이후의 값을 추출하여 subcategory로 사용하고, 아니면 '-'로 처리
+	    CASE 
+	      WHEN endpoint = '/search'
+	      THEN regexp_extract(request, '^(?:GET|POST|PUT|DELETE)\\s+[^\\s\\?]+\\?query=([^\\s]+)', 1)
+	      ELSE '-' 
+	    END AS subcategory,
+	    status_int
+	  FROM parsed
+	)
+	SELECT 
+	  endpoint,
+	  subcategory,
+	  COUNT(*) AS total,
+	  SUM(CASE WHEN status_int >= 400 THEN 1 ELSE 0 END) AS error_count,
+	  ROUND(SUM(CASE WHEN status_int >= 400 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS error_rate_percentage
+	FROM extracted
+	GROUP BY endpoint, subcategory
+	ORDER BY endpoint;
+
     ```
 
-
-```
-	1.	performance_schema 활성화 여부 확인:
-	•	performance_schema는 MySQL 서버 설정에서 활성화되어 있어야 사용할 수 있습니다.
-	•	performance_schema를 활성화하려면 MySQL 서버의 my.cnf 또는 my.ini 설정 파일에서 아래 항목이 포함되어 있는지 확인하고, 포함되지 않으면 추가합니다.
-```
