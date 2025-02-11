@@ -121,7 +121,7 @@
 
 ## 5. Traffic Generator 실행
 
-**Traffic-Generator-VM1에서:**
+**Traffic-Generator-VM1에서 아래 명령어 실행**
 
 1. 트래픽 생성 스크립트 실행
     
