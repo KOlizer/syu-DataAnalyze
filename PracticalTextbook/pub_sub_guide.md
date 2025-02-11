@@ -146,18 +146,9 @@
 ## 6. Go SDK 실습
 
 ### A. 작업 디렉토리 이동(VM1, 2)
-
-1. 홈 디렉토리로 이동
-    
-    ```bash
-    cd
-    ```
-    
-2. `gosdk/cmd` 디렉토리로 이동
-    
-    ```bash
-    cd gosdk/cmd
-    ```
+```bash
+cd /home/ubuntu/gosdk/cmd
+```
     
 
 ### B. Publisher 및 Subscriber 실행
