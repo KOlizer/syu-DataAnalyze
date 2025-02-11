@@ -16,7 +16,7 @@
    - 경로
      - S3 연결 : `체크`
      - 버킷 이름: `{카프카와 연동된 버킷}`
-     - 디렉터리:`{topics/nginx-topic/partition_0}` // 현재 임의 설정
+     - 디렉터리:`{topics/nginx-topic/partition_0}` // 현재 임의 설정 (경로에`=` 못 넣음, partition을 경로에서 빼면 오류) 
 </br>
 
 ## 3. 테이블 생성
@@ -26,37 +26,41 @@
    - 테이블 이름: `data_table`
    - 데이터 저장경로
      - 버킷 이름: {카프카와 연동된 버킷}
-     - 디렉터리: {topics/nginx-topic} // 임의로 테스트, or 여기 보다 한 단계 위의  경로
+     - 디렉터리: {topics/nginx-topic} // 임의 테스트
    - 데이터 유형: `JSON` // 테스트
    - Pub/Sub 연동: `사용` // 테스트
      - 토픽 선택: {data-catalog-topic}
      - `저장` 클릭
    - 스키마(추후 시나리오에 맞게 수정해야함)
      - `필드추가` 클릭
-     - `파티션 키`: 사용
-     - 필드 이름: `partition_key`
-     - 데이터 유형: `string
-     - ---
+     - 필드 정보
+        - `파티션 키`: 사용
+        - 필드 이름: `partition`
+        - 데이터 유형: `string`
+        - ---
     
-     - `필드추가` 클릭
-     - `파티션 키`: 미사용
-     - 필드 이름: `id`
-     - 데이터 유형: `int`
-     - ---
-    
-     - `필드추가` 클릭
-     - `파티션 키`: 미사용
-     - 필드 이름: `name`
-     - 데이터 유형: `string`
+        - `파티션 키`: 미사용
+        - 필드 이름: `status`
+        - 데이터 유형: `string`
+        - ---
+        - `파티션 키`: 미사용
+        - 필드 이름: `endpoint`
+        - 데이터 유형: `string`
+        - ---
+        - `파티션 키`: 미사용
+        - 필드 이름: `request`
+        - 데이터 유형: `string`
+        - - ---
+
     
    - 모든 필드 선택 후 `생성` 클릭
   
 # 메시지 확인 실습
 ## 1. pub/sub 연동을 통한 메시지 확인
    ### 서브스크립션 생성
-   기본설정
-      - 이름: pull-subscription-cjm
-      - 토픽: data-catalog-topic
+   - 기본설정
+      - 이름: pull-subscription-cjm //임의 값
+      - 토픽: data-catalog-topic //임의 값
       - 유형: Pull
 
    ### TG에서 메시지 확인 코드 실행
