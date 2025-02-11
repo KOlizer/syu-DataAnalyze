@@ -65,7 +65,7 @@
 
 **Traffic-Generator-VM2에서 실행**
 
-1. **토픽 생성:**
+1. **토픽 생성**
     
     ```bash
     python3 create_topic.py
@@ -73,7 +73,7 @@
     
     > Pub/Sub 콘솔에서 토픽 생성 여부를 확인할 수 있습니다.
     > 
-2. **Subscription 생성:**
+2. **Subscription 생성**
     
     ```bash
     python3 create_subscription.py
@@ -86,13 +86,13 @@
 
 ### A. Pub/Sub send/receive 스크립트 실행
 
-- **Traffic-Generator-VM1 (Publisher):**
+- **Traffic-Generator-VM1 (Publisher)**
     
     ```bash
     python3 pub_sub_send.py
     ```
     
-- **Traffic-Generator-VM2 (Subscriber):**
+- **Traffic-Generator-VM2 (Subscriber)**
     
     ```bash
     python3 restapi_pull_sub.py
@@ -130,13 +130,13 @@
 
 **Traffic-Generator-VM1에서:**
 
-1. 트래픽 생성 스크립트 실행:
+1. 트래픽 생성 스크립트 실행
     
     ```bash
     python3 traffic_generator.py
     ```
     
-2. 실행 완료 후, 생성된 로그 확인:
+2. 실행 완료 후, 생성된 로그 확인
     
     ```bash
     cat traffic_generator.log
@@ -149,13 +149,13 @@
 
 ### A. 작업 디렉토리 이동(VM1, 2)
 
-1. 홈 디렉토리로 이동:
+1. 홈 디렉토리로 이동
     
     ```bash
     cd
     ```
     
-2. `gosdk/cmd` 디렉토리로 이동:
+2. `gosdk/cmd` 디렉토리로 이동
     
     ```bash
     cd gosdk/cmd
@@ -164,7 +164,7 @@
 
 ### B. Publisher 및 Subscriber 실행
 
-- **Traffic-Generator-VM1 (Publisher):**
+- **Traffic-Generator-VM1 (Publisher)**
     
     ```bash
     go build -o publisher config.go publisher.go
@@ -173,7 +173,7 @@
     ./publisher
     ```
     
-- **Traffic-Generator-VM2 (Subscriber):**
+- **Traffic-Generator-VM2 (Subscriber)**
     
     ```bash
     go build -o subscriber config.go subscriber.go
@@ -237,5 +237,3 @@ sudo systemctl status filebeat
 sudo systemctl status logstash
 sudo systemctl status nginx
 ```
-
-
