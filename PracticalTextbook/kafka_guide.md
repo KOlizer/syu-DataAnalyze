@@ -452,9 +452,7 @@ aws s3api put-bucket-acl \
 ### 4-1. 연결 폴더 생성
 
 ```bash
-sudo mkdir -p /opt/kafka/config
-sudo chown ubuntu:ubuntu /opt/kafka
-sudo chown ubuntu:ubuntu /opt/kafka/config
+sudo mkdir -p /opt/kafka/config && sudo chown -R ubuntu:ubuntu /opt/kafka
 ```
 
 ### 4-2. S3 Sink Connector 전용 설정 파일 생성
