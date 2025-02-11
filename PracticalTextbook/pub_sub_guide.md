@@ -48,7 +48,7 @@
 1. **토픽 생성:**
     
     ```bash
-    python3 CreateTopic.py
+    python3 create-topic.py
     ```
     
     > Pub/Sub 콘솔에서 토픽 생성 여부를 확인할 수 있습니다.
@@ -56,7 +56,7 @@
 2. **Subscription 생성:**
     
     ```bash
-    python3 CreateSubscription.py
+    python3 create-subscription.py
     ```
     
 
