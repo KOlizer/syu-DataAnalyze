@@ -153,6 +153,8 @@
     
     ```bash
     go build -o publisher config.go publisher.go
+    ```
+    ```bash
     ./publisher
     ```
     
@@ -160,6 +162,8 @@
     
     ```bash
     go build -o subscriber config.go subscriber.go
+    ```
+    ```bash
     ./subscriber
     ```
     
