@@ -131,32 +131,24 @@ bin/kafka-topics.sh --bootstrap-server $KAFKA_BOOTSTRAP_SERVERS --create --topic
 
 api서버에서 logstash 설정(API VM1, 2)
 ```
-cd /etc/logstash/conf.d
-cat logs-to-kafka.conf
+cd /etc/logstash/
+sudo vi logstash.yml
 ```
 
-아래 코드와 동일한지 확인
+보이는 파일
 ```
-input {
-  beats {
-    port => 5045
-  }
-}
-filter {
-
-}
-output {
-  # Kafka로 데이터 전송 (원본 메시지 사용)
-  kafka {
-    bootstrap_servers => "${LOGSTASH_KAFKA_ENDPOINT}"
-    topic_id => "nginx-topic"
-    codec => json  # 데이터 형식에 맞게 조정하세요 (예: json, plain)
-    # 필요에 따라 추가 Kafka 설정을 여기에 추가하세요
-    # 예: security_protocol, sasl_mechanism 등
-  }
-}
-
+path.data: /var/lib/logstash
+path.logs: /var/log/logstash
+path.config: /etc/logstash/conf.d/logs-to-pubsub.conf
 ```
+
+path.config 수정 필요 logs-to-pubsub.conf -> logs-to-kafka.conf
+```bash
+i 클릭 후 방향키로 이동하여logs-to-pubsub.conf로 이동
+logs-to-pubsub.conf에서 pubsub 삭제 후 kafka 입력
+esc 클릭 후 :wq 입력
+```
+
 
 Logstash 재실행 및 상태 확인 (API VM1, 2)
 ```
