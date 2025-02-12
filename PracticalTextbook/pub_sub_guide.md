@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/3f9947e1-f14f-4520-8814-fe69250a6fc3)# 1. 사전 준비
+1. 사전 준비
 - 콘솔로 자원 미리 구축
   - Pub/Sub topic
   - MySQL
@@ -19,30 +19,27 @@ Pub/Sub 기능을 활용한 메시지 송수신, 트래픽 로그 생성, REST A
 ## 1. 기본 환경 설정
 
 1. **VM 접속**
-    - Traffic Generator VM 1, 2에 public IP를 통해 연결합니다.
-    - 각 VM에 SSH로 접속합니다.
+    - Traffic Generator 1, 2 VM에 SSH로 접속합니다.
       ```bash
       ssh -i {keypair}.pem ubuntu@{vm public ip}
       ```
       
-2. **디렉토리 이동**
+2. **디렉터리 내부 파일 목록 확인**
     - **Traffic-Generator-VM1**
         
         ```bash
         cd /home/ubuntu/syu-DataAnalyze/TrafficGenerator/REST_API/VM1
+        ls -l
         ```
         
     - **Traffic-Generator-VM2**
         
         ```bash
         cd /home/ubuntu/syu-DataAnalyze/TrafficGenerator/REST_API/VM2
-        ```
-
-    - **디렉토리 내부 파일 생성 여부 확인**
-
-        ```bash
         ls -l
         ```
+
+
 - **파일 생성이 안 되었을 시 아래 명령어 실행**
   - **Traffic-Generator-VM1,2 모두 실행**
   ```bash
