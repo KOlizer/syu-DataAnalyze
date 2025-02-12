@@ -70,7 +70,7 @@ Pub/Sub을 활용한 메시지 송수신, 트래픽 로그 생성, REST API 실�
 1. **create_topic.py 파일을 실행하여 토픽 생성**
     
     ```bash
-    python3 create_topic.py
+    python3 /home/ubuntu/syu-DataAnalyze/TrafficGenerator/REST_API/VM2/create_topic.py
     ```
 
 2. **카카오클라우드 콘솔 > Analytics > Pub/Sub > 토픽 메뉴 클릭**
@@ -78,7 +78,7 @@ Pub/Sub을 활용한 메시지 송수신, 트래픽 로그 생성, REST API 실�
 4. **create_subscription.py 파일을 실행하여 Subscription 생성**
     
     ```bash
-    python3 create_subscription.py
+    python3 /home/ubuntu/syu-DataAnalyze/TrafficGenerator/REST_API/VM2/create_subscription.py
     ```
 5. **카카오클라우드 콘솔 > Analytics > Pub/Sub > 서브스크립션 메뉴 클릭**
 6. **`obj-subscription` 서브스크립션 생성 확인**
@@ -111,28 +111,10 @@ Pub/Sub을 활용한 메시지 송수신, 트래픽 로그 생성, REST API 실�
   - **종료:** `Ctrl + C`
     - (Traceback 메시지가 뜨는 것은 정상입니다.)
 
----
-
-## 4. Traffic Generator를 활용한 트래픽 생성
-
-**Traffic-Generator-VM1에서 아래 명령어 실행**
-
-1. 트래픽 생성 스크립트 실행
-    
-    ```bash
-    python3 traffic_generator.py
-    ```
-    
-2. 실행 완료 후, 생성된 로그 확인
-    
-    ```bash
-    cat traffic_generator.log
-    ```
-    
 
 ---
 
-## 5. Go SDK를 활용한 메시지 송수신
+## 4. Go SDK를 활용한 메시지 송수신
 
 1. 작업 디렉토리 이동(VM1, 2)
 ```bash
@@ -162,7 +144,26 @@ cd /home/ubuntu/gosdk/cmd
     
 
 > 확인: VM1에서 입력한 메시지가 VM2에서 정상적으로 수신되는지 확인합니다.
-> 
+
+
+---
+
+## 5. Traffic Generator를 활용한 트래픽 생성
+
+**Traffic-Generator-VM1에서 아래 명령어 실행**
+
+1. 트래픽 생성 스크립트 실행
+    
+    ```bash
+    python3 /home/ubuntu/syu-DataAnalyze/TrafficGenerator/REST_API/VM1/traffic_generator.py
+    ```
+    
+2. 실행 완료 후, 생성된 로그 확인
+    
+    ```bash
+    cat /home/ubuntu/syu-DataAnalyze/TrafficGenerator/REST_API/VM1/traffic_generator.log
+    ```
+    
 
 ---
 
