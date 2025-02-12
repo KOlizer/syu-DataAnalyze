@@ -66,7 +66,7 @@ Pub/Sub 기능을 활용한 메시지 송수신, 트래픽 로그 생성, REST A
   ```
 ---
 
-## 2. Topic 및 Subscription 생성
+## 2. Pub/Sub Topic 및 Subscription 생성
 
 **Traffic-Generator-VM2에서 실행**
 
