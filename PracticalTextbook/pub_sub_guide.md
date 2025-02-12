@@ -1,4 +1,4 @@
-# 1. 사전 준비
+![image](https://github.com/user-attachments/assets/3f9947e1-f14f-4520-8814-fe69250a6fc3)# 1. 사전 준비
 - 콘솔로 자원 미리 구축
   - Pub/Sub topic
   - MySQL
@@ -70,7 +70,7 @@ Pub/Sub 기능을 활용한 메시지 송수신, 트래픽 로그 생성, REST A
 
 **Traffic-Generator-VM2에서 실행**
 
-1. **토픽 생성**
+1. **create_topic.py 파일을 실행하여 토픽 생성**
     
     ```bash
     python3 create_topic.py
@@ -78,7 +78,7 @@ Pub/Sub 기능을 활용한 메시지 송수신, 트래픽 로그 생성, REST A
 
 2. **카카오클라우드 콘솔 > Analytics > Pub/Sub > 토픽 메뉴 클릭**
 3. **`log-topic` 토픽 생성 확인**
-4. **Subscription 생성**
+4. **create_subscription.py 파일을 실행하여 Subscription 생성**
     
     ```bash
     python3 create_subscription.py
@@ -89,42 +89,34 @@ Pub/Sub 기능을 활용한 메시지 송수신, 트래픽 로그 생성, REST A
 
 ---
 
-## 3. 메시지 송수신 테스트
+## 3. REST API를 활용한 메시지 송수신
 
-1. **Traffic-Generator-VM1 (Publisher)에서 아래 명령어를 입력하여 Pub/Sub send 스크립트 실행**
+1. **Traffic-Generator-VM1 (Publisher)에서 아래 명령어를 입력하여 Pub/Sub 메세지 송신용 스크립트 실행**
     
     ```bash
     python3 pub_sub_send.py
     ```
 2. **Traffic-Generator-VM1 터미널 창에 전송하고 싶은 메세지 입력 후 키보드의 `Enter`, `Ctrl+D` 키를 눌러 메세지 송신**
-3. **Traffic-Generator-VM2 (Subscriber)에서 아래 명령어를 입력하여 Pub/Sub receive 스크립트 실행**
+3. **Traffic-Generator-VM2 (Subscriber)에서 아래 명령어를 입력하여 Pub/Sub 메세지 수신용 스크립트 실행**
     
     ```bash
     python3 restapi_pull_sub.py
     ```
 4. **Traffic-Generator-VM2 터미널에서 Traffic-Generator-VM1에서 입력한 메세지 수신 확인**
-
-
----
-
-## 4. 웹 브라우저를 통한 메시지 확인
-
-1. 웹 브라우저에서 아래 URL에 접속합니다.
+5. **웹 브라우저에서 아래 URL에 접속합니다.**
     
     ```
     http://{alb public ip 주소}/push-messages
     ```
     
-2. 여러 번 새로고침하여 메시지 적재 여부를 확인합니다.
-
-  - note (메세지 받은 부분이 안뜰시 전송 중이라 그런 것이므로 잠시 기다렸다가 확인)
-
-3. **종료:** `Ctrl + C`
+6. 여러 번 새로고침하여 메시지 적재 여부를 확인합니다.
+  - note (메세지 받은 부분이 뜨지 않을 경우, 전송 중이라 그런 것이므로 잠시 기다렸다가 확인)
+  - **종료:** `Ctrl + C`
     - (Traceback 메시지가 뜨는 것은 정상입니다.)
 
 ---
 
-## 5. Traffic Generator 실행
+## 4. Traffic Generator를 활용한 트래픽 생성
 
 **Traffic-Generator-VM1에서 아래 명령어 실행**
 
@@ -143,15 +135,15 @@ Pub/Sub 기능을 활용한 메시지 송수신, 트래픽 로그 생성, REST A
 
 ---
 
-## 6. Go SDK 실습
+## 5. Go SDK를 활용한 메시지 송수신
 
-### A. 작업 디렉토리 이동(VM1, 2)
+1. 작업 디렉토리 이동(VM1, 2)
 ```bash
 cd /home/ubuntu/gosdk/cmd
 ```
     
 
-### B. Publisher 및 Subscriber 실행
+2. Publisher 및 Subscriber 실행
 
 - **Traffic-Generator-VM1 (Publisher)**
     
@@ -177,11 +169,11 @@ cd /home/ubuntu/gosdk/cmd
 
 ---
 
-## 7. NGINX 로그를 Object Storage에 적재
+## 6. Object Storage에 NGINX 로그 적재
 
 ### API Public ip를 이용하여 접속 후 로그 생성
 
-- web에 http://api server public ip로 접속하여 웹페이지 내용 클릭하여 로그 생성
+- 웹 브라우저 주소창에 http://{api server public ip}를 입력하여 접속 후 웹 페이지 내용 클릭하여 로그 생성
 
 
 ### Pub/Sub용 Object Storage 콘솔 확인
@@ -214,7 +206,7 @@ cd /home/ubuntu/gosdk/cmd
 4. 편집 후 저장 및 나가기(필요시)
 
 ```jsx
-Esc -> :wq
+Esc  :wq
 ```
 
 ### 서비스 상태 확인
