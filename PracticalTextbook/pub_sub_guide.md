@@ -16,7 +16,7 @@ Pub/Sub을 활용한 메시지 송수신, 트래픽 로그 생성, REST API 실�
 
 ---
 
-## 1. 기본 환경 설정
+## 0. 기본 환경 설정(lab0 tg 생성 시 접속하여 확인하는 것으로 해당 실습 옮기기)
 
 1. **VM 접속**
     - Traffic Generator 1, 2 VM에 SSH로 접속합니다.
@@ -63,7 +63,7 @@ Pub/Sub을 활용한 메시지 송수신, 트래픽 로그 생성, REST API 실�
   ```
 ---
 
-## 2. Pub/Sub Topic 및 Subscription 생성
+## 1. Pub/Sub Topic 및 Subscription 생성
 
 **Traffic-Generator-VM2에서 실행**
 
@@ -86,7 +86,7 @@ Pub/Sub을 활용한 메시지 송수신, 트래픽 로그 생성, REST API 실�
 
 ---
 
-## 3. REST API를 활용한 메시지 송수신
+## 2. REST API를 활용한 메시지 송수신
 
 1. **Traffic-Generator-VM1 (Publisher)에서 아래 명령어를 입력하여 Pub/Sub 메세지 송신용 스크립트 실행**
     
@@ -114,7 +114,7 @@ Pub/Sub을 활용한 메시지 송수신, 트래픽 로그 생성, REST API 실�
 
 ---
 
-## 4. Go SDK를 활용한 메시지 송수신
+## 3. Go SDK를 활용한 메시지 송수신
 
 1. 작업 디렉토리 이동(VM1, 2)
 ```bash
@@ -148,7 +148,7 @@ cd /home/ubuntu/gosdk/cmd
 
 ---
 
-## 5. Traffic Generator를 활용한 트래픽 생성
+## 4. Traffic Generator를 활용한 트래픽 생성
 
 **Traffic-Generator-VM1에서 아래 명령어 실행**
 
@@ -167,7 +167,7 @@ cd /home/ubuntu/gosdk/cmd
 
 ---
 
-## 6. Object Storage에 NGINX 로그 적재
+## 5. Object Storage에 NGINX 로그 적재
 
 ### API Public ip를 이용하여 접속 후 로그 생성
 
