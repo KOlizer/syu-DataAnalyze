@@ -131,7 +131,7 @@ bin/kafka-topics.sh --bootstrap-server $KAFKA_BOOTSTRAP_SERVERS --create --topic
 
 api서버에서 logstash 설정(API VM1, 2)
 ```
-vi /etc/logstash/logstash.yml
+sudo vi /etc/logstash/logstash.yml
 ```
 
 보이는 파일
