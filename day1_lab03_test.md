@@ -110,7 +110,7 @@ Kafka로 메시지를 송수신하고, Nginx 로그를 실시간으로 수집·�
     #### **lab3-3-2**
    
     ```bash
-    for s in $(echo $KAFKA_BOOTSTRAP_SERVERS | tr ',' ' '); do nc -zv ${s%:*} ${s##*:} && echo "---"; done
+    for s in $(echo $KAFKA_BOOTSTRAP_SERVERS | tr ',' ' '); do nc -zv ${s%:*} ${s##*:} 2>&1 | grep "succeeded"; done
     ```
 
     ![Image](https://github.com/user-attachments/assets/923c51ed-0cf3-4fea-8c13-442beb0005ee)
