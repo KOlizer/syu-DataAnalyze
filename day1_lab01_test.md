@@ -336,7 +336,7 @@
    - 고급 설정  
      - **Note**: 메모장에 아래 링크의 코드를 복사 붙여넣기 하여 사용  
      - **Note**: 중괄호({})는 제거하고 쌍 따옴표는 유지  
-     - 사용자 스크립트: [`api_vm_init`](https://github.com/kakaocloud-edu/tutorial/blob/main/DataAnalyzeCourse/src/day1/Lab00/api_server/api_vm_init.sh)의 쌍따옴표(“”) 사이에 자신의 리소스 값 입력  
+     - 사용자 스크립트: [`api_vm_init`](DataAnalyzeCourse/src/day1/Lab01/api_server/api_vm_init.sh)의 쌍따옴표(“”) 사이에 자신의 리소스 값 입력  
        - **Note**: 스크립트에 대한 자세한 내용은 아래 파일들 참고
          - [api_env_setup.sh](https://github.com/kakaocloud-edu/tutorial/blob/main/DataAnalyzeCourse/src/day1/Lab00/api_server/api_env_setup.sh)  
          - [api_full_setup.sh](https://github.com/kakaocloud-edu/tutorial/blob/main/DataAnalyzeCourse/src/day1/Lab00/api_server/api_full_setup.sh)  
@@ -358,9 +358,9 @@
       export MYSQL_HOST="{MySQL 엔드포인트}"
       
       # Pub/Sub 및 Kafka 설정
+      export LOGSTASH_KAFKA_ENDPOINT="{Kafka 부트스트랩 서버}"
       export PUBSUB_TOPIC_NAME="log-topic"
       export KAFKA_TOPIC_NAME="nginx-topic"
-      export LOGSTASH_KAFKA_ENDPOINT="temp-kafka-bootstrap-server"
       
       # 로그 및 환경 설정
       export LOGSTASH_ENV_FILE="/etc/default/logstash"
