@@ -106,13 +106,11 @@ Kafka로 메시지를 송수신하고, Nginx 로그를 실시간으로 수집·�
 
     
 3. `traffic-generator-1`, `traffic-generator-2`에서 Kafka 클러스터와 통신 확인
-    - **Note**: 콤마(,) 기준으로 앞뒤의 kafka 클러스터의 부트스트랩 서버 주소 하나씩 입력
-    - **Note**: 포트 번호 입력 시 콜론(:) 대신 공백(space) 넣은 후 진행
-    
+
     #### **lab3-3-2**
    
     ```bash
-    nc -zv $KAFKA_BOOTSTRAP_SERVERS
+    for s in $(echo $KAFKA_BOOTSTRAP_SERVERS | tr ',' ' '); do nc -zv ${s%:*} ${s##*:} && echo "---"; done
     ```
 
     ![Image](https://github.com/user-attachments/assets/923c51ed-0cf3-4fea-8c13-442beb0005ee)
