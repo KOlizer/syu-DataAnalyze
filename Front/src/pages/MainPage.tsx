@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import InputBox from '../components/InputBox';
-import ClusterToggle from '../components/ClusterToggle';
 import ScriptDisplay from '../components/ScriptDisplay';
+import SelectBox from '../components/SelectBox';
 import styled from 'styled-components';
 import axios from 'axios';
 import usePersistedState from '../hooks/usePersistedState';
@@ -9,17 +9,6 @@ import { STORAGE_KEYS } from '../constants/storageKeys';
 
 // API URL 환경변수
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
-
-// Cluster 인터페이스 정의
-interface Cluster {
-    id: string;
-    name: string;
-    status: string;
-    version: string;
-    bootstrap_servers: string;
-    total_broker_count: number;
-    instance_type: string;
-}
 
 const Container = styled.div`
     max-width: 800px;
@@ -56,74 +45,6 @@ const GroupContainer = styled.div`
     border-radius: 8px;
 `;
 
-// 통합 조회 버튼 컨테이너
-const IntegratedQueryContainer = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 1.5em 0;
-    padding: 1.5em;
-    background: linear-gradient(135deg, rgba(255, 225, 0, 0.15) 0%, rgba(255, 225, 0, 0.08) 100%);
-    border: 2px solid rgba(255, 225, 0, 0.4);
-    border-radius: 15px;
-    box-shadow: 0 4px 20px rgba(255, 225, 0, 0.2);
-`;
-
-const IntegratedQueryButton = styled.button<{ $isLoading: boolean }>`
-    background: linear-gradient(135deg, #ffe100 0%, #ffec4f 100%);
-    color: #000;
-    border: none;
-    padding: 1.2em 2.5em;
-    border-radius: 30px;
-    cursor: pointer;
-    font-size: 1.1em;
-    font-weight: bold;
-    transition: all 0.3s ease;
-    position: relative;
-    min-width: 250px;
-    box-shadow: 0 6px 20px rgba(255, 225, 0, 0.4);
-    
-    &:hover:not(:disabled) {
-        background: linear-gradient(135deg, #ffec4f 0%, #fff176 100%);
-        transform: translateY(-3px);
-        box-shadow: 0 10px 30px rgba(255, 225, 0, 0.5);
-    }
-    
-    &:disabled {
-        background: #666;
-        cursor: not-allowed;
-        transform: none;
-        box-shadow: none;
-    }
-    
-    ${props => props.$isLoading ? `
-        &::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            margin: auto;
-            border: 3px solid #000;
-            border-top: 3px solid transparent;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-    ` : ''}
-    
-    @keyframes spin {
-        0% { transform: translate(-50%, -50%) rotate(0deg); }
-        100% { transform: translate(-50%, -50%) rotate(360deg); }
-    }
-`;
-
-const LoadingText = styled.span<{ $visible: boolean }>`
-    opacity: ${props => props.$visible ? 0 : 1};
-    transition: opacity 0.2s ease;
-`;
-
 const ButtonContainer = styled.div`
     display: flex;
     justify-content: center;
@@ -152,182 +73,451 @@ const StyledButton = styled.button`
     }
 `;
 
-const S3SinkConnectorVM: React.FC = () => {
+interface KubeConfig {
+    clusters: Array<{
+        cluster: {
+            "certificate-authority-data": string;
+            server: string;
+        };
+        name: string;
+    }>;
+}
+
+const MainPage: React.FC = () => {
     const [accessKey, setAccessKey] = usePersistedState(STORAGE_KEYS.KAKAO_ACCESS_KEY, '');
     const [secretKey, setSecretKey] = usePersistedState(STORAGE_KEYS.KAKAO_SECRET_KEY, '');
-    const [kafkaServer, setKafkaServer] = useState('');
-    const [dataStreamVmIp, setDataStreamVmIp] = useState('');
-    const [s3AccessKey, setS3AccessKey] = usePersistedState(STORAGE_KEYS.S3_ACCESS_KEY, '');
-    const [s3SecretKey, setS3SecretKey] = usePersistedState(STORAGE_KEYS.S3_SECRET_KEY, '');
+    const [projectName, setProjectName] = useState('');
+    const [clusterList, setClusterList] = useState<string[]>([]);
+    const [clusterName, setClusterName] = useState('');
+    const [apiEndpoint, setApiEndpoint] = useState('');
+    const [authData, setAuthData] = useState('');
+    const [instanceList, setInstanceList] = useState('');
+    const [instanceName, setInstanceName] = useState('');
+    const [primaryEndpoint, setPrimaryEndpoint] = useState('');
+    const [standbyEndpoint, setStandbyEndpoint] = useState('');
+    const [dockerImageName, setDockerImageName] = useState('demo-spring-boot');
+    const [dockerJavaVersion, setDockerJavaVersion] = useState('17-jdk-slim');
     const [script, setScript] = useState('');
-    
-    // Kafka 클러스터 관련 상태
-    const [selectedClusterId, setSelectedClusterId] = useState('');
-    const [kafkaClusters, setKafkaClusters] = useState<Cluster[]>([]);
-    const [kafkaLoaded, setKafkaLoaded] = useState(false);
-    
-    // 통합 조회 로딩 상태
-    const [integratedLoading, setIntegratedLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [loadingButton, setLoadingButton] = useState<string | null>(null);
+    const [instanceEndpoints, setInstanceEndpoints] = useState<{ [key: string]: { primary_endpoint: string, standby_endpoint: string } }>({});
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-    // Kafka 클러스터 조회
-    const handleKafkaQuery = async () => {
-        if (!accessKey || !secretKey) {
-            alert('액세스 키와 시크릿 키를 먼저 입력해야 함');
-            return;
-        }
-
-        setIntegratedLoading(true);
-        
+    const handleApiButtonClick = async (id: string, apiFunction: (arg?: string) => Promise<void>, arg?: string) => {
+        setLoadingButton(id);
         try {
-            const kafkaResponse = await axios.post(`${API_BASE_URL}/get-kafka-clusters`, {
-                access_key_id: accessKey,
-                access_key_secret: secretKey,
-            });
-            
-            const clusterDetails = kafkaResponse.data.cluster_details || [];
-            setKafkaClusters(clusterDetails);
-            setKafkaLoaded(true);
-            
-        } catch (error: any) {
-            if (error.response?.status === 424) {
-                alert('⚠️ Kafka 클러스터 조회 실패\n\nKafka 서비스 권한이 없거나 클러스터가 존재하지 않을 수 있습니다.\n수동으로 입력해주세요.');
-            } else {
-                alert('Kafka 클러스터 조회 중 오류 발생');
-            }
-            setKafkaClusters([]);
-            setKafkaLoaded(true);
+            await apiFunction(arg);
+        } finally {
+            setLoadingButton(null);
         }
-        
-        setIntegratedLoading(false);
     };
 
-    // Kafka 클러스터 선택 처리
-    const handleClusterSelect = (clusterId: string, bootstrapServers: string) => {
-        setSelectedClusterId(clusterId);
-        setKafkaServer(bootstrapServers);
+    const handleInstanceNameChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedInstanceName = event.target.value;
+        setInstanceName(selectedInstanceName);
+        handleApiButtonClick('fetchInstanceEndpoints', fetchInstanceEndpoints, selectedInstanceName);
+    };
+
+    const handleClusterNameChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedClusterName = event.target.value;
+        setClusterName(selectedClusterName);
+        handleApiButtonClick('fetchKubeConfig', fetchKubeConfig, selectedClusterName);
+    };
+
+    const handleFetchProjectsAndClusters = async () => {
+        await fetchProjects();
+        await fetchClusters();
+        await fetchInstanceLists();
+    };
+
+    const validateForm = () => {
+        const newErrors: { [key: string]: string } = {};
+        let isValid = true;
+
+        // 액세스 키 유효성 검사
+        if (accessKey.length < 32) {
+            isValid = false;
+            newErrors.accessKey = '액세스 키는 최소 32자리여야 합니다.';
+        } else if (!/^[a-z0-9]+$/.test(accessKey)) {
+            isValid = false;
+            newErrors.accessKey = '액세스 키는 소문자와 숫자로만 구성되어야 합니다.';
+        }
+
+        // 비밀 액세스 키 유효성 검사
+        if (secretKey.length < 64) {
+            isValid = false;
+            newErrors.secretKey = '비밀 액세스 키는 최소 64자리여야 합니다.';
+        } else if (!/^[a-z0-9]+$/.test(secretKey)) {
+            isValid = false;
+            newErrors.secretKey = '비밀 액세스 키는 소문자와 숫자로만 구성되어야 합니다.';
+        }
+
+        // 클러스터 이름 유효성 검사
+        if (!/^[a-z]/.test(clusterName)) {
+            isValid = false;
+            newErrors.clusterName = '클러스터 이름은 영어 소문자로 시작해야 합니다.';
+        } else if (!/^[a-z0-9-]+$/.test(clusterName)) {
+            isValid = false;
+            newErrors.clusterName = '클러스터 이름은 소문자, 숫자, "-"만 사용해야 합니다.';
+        } else if (clusterName.length < 4 || clusterName.length > 20) {
+            isValid = false;
+            newErrors.clusterName = '클러스터 이름은 4~20자리여야 합니다.';
+        }
+
+        // API 엔드포인트 유효성 검사
+        const apiEndpointPattern = /^https:\/\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}-public\.ke\.kr-central-2\.kakaocloud\.com$/;
+        if (!apiEndpointPattern.test(apiEndpoint)) {
+            isValid = false;
+            newErrors.apiEndpoint = 'API 엔드포인트 형식이 유효하지 않습니다.';
+        }
+
+        // 인증 데이터 유효성 검사
+        const authDataPattern = /^[A-Za-z0-9+/=]+$/;
+        if (!authDataPattern.test(authData)) {
+            isValid = false;
+            newErrors.authData = '인증 데이터는 유효한 Base64 형식이어야 합니다.';
+        } else if (!authData.endsWith('=')) {
+            isValid = false;
+            newErrors.authData = '인증 데이터는 "="로 끝나야 합니다.';
+        } else {
+            try {
+                const decodedAuthData = atob(authData);
+                const pemPattern = /-----BEGIN CERTIFICATE-----[\s\S]+-----END CERTIFICATE-----/;
+                if (!pemPattern.test(decodedAuthData)) {
+                    isValid = false;
+                    newErrors.authData = '인증 데이터는 유효한 PEM 형식의 인증서여야 합니다.';
+                }
+            } catch (e) {
+                isValid = false;
+                newErrors.authData = '인증 데이터를 Base64로 디코딩할 수 없습니다.';
+            }
+        }
+
+        // 프로젝트명 유효성 검사
+        if (!/^[a-z]/.test(projectName)) {
+            isValid = false;
+            newErrors.projectName = '프로젝트명은 영어 소문자로 시작해야 합니다.';
+        } else if (!/^[a-z0-9-]+$/.test(projectName)) {
+            isValid = false;
+            newErrors.projectName = '프로젝트명은 소문자, 숫자, "-"만 사용해야 합니다.';
+        } else if (projectName.length < 4 || projectName.length > 30) {
+            isValid = false;
+            newErrors.projectName = '프로젝트명은 4~30자리여야 합니다.';
+        }
+
+        // Primary 엔드포인트 유효성 검사
+        if (!primaryEndpoint.startsWith('az-')) {
+            isValid = false;
+            newErrors.primaryEndpoint = 'Primary 엔드포인트는 az-a 또는 az-b로 시작해야 합니다.';
+        } else {
+            const primaryParts = primaryEndpoint.split('.');
+            if (primaryParts.length < 6 || (primaryParts[0] !== 'az-a' && primaryParts[0] !== 'az-b')) {
+                isValid = false;
+                newErrors.primaryEndpoint = 'Primary 엔드포인트 형식이 유효하지 않습니다.';
+            } else if (!/^[0-9a-f]{32}$/.test(primaryParts[2])) {
+                isValid = false;
+                newErrors.primaryEndpoint = 'Primary 엔드포인트의 UUID 형식이 유효하지 않습니다.';
+            } else if (primaryParts.slice(3).join('.') !== 'mysql.managed-service.kr-central-2.kakaocloud.com') {
+                isValid = false;
+                newErrors.primaryEndpoint = 'Primary 엔드포인트는 "mysql.managed-service.kr-central-2.kakaocloud.com"로 끝나야 합니다.';
+            }
+        }
+
+        // Standby 엔드포인트 유효성 검사
+        if (!standbyEndpoint.startsWith('az-')) {
+            isValid = false;
+            newErrors.standbyEndpoint = 'Standby 엔드포인트는 az-a 또는 az-b로 시작해야 합니다.';
+        } else {
+            const standbyParts = standbyEndpoint.split('.');
+            if (standbyParts.length < 6 || (standbyParts[0] !== 'az-a' && standbyParts[0] !== 'az-b')) {
+                isValid = false;
+                newErrors.standbyEndpoint = 'Standby 엔드포인트 형식이 유효하지 않습니다.';
+            } else if (!/^[0-9a-f]{32}$/.test(standbyParts[2])) {
+                isValid = false;
+                newErrors.standbyEndpoint = 'Standby 엔드포인트의 UUID 형식이 유효하지 않습니다.';
+            } else if (standbyParts.slice(3).join('.') !== 'mysql.managed-service.kr-central-2.kakaocloud.com') {
+                isValid = false;
+                newErrors.standbyEndpoint = 'Standby 엔드포인트는 "mysql.managed-service.kr-central-2.kakaocloud.com"로 끝나야 합니다.';
+            }
+        }
+
+        // az-a와 az-b의 상호 검증
+        if (primaryEndpoint.startsWith('az-a') && !standbyEndpoint.startsWith('az-b')) {
+            isValid = false;
+            newErrors.standbyEndpoint = 'Primary 엔드포인트가 az-a로 시작하면 Standby 엔드포인트는 az-b로 시작해야 합니다.';
+        } else if (primaryEndpoint.startsWith('az-b') && !standbyEndpoint.startsWith('az-a')) {
+            isValid = false;
+            newErrors.standbyEndpoint = 'Primary 엔드포인트가 az-b로 시작하면 Standby 엔드포인트는 az-a로 시작해야 합니다.';
+        }
+
+        setErrors(newErrors);
+        return isValid;
     };
 
     const generateScript = async () => {
-        const newScript = `#!/bin/bash
-# s3_sink_connector_init.sh
-echo "kakaocloud: 1. 환경 변수 설정 시작"
+        if (validateForm()) {
+            const newScript = `#!/bin/bash
+echo "kakaocloud: 1.Starting environment variable setup"
 
-cat <<'EOF' > /tmp/env_vars.sh
-# 기존 리소스 정보
-export KAFKA_BOOTSTRAP_SERVER="${kafkaServer}"
-export SCHEMA_REGISTRY_SERVER="${dataStreamVmIp}"
-
-# S3 인증 정보
-export AWS_ACCESS_KEY_ID_VALUE="${s3AccessKey}"
-export AWS_SECRET_ACCESS_KEY_VALUE="${s3SecretKey}"
-
-# AWS 환경 변수 설정
-export BUCKET_NAME="data-catalog-bucket"
-export AWS_DEFAULT_REGION_VALUE="kr-central-2"
-export AWS_DEFAULT_OUTPUT_VALUE="json"
-
-# 로그 파일 경로
-export LOGFILE="/home/ubuntu/setup.log"
+# 환경 변수 설정: 사용자는 이 부분에 자신의 환경에 맞는 값을 입력해야 합니다.
+command=$(cat <<EOF
+export ACCESS_KEY="${accessKey}"
+export SECRET_KEY="${secretKey}"
+export PROJECT_NAME="${projectName}"
+export CLUSTER_NAME="${clusterName}"
+export API_ENDPOINT="${apiEndpoint}"
+export AUTH_DATA="${authData}"
+export INSTANCE_LIST="${instanceList}"
+export PRIMARY_ENDPOINT="${primaryEndpoint}"
+export STANDBY_ENDPOINT="${standbyEndpoint}"
+export DOCKER_IMAGE_NAME="${dockerImageName}"
+export DOCKER_JAVA_VERSION="${dockerJavaVersion}"
 EOF
+)
 
-# 환경 변수 적용 
-source /tmp/env_vars.sh
-echo "source /tmp/env_vars.sh" >> /home/ubuntu/.bashrc
+eval "$command"
+echo "$command" >> /home/ubuntu/.bashrc
+echo "kakaocloud: Environment variable setup completed"
 
-echo "kakaocloud: 2. 스크립트 다운로드 사이트 유효성 검사 시작"
-SCRIPT_URL="https://raw.githubusercontent.com/kakaocloud-edu/tutorial/refs/heads/main/DataAnalyzeCourse/src/day1/Lab01/kafka/s3_sink_connector.sh"
+echo "kakaocloud: 2.Checking the validity of the script download site"
+curl --output /dev/null --silent --head --fail "https://github.com/kakaocloud-edu/tutorial/raw/main/AdvancedCourse/src/script/script.sh" || { echo "kakaocloud: Script download site is not valid"; exit 1; }
 
-curl -L --output /dev/null --silent --head --fail "$SCRIPT_URL" || { echo "kakaocloud: Script download site is not valid"; exit 1; }
-wget -q "$SCRIPT_URL"
-chmod +x s3_sink_connector.sh
-sudo -E ./s3_sink_connector.sh`;
+echo "kakaocloud: Script download site is valid"
+wget https://github.com/kakaocloud-edu/tutorial/raw/main/AdvancedCourse/src/script/script.sh
+chmod +x script.sh
+sudo -E ./script.sh`;
 
-        setScript(newScript);
+            setScript(newScript);
 
-        try {
-            await navigator.clipboard.writeText(newScript);
-            alert('스크립트가 생성되고 클립보드에 복사됨');
-        } catch (err) {
-            alert('클립보드 복사 중 오류 발생');
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(newScript);
+                    alert('스크립트가 생성되고 클립보드에 복사되었습니다.');
+                } else {
+                    const textArea = document.createElement('textarea');
+                    textArea.value = newScript;
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        alert('스크립트가 생성되고 클립보드에 복사되었습니다.');
+                    } catch (err) {
+                        console.error('클립보드에 복사하는 동안 오류가 발생했습니다:', err);
+                    }
+                    document.body.removeChild(textArea);
+                }
+            } catch (err) {
+                console.error('클립보드에 복사하는 동안 오류가 발생했습니다:', err);
+            }
+        } else {
+            alert('각 필드의 유효성을 체크해주세요.');
         }
+    };
+
+    const fetchProjects = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.post(`${API_BASE_URL}/get-project-name`, {
+                access_key_id: accessKey,
+                access_key_secret: secretKey,
+            });
+            const projectName = response.data.project_name;
+            setProjectName(projectName);
+        } catch (error) {
+            console.error('API 호출 오류:', error);
+        }
+        setLoading(false);
+    };
+
+    const fetchClusters = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.post(`${API_BASE_URL}/get-clusters`, {
+                access_key_id: accessKey,
+                access_key_secret: secretKey,
+            });
+            const clusterNames = response.data.items.map((item: any) => item.name);
+            setClusterList(clusterNames);
+        } catch (error) {
+            console.error('API 호출 오류:', error);
+        }
+        setLoading(false);
+    };
+
+    const fetchInstanceLists = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.post(`${API_BASE_URL}/get-instance-groups`, {
+                access_key_id: accessKey,
+                access_key_secret: secretKey,
+            });
+            const instanceSetNames = response.data;
+            setInstanceList(instanceSetNames.join(', '));
+        } catch (error) {
+            console.error('API 호출 오류:', error);
+        }
+        setLoading(false);
+    };
+
+    const fetchInstanceEndpoints = async (selectedInstanceName?: string) => {
+        setLoading(true);
+        try {
+            const response = await axios.post(`${API_BASE_URL}/get-instance-endpoints`, {
+                access_key_id: accessKey,
+                access_key_secret: secretKey,
+                instance_set_name: selectedInstanceName
+            });
+            console.log('전체 응답 데이터:', response.data);
+            const { primary_endpoint, standby_endpoint } = response.data;
+            setInstanceEndpoints(prev => ({
+                ...prev,
+                [selectedInstanceName as string]: { primary_endpoint, standby_endpoint }
+            }));
+            setPrimaryEndpoint(primary_endpoint);
+            setStandbyEndpoint(standby_endpoint);
+        } catch (error) {
+            console.error('API 호출 오류:', error);
+        }
+        setLoading(false);
+    };
+
+    const fetchKubeConfig = async (selectedClusterName?: string) => {
+        setLoading(true);
+        try {
+            const response = await axios.post(`${API_BASE_URL}/get-kubeconfig`, {
+                access_key_id: accessKey,
+                access_key_secret: secretKey,
+                cluster_name: selectedClusterName
+            });
+            const { clusters } = response.data;
+            const selectedCluster = clusters.find((cluster: any) => cluster.name === selectedClusterName);
+            if (selectedCluster) {
+                setClusterName(selectedCluster.name);
+                setApiEndpoint(selectedCluster.cluster.server);
+                setAuthData(selectedCluster.cluster["certificate-authority-data"]);
+            }
+        } catch (error) {
+            console.error('API 호출 오류:', error);
+        }
+        setLoading(false);
     };
 
     return (
         <Container>
-            <Title>S3 Sink Connector VM 스크립트 생성</Title>
+            <Title>Bastion VM 스크립트 생성</Title>
             <Subtitle>kakaocloud 교육용</Subtitle>
             
-            {/* 1단계: 직접 입력 필요한 필드들 */}
             <GroupContainer>
                 <InputBox
                     label="1. 액세스 키"
                     placeholder="직접 입력"
                     value={accessKey}
                     onChange={(e) => setAccessKey(e.target.value)}
+                    error={errors.accessKey}
                 />
                 <InputBox
                     label="2. 시크릿 키"
                     placeholder="직접 입력"
                     value={secretKey}
                     onChange={(e) => setSecretKey(e.target.value)}
+                    error={errors.secretKey}
                 />
                 <InputBox
-                    label="3. DataStream VM의 Public IP"
-                    placeholder="ex) 1.2.3.4 (직접 입력 필요)"
-                    value={dataStreamVmIp}
-                    onChange={(e) => setDataStreamVmIp(e.target.value)}
-                />
-                <InputBox
-                    label="4. S3 액세스 키"
-                    placeholder="직접 입력"
-                    value={s3AccessKey}
-                    onChange={(e) => setS3AccessKey(e.target.value)}
-                />
-                <InputBox
-                    label="5. S3 시크릿 키"
-                    placeholder="직접 입력"
-                    value={s3SecretKey}
-                    onChange={(e) => setS3SecretKey(e.target.value)}
+                    label="3. 프로젝트 이름"
+                    placeholder="조회 버튼 클릭 시 자동 입력"
+                    value={projectName}
+                    onChange={(e) => setProjectName(e.target.value)}
+                    showApiButton
+                    onApiClick={() => handleApiButtonClick('fetchProjects', handleFetchProjectsAndClusters)}
+                    isLoading={loadingButton === 'fetchProjects'}
+                    error={errors.projectName}
                 />
             </GroupContainer>
 
-            {/* 2단계: Kafka 클러스터 조회 버튼 */}
-            <IntegratedQueryContainer>
-                <IntegratedQueryButton
-                    onClick={handleKafkaQuery}
-                    disabled={integratedLoading || !accessKey || !secretKey}
-                    $isLoading={integratedLoading}
-                >
-                    <LoadingText $visible={integratedLoading}>
-                        🚀 Kafka 클러스터 조회
-                    </LoadingText>
-                </IntegratedQueryButton>
-            </IntegratedQueryContainer>
-
-            {/* 3단계: Kafka 클러스터 선택 */}
             <GroupContainer>
-                <ClusterToggle
-                    label="6. Kafka 클러스터 선택"
-                    selectedClusterId={selectedClusterId}
-                    onClusterSelect={handleClusterSelect}
-                    clusters={kafkaClusters}
-                    isLoaded={kafkaLoaded}
-                    hideButton={true}
+                <SelectBox
+                    label="4. 클러스터 이름"
+                    value={clusterName}
+                    options={clusterList}
+                    onChange={handleClusterNameChange}
                 />
                 <InputBox
-                    label="7. Kafka 부트스트랩 서버"
+                    label="5. API 엔드포인트"
                     placeholder="위에서 클러스터 선택 시 자동 입력"
-                    value={kafkaServer}
-                    onChange={(e) => setKafkaServer(e.target.value)}
+                    value={apiEndpoint}
+                    onChange={(e) => setApiEndpoint(e.target.value)}
+                    height="100px"
+                    error={errors.apiEndpoint}
+                />
+                <InputBox
+                    label="6. 인증 데이터"
+                    placeholder="위에서 클러스터 선택 시 자동 입력"
+                    value={authData}
+                    onChange={(e) => setAuthData(e.target.value)}
+                    height="100px"
+                    error={errors.authData}
+                />
+            </GroupContainer>
+
+            <GroupContainer>
+                <InputBox
+                    label="7. 인스턴스 목록"
+                    placeholder="조회 버튼 클릭 시 자동 입력"
+                    value={instanceList}
+                    onChange={(e) => setInstanceList(e.target.value)}
+                />
+                <SelectBox
+                    label="8. 인스턴스 이름"
+                    value={instanceName}
+                    options={instanceList.split(', ').filter(name => name.trim() !== '')}
+                    onChange={handleInstanceNameChange}
+                />
+                <InputBox
+                    label="9. Primary 엔드포인트"
+                    placeholder="위에서 인스턴스 선택 시 자동 입력"
+                    value={primaryEndpoint}
+                    onChange={(e) => setPrimaryEndpoint(e.target.value)}
+                    height="100px"
+                    error={errors.primaryEndpoint}
+                />
+                <InputBox
+                    label="10. Standby 엔드포인트"
+                    placeholder="위에서 인스턴스 선택 시 자동 입력"
+                    value={standbyEndpoint}
+                    onChange={(e) => setStandbyEndpoint(e.target.value)}
+                    height="100px"
+                    isLoading={loadingButton === 'fetchInstanceStandbyEndpoints'}
+                    error={errors.standbyEndpoint}
+                />
+            </GroupContainer>
+
+            <GroupContainer>
+                <InputBox
+                    label="11. Docker 이미지명"
+                    placeholder="예: demo-spring-boot"
+                    value={dockerImageName}
+                    onChange={(e) => setDockerImageName(e.target.value)}
+                    error={errors.dockerImageName}
+                />
+                <InputBox
+                    label="12. Java 버전"
+                    placeholder="예: 17-jdk-slim"
+                    value={dockerJavaVersion}
+                    onChange={(e) => setDockerJavaVersion(e.target.value)}
+                    error={errors.dockerJavaVersion}
                 />
             </GroupContainer>
 
             <ScriptDisplay script={script} />
+            
             <ButtonContainer>
-                <StyledButton onClick={generateScript}>스크립트 생성 및 복사</StyledButton>
+                <StyledButton onClick={generateScript}>
+                    스크립트 생성 및 복사
+                </StyledButton>
             </ButtonContainer>
         </Container>
     );
 };
 
-export default S3SinkConnectorVM;
+export default MainPage;
