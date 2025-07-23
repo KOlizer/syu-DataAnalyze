@@ -404,13 +404,13 @@ echo "🎉 Hadoop & Spark 환경 설정 완료!"`;
             {/* 1단계: 액세스 키, 시크릿 키, DataStream VM IP */}
             <GroupContainer>
                 <InputBox
-                    label="1. 카카오 액세스 키 (credential_id)"
+                    label="1. 사용자 액세스 키 (credential_id)"
                     placeholder="직접 입력"
                     value={accessKey}
                     onChange={(e) => setAccessKey(e.target.value)}
                 />
                 <InputBox
-                    label="2. 카카오 시크릿 키 (credential_secret)"
+                    label="2. 사용자 시크릿 키 (credential_secret)"
                     placeholder="직접 입력"
                     value={secretKey}
                     onChange={(e) => setSecretKey(e.target.value)}
